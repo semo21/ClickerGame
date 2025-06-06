@@ -1,0 +1,50 @@
+# Build & temp files
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+*.sln
+*.opensdf
+*.sdf
+*.suo
+*.tmp
+*.user
+*.userosscache
+*.unsuccessfulbuild
+*.VC.db
+
+# Exclude packaged builds
+Build/
+Windows/
+Android_ASTC/
+
+# Unreal specific
+*.log
+*.tlog
+*.cache
+*.pdb
+*.ipch
+*.aps
+*.ncb
+*.obj
+*.iobj
+*.ipdb
+*.uasset
+*.umap
+*.upk
+*.pak
+*.exe
+*.dll
+*.lib
+*.so
+*.apk
+*.bat
+
+# Ignore external actors/objects
+Content/__ExternalActors__/
+Content/__ExternalObjects__/
+
+# Configuration override files
+Config/DefaultEditor.ini
+Config/DefaultEditorPerProjectUserSettings.ini
