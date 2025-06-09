@@ -22,6 +22,7 @@ public:
 	// called when the button clicked
 	UFUNCTION()
 	void OnUpgradeClicked();
+	void UpdateCurrencyUI();
 
 
 protected:
@@ -46,5 +47,4 @@ private:
 	TSubclassOf<UUserWidget> WidgetClassRef;
 
 	void OnClick();
-	void UpdateCurrencyUI();
 };

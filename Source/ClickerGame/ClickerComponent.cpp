@@ -3,6 +3,7 @@
 
 #include "ClickerComponent.h"
 #include "Engine/Engine.h"	
+#include "MyPlayerController.h"
 
 // Sets default values for this component's properties
 UClickerComponent::UClickerComponent()
@@ -15,7 +16,9 @@ UClickerComponent::UClickerComponent()
 	Currency = 0.0f;
 	CurrencyPerClick = 1.0f; // Default value for currency earned per click
 	CurrencyPerSecond = 2.0f;
+	UpgradeCost = 10.0f;
 	AccumulatedTime = 0.0f;
+
 }
 
 
@@ -41,6 +44,14 @@ void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow,
 			FString::Printf(TEXT("Passive Income! Currency: %.2f"), Currency));
+
+		if (APlayerController* PC = GetWorld()->GetFirstPlayerController()) {
+			AMyPlayerController* MyPC = Cast<AMyPlayerController>(PC);
+			if (MyPC) {
+				MyPC->UpdateCurrencyUI();
+			}
+		}
+
 	}
 }
 
@@ -79,4 +90,8 @@ float UClickerComponent::GetCurrency() const {
 
 float UClickerComponent::GetClickValue() const {
 	return ClickValue;
+}
+
+float UClickerComponent::GetUpgradeCost() const {
+	return UpgradeCost;
 }
