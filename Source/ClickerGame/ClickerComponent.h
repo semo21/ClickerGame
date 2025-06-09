@@ -28,10 +28,12 @@ public:
 	void HandleUpgrade();
 	float GetCurrency() const;
 	float GetClickValue() const;
+	float GetUpgradeCost() const;
 		
 private:
 	int32 ClickCount;
 	float Currency = 0.0f;
+	float Multiplier;
 	float CurrencyPerClick;
 	float CurrencyPerSecond;
 	float AccumulatedTime;

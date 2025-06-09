@@ -98,7 +98,7 @@ void AMyPlayerController::OnClick() {
 void AMyPlayerController::UpdateCurrencyUI() {
 	if (CurrencyText && ClickerComponent) {
 		float Current = ClickerComponent->GetCurrency();
-		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Current)));
+		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f\nUpgrade Cost: %.2f"), ClickerComponent->GetCurrency(), ClickerComponent->GetUpgradeCost())));
 	}
 }
 
