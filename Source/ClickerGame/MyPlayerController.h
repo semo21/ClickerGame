@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+
 #include "MyPlayerController.generated.h"
 
 class UClickerComponent;
@@ -39,6 +40,15 @@ private:
 
 	UPROPERTY()
 	UTextBlock* CurrencyText;
+
+	UPROPERTY()
+	UTextBlock* ClickValueText;
+
+	UPROPERTY()
+	UTextBlock* UpgradeCostText;
+
+	UPROPERTY()
+	UTextBlock* PassiveIncomeText;
 
 	UPROPERTY()
 	UButton* UpgradeButton;
