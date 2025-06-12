@@ -11,7 +11,7 @@
 
 AMyPlayerController::AMyPlayerController() {
 	bEnableClickEvents = true;	
-	static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClass(TEXT("/Game/Widgets/WBP_ClickerUI.WBP_ClickerUI_C"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClass(TEXT("/Game/Widgets/WBP_ClickerUI"));
 	if (WidgetClass.Succeeded()) {
 		WidgetClassRef = WidgetClass.Class;
 	}
@@ -32,16 +32,35 @@ void AMyPlayerController::BeginPlay() {
 			UWidget* FoundWidget = ClickerUI->GetWidgetFromName(TEXT("CurrencyText"));
 			CurrencyText = Cast<UTextBlock>(FoundWidget);
 
+			UWidget* ClickValueWidget = ClickerUI->GetWidgetFromName(TEXT("ClickValueText"));
+			ClickValueText = Cast<UTextBlock>(ClickValueWidget);
+
+			UWidget* UpgradeCostWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeCostText"));
+			UpgradeCostText = Cast<UTextBlock>(UpgradeCostWidget);
+
+			UWidget* PassiveIncomeWidget = ClickerUI->GetWidgetFromName(TEXT("PassiveIncomeText"));
+			PassiveIncomeText = Cast<UTextBlock>(PassiveIncomeWidget);
+
+			UWidget* UpgradeButtonWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeButton"));
+			UpgradeButton = Cast<UButton>(UpgradeButtonWidget);
+
+			UWidget* UpgradeSuccessWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeSuccessText"));
+			UpgradeSuccessText = Cast<UTextBlock>(UpgradeSuccessWidget);
+
 			// µð¹ö±ë ·Î±×
 			if (!CurrencyText) {
 				UE_LOG(LogTemp, Warning, TEXT("CurrencyText not found in widget!"));
 			}
 
-			UWidget* UpgradeButtonWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeButton"));
-			UpgradeButton = Cast<UButton>(UpgradeButtonWidget);
-
 			if (UpgradeButton) {
 				UpgradeButton->OnClicked.AddDynamic(this, &AMyPlayerController::OnUpgradeClicked);
+			}
+
+			if (UpgradeSuccessText) {
+				UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("UpgradeSuccessText not found!"));
 			}
 		}
 	}
@@ -51,6 +70,17 @@ void AMyPlayerController::BeginPlay() {
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	SetInputMode(InputMode);
 	bShowMouseCursor = true;
+}
+
+FString AMyPlayerController::FormatCurrency(float Value) const {
+	if (Value >= 1e9f)
+		return FString::Printf(TEXT("%.2fB"), Value / 1e9f);
+	else if (Value >= 1e6f)
+		return FString::Printf(TEXT("%.2fM"), Value / 1e6f);
+	else if (Value >= 1e3f)
+		return FString::Printf(TEXT("%.2fK"), Value / 1e3f);
+	else
+		return FString::Printf(TEXT("%.0f"), Value);
 }
 
 void AMyPlayerController::SetupInputComponent() {
@@ -96,9 +126,24 @@ void AMyPlayerController::OnClick() {
 }
 
 void AMyPlayerController::UpdateCurrencyUI() {
-	if (CurrencyText && ClickerComponent) {
+	if (ClickerComponent) {
 		float Current = ClickerComponent->GetCurrency();
-		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f\nUpgrade Cost: %.2f"), ClickerComponent->GetCurrency(), ClickerComponent->GetUpgradeCost())));
+		float ClickValue = ClickerComponent->GetClickValue();
+		float UpgradeCost = ClickerComponent->GetUpgradeCost();
+		float PassiveIncome = ClickerComponent->GetCurrencyPerSecond();
+
+		if (CurrencyText) {
+			CurrencyText->SetText(FText::FromString(FormatCurrency(Current)));
+		}
+		if (ClickValueText) {
+			ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickValue)));
+		}
+		if (UpgradeCostText) {
+			UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), UpgradeCost)));
+		}
+		if (PassiveIncomeText) {
+			PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), PassiveIncome)));
+		}
 	}
 }
 
@@ -106,5 +151,17 @@ void AMyPlayerController::OnUpgradeClicked() {
 	if (ClickerComponent) {
 		ClickerComponent->HandleUpgrade();
 		UpdateCurrencyUI();
+
+		if (UpgradeSuccessText) {
+			UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
+
+			GetWorldTimerManager().SetTimer(UpgradeSuccessTimerHandle, this, &AMyPlayerController::HideUpgradeSuccessText, 2.0f, false);
+		}
+	}
+}
+
+void AMyPlayerController::HideUpgradeSuccessText() {
+	if (UpgradeSuccessText) {
+		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }

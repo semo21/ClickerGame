@@ -45,12 +45,19 @@ void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow,
 			FString::Printf(TEXT("Passive Income! Currency: %.2f"), Currency));
 
-		if (APlayerController* PC = GetWorld()->GetFirstPlayerController()) {
-			AMyPlayerController* MyPC = Cast<AMyPlayerController>(PC);
-			if (MyPC) {
-				MyPC->UpdateCurrencyUI();
-			}
+		if (!CachedMyPlayerController) {
+			CachedMyPlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
 		}
+		if (CachedMyPlayerController) {
+			CachedMyPlayerController->UpdateCurrencyUI();
+		}
+
+		//if (APlayerController* PC = GetWorld()->GetFirstPlayerController()) {
+		//	AMyPlayerController* MyPC = Cast<AMyPlayerController>(PC);
+		//	if (MyPC) {
+		//		MyPC->UpdateCurrencyUI();
+		//	}
+		//}
 
 	}
 }
@@ -94,4 +101,8 @@ float UClickerComponent::GetClickValue() const {
 
 float UClickerComponent::GetUpgradeCost() const {
 	return UpgradeCost;
+}
+
+float UClickerComponent::GetCurrencyPerSecond() const {
+	return CurrencyPerSecond;
 }
