@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 
+
 #include "MyPlayerController.generated.h"
 
 class UClickerComponent;
@@ -23,12 +24,16 @@ public:
 	// called when the button clicked
 	UFUNCTION()
 	void OnUpgradeClicked();
+
 	void UpdateCurrencyUI();
 
+	FString FormatCurrency(float Value) const;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+
+	void HideUpgradeSuccessText();
 
 
 private:
@@ -56,5 +61,11 @@ private:
 	UPROPERTY()
 	TSubclassOf<UUserWidget> WidgetClassRef;
 
+	UPROPERTY()
+	UTextBlock* UpgradeSuccessText;
+
+	FTimerHandle UpgradeSuccessTimerHandle;
+
 	void OnClick();
+
 };
