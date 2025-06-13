@@ -7,3 +7,7 @@
 
 - Fixed an issue where _UpgradeCost_ text was not displayed.
 - Updated the currency display format.
+
+### 06.13.25.
+
+- Implemented Floating Text to appear on click.

@@ -64,8 +64,11 @@ private:
 	UPROPERTY()
 	UTextBlock* UpgradeSuccessText;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> FloatingTextClass;
+
 	FTimerHandle UpgradeSuccessTimerHandle;
 
 	void OnClick();
-
+	void SpawnFloatingText(const FString& Text, const FVector2D& ScreenPosition);
 };
