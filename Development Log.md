@@ -16,3 +16,7 @@
 
 - Learned detail structure of UE C++ system.
   - DLL, UHT, UBT etc.
+
+### 06.16.25.
+
+- Added Floating Text Animation.
