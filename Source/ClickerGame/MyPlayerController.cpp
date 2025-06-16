@@ -174,7 +174,7 @@ void AMyPlayerController::HideUpgradeSuccessText() {
 void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D& ScreenPosition) {
 	if (!FloatingTextClass)	return;
 
-	UUserWidget* FloatingTextWidget = CreateWidget<UUserWidget>(this, FloatingTextClass);
+	UClickFloatingTextWidget* FloatingTextWidget = CreateWidget<UClickFloatingTextWidget>(this, FloatingTextClass);
 	if (!FloatingTextWidget) return;	
 
 	FloatingTextWidget->AddToViewport();
@@ -189,8 +189,8 @@ void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D
 		CanvasSlot->SetPosition(ScreenPosition);
 	}
 
-	if (UWidgetAnimation* Anim = Cast<UWidgetAnimation>(FloatingTextWidget->FindAnimation(TEXT("FloatUpFade")))) {
-		FloatingTextWidget->PlayAnimation(Anim);
+	if (FloatingTextWidget->FloatUpFade) {
+		FloatingTextWidget->PlayAnimation(FloatingTextWidget->FloatUpFade);
 	}
 
 	FTimerHandle TempHandle;

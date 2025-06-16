@@ -7,7 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
-
+#include "ClickFloatingTextWidget.h"
 
 #include "MyPlayerController.generated.h"
 
@@ -65,7 +65,7 @@ private:
 	UTextBlock* UpgradeSuccessText;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> FloatingTextClass;
+	TSubclassOf<UClickFloatingTextWidget> FloatingTextClass;
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* FloatUpFade;
