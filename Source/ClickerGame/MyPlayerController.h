@@ -67,6 +67,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> FloatingTextClass;
 
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UWidgetAnimation* FloatUpFade;
+
 	FTimerHandle UpgradeSuccessTimerHandle;
 
 	void OnClick();

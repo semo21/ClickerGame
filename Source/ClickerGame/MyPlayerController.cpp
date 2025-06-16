@@ -189,6 +189,10 @@ void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D
 		CanvasSlot->SetPosition(ScreenPosition);
 	}
 
+	if (UWidgetAnimation* Anim = Cast<UWidgetAnimation>(FloatingTextWidget->FindAnimation(TEXT("FloatUpFade")))) {
+		FloatingTextWidget->PlayAnimation(Anim);
+	}
+
 	FTimerHandle TempHandle;
 	GetWorldTimerManager().SetTimer(TempHandle, FTimerDelegate::CreateLambda([FloatingTextWidget]() {
 		FloatingTextWidget->RemoveFromParent();

@@ -11,3 +11,12 @@
 ### 06.13.25.
 
 - Implemented Floating Text to appear on click.
+
+### 06.15.25.
+
+- Learned detail structure of UE C++ system.
+  - DLL, UHT, UBT etc.
+
+### 06.16.25.
+
+- Added Floating Text Animation.
