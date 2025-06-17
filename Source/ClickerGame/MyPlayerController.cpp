@@ -174,7 +174,7 @@ void AMyPlayerController::HideUpgradeSuccessText() {
 void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D& ScreenPosition) {
 	if (!FloatingTextClass)	return;
 
-	UClickFloatingTextWidget* FloatingTextWidget = CreateWidget<UClickFloatingTextWidget>(this, FloatingTextClass);
+	UClickFloatingTextWidget* FloatingTextWidget = GetFloatingTextWidgetFromPool();
 	if (!FloatingTextWidget) return;	
 
 	FloatingTextWidget->AddToViewport();
@@ -197,4 +197,18 @@ void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D
 	GetWorldTimerManager().SetTimer(TempHandle, FTimerDelegate::CreateLambda([FloatingTextWidget]() {
 		FloatingTextWidget->RemoveFromParent();
 		}), 1.0f, false);
+}
+
+UClickFloatingTextWidget* AMyPlayerController::GetFloatingTextWidgetFromPool() {
+	for (UClickFloatingTextWidget* Widget : FloatingTextPool) {
+		if (!Widget->IsInViewport()) {
+			return Widget;
+		}
+	}
+
+	if (FloatingTextWidgetClass) {
+		UClickFloatingTextWidget* NewWidget = CreateWidget<UClickFloatingTextWidget>(this, FloatingTextWidgetClass);
+		return NewWidget;
+	}
+	return nullptr;
 }

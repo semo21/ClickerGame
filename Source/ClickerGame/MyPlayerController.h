@@ -25,6 +25,10 @@ public:
 	UFUNCTION()
 	void OnUpgradeClicked();
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
+	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
+
 	void UpdateCurrencyUI();
 
 	FString FormatCurrency(float Value) const;
@@ -69,6 +73,12 @@ private:
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* FloatUpFade;
+
+	UPROPERTY()
+	TArray<UClickFloatingTextWidget*> FloatingTextPool;
+
+	UFUNCTION()
+	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 
 	FTimerHandle UpgradeSuccessTimerHandle;
 
