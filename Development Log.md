@@ -14,9 +14,14 @@
 
 ### 06.15.25.
 
-- Learned detail structure of UE C++ system.
-  - DLL, UHT, UBT etc.
+- Studied the detailed architecture of the Unreal Engine C++ build system.
+  - Covered concepts like DLLs, UHT, UBT, etc.
 
 ### 06.16.25.
 
-- Added Floating Text Animation.
+- Added animation to FloatingText for better visual feedback.
+
+### 06.17.25.
+
+- Started refactoring the source code, focusing on AMyPlayerController.
+  - Began separating responsibilities from AMyPlayerController as it had become too monolithic.
