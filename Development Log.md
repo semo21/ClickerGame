@@ -31,3 +31,4 @@
 
 - Resolved GitHub merge conflict.
 - Created new UI manager script as part of the refactoring effort.
+- Added new branch named "refactor/ui-manager"
