@@ -21,6 +21,9 @@ AMyPlayerController::AMyPlayerController() {
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
+	UIManager = NewObject<UClickerUIManager>(this);
+	UIManager->Initialize(this);
+
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
 
@@ -86,7 +89,6 @@ FString AMyPlayerController::FormatCurrency(float Value) const {
 
 void AMyPlayerController::SetupInputComponent() {
 	Super::SetupInputComponent();
-	//UE_LOG(LogTemp, Warning, TEXT("SetupInputComponent called!"));
 
 	if (InputComponent)
 	{
@@ -95,27 +97,20 @@ void AMyPlayerController::SetupInputComponent() {
 }
 
 void AMyPlayerController::OnClick() {
-	//UE_LOG(LogTemp, Warning, TEXT("OnClick called!"));
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
-	//UE_LOG(LogTemp, Warning, TEXT("HitResult.bBlockingHit: %s"), HitResult.bBlockingHit ? TEXT("true") : TEXT("false"));
 
 	if (!HitResult.bBlockingHit)	return;
 
 	AActor* HitActor = HitResult.GetActor();
 	if (!IsValid(HitActor))	return;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Hit Actor Name: %s"), *HitActor->GetName());
-	//UE_LOG(LogTemp, Warning, TEXT("Hit Actor Class: %s"), *HitActor->GetClass()->GetName());
-
 	if (!HitActor->IsA(AClickTargetActor::StaticClass())) {
-		//UE_LOG(LogTemp, Warning, TEXT("Hit actor is not AClickTargetActor!"));
 		return;
 	}
 
 	AClickTargetActor* ClickedActor = Cast<AClickTargetActor>(HitActor);
 	if (!IsValid(ClickedActor)) {
-		//UE_LOG(LogTemp, Warning, TEXT("Hit actor is not AClickTargetActor!"));
 		return;
 	}
 
@@ -124,9 +119,8 @@ void AMyPlayerController::OnClick() {
 		UpdateCurrencyUI();
 		DrawDebugSphere(GetWorld(), HitResult.Location, 16.0f, 12, FColor::Green, false, 1.0f);
 
-		FVector2D ScreenPosition;
-		ProjectWorldLocationToScreen(HitResult.Location, ScreenPosition);
-		SpawnFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetClickValue()), ScreenPosition);
+		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetClickValue()), HitResult.Location);
+
 	}
 }
 
@@ -171,33 +165,33 @@ void AMyPlayerController::HideUpgradeSuccessText() {
 	}
 }
 
-void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D& ScreenPosition) {
-	if (!FloatingTextClass)	return;
-
-	UClickFloatingTextWidget* FloatingTextWidget = GetFloatingTextWidgetFromPool();
-	if (!FloatingTextWidget) return;	
-
-	FloatingTextWidget->AddToViewport();
-
-	UTextBlock* TextBlock = Cast<UTextBlock>(FloatingTextWidget->GetWidgetFromName(TEXT("FloatingText")));
-
-	if (TextBlock) {
-		TextBlock->SetText(FText::FromString(Text));
-	}
-	UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(FloatingTextWidget->Slot);
-	if (CanvasSlot) {
-		CanvasSlot->SetPosition(ScreenPosition);
-	}
-
-	if (FloatingTextWidget->FloatUpFade) {
-		FloatingTextWidget->PlayAnimation(FloatingTextWidget->FloatUpFade);
-	}
-
-	FTimerHandle TempHandle;
-	GetWorldTimerManager().SetTimer(TempHandle, FTimerDelegate::CreateLambda([FloatingTextWidget]() {
-		FloatingTextWidget->RemoveFromParent();
-		}), 1.0f, false);
-}
+//void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D& ScreenPosition) {
+//	if (!FloatingTextClass)	return;
+//
+//	UClickFloatingTextWidget* FloatingTextWidget = GetFloatingTextWidgetFromPool();
+//	if (!FloatingTextWidget) return;	
+//
+//	FloatingTextWidget->AddToViewport();
+//
+//	UTextBlock* TextBlock = Cast<UTextBlock>(FloatingTextWidget->GetWidgetFromName(TEXT("FloatingText")));
+//
+//	if (TextBlock) {
+//		TextBlock->SetText(FText::FromString(Text));
+//	}
+//	UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(FloatingTextWidget->Slot);
+//	if (CanvasSlot) {
+//		CanvasSlot->SetPosition(ScreenPosition);
+//	}
+//
+//	if (FloatingTextWidget->FloatUpFade) {
+//		FloatingTextWidget->PlayAnimation(FloatingTextWidget->FloatUpFade);
+//	}
+//
+//	FTimerHandle TempHandle;
+//	GetWorldTimerManager().SetTimer(TempHandle, FTimerDelegate::CreateLambda([FloatingTextWidget]() {
+//		FloatingTextWidget->RemoveFromParent();
+//		}), 1.0f, false);
+//}
 
 UClickFloatingTextWidget* AMyPlayerController::GetFloatingTextWidgetFromPool() {
 	for (UClickFloatingTextWidget* Widget : FloatingTextPool) {

@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "ClickFloatingTextWidget.h"
+#include "ClickerUIManager.h"
 
 #include "MyPlayerController.generated.h"
 
@@ -68,17 +69,20 @@ private:
 	UPROPERTY()
 	UTextBlock* UpgradeSuccessText;
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UClickFloatingTextWidget> FloatingTextClass;
-
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* FloatUpFade;
 
 	UPROPERTY()
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
 
+	UPROPERTY()
+	UClickerUIManager* UIManager;
+
 	UFUNCTION()
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
+	
+	
+
 
 	FTimerHandle UpgradeSuccessTimerHandle;
 
