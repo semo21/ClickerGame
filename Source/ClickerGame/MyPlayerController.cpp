@@ -22,7 +22,7 @@ void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
 	UIManager = NewObject<UClickerUIManager>(this);
-	UIManager->Initialize(this);
+	UIManager->Initialize(this, FloatingTextWidgetClass, HUDWidgetClass);
 
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();

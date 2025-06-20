@@ -31,3 +31,7 @@
 
 - Resolved GitHub merge conflict.
 - Created new UI manager script as part of the refactoring effort.
+
+### 06.20.25.
+
+- Began refactoring the HUD-related logic within the AMyPlayerController class, continuing the effort to modularize its responsibilities.

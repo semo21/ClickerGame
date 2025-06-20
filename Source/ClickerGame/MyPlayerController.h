@@ -81,6 +81,7 @@ private:
 	UFUNCTION()
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 	
+	TSubclassOf<UUserWidget> HUDWidgetClass;
 	
 
 

@@ -22,17 +22,20 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 
 public:
 	void Initialize(AMyPlayerController* InController);
-
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
+	void ShowHUD();
+	void HideHUD();
+	void UpdateScore(int32 NewScore);
 
 private:
 	AMyPlayerController* PlayerController;
-
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
-
+	TSubclassOf<UUserWidget> HUDWidgetClass;
+	UUserWidget* HUDWidget;
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
+	FTimerHandle TimerHandle;
 
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 
-	FTimerHandle TimerHandle;
+	
 };

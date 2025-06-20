@@ -11,15 +11,14 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "TimerManager.h"
 
-void UClickerUIManager::Initialize(AMyPlayerController* InController) {
+void UClickerUIManager::Initialize(AMyPlayerController* InController, TSubclassOf<UClickFloatingTextWidget> InFloatingTextWidgetClass, TSubclassOf<UUserWidget> InHUDWidgetClass) {
 	UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
 
 	PlayerController = InController;
-
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
-	if (!FloatingTextWidgetClass) {
-		UE_LOG(LogTemp, Error, TEXT("FloatingTextWidgetClass is NULL!"));
-	}
+	HUDWidgetClass = InHUDWidgetClass;
+	
+
 }
 
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
