@@ -11,14 +11,13 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "TimerManager.h"
 
-void UClickerUIManager::Initialize(AMyPlayerController* InController, TSubclassOf<UClickFloatingTextWidget> InFloatingTextWidgetClass, TSubclassOf<UUserWidget> InHUDWidgetClass) {
+void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
 
 	PlayerController = InController;
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
-	HUDWidgetClass = InHUDWidgetClass;
-	
-
+	HUDWidgetClass = InController->HUDWidgetClass;
+	ClickEffectClass = InController->ClickEffectClass;
 }
 
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -68,4 +67,22 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 	}
 
 	return nullptr;
+}
+
+void UClickerUIManager::ShowClickEffect(const FVector& Location) {
+	if (!PlayerController || !ClickEffectClass) {
+		return;
+	}
+
+	if (CurrentClickEffect) {
+		CurrentClickEffect->Destroy();
+		CurrentClickEffect = nullptr;
+	}
+
+	UWorld* World = PlayerController->GetWorld();
+	if (World) {
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = PlayerController;
+		CurrentClickEffect = World->SpawnActor<AActor>(ClickEffectClass, Location, FRotator::ZeroRotator, SpawnParams);
+	}
 }

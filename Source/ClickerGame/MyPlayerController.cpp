@@ -22,7 +22,7 @@ void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
 	UIManager = NewObject<UClickerUIManager>(this);
-	UIManager->Initialize(this, FloatingTextWidgetClass, HUDWidgetClass);
+	UIManager->Initialize(this);
 
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
@@ -117,8 +117,8 @@ void AMyPlayerController::OnClick() {
 	if (ClickerComponent) {
 		ClickerComponent->HandleClick();
 		UpdateCurrencyUI();
-		DrawDebugSphere(GetWorld(), HitResult.Location, 16.0f, 12, FColor::Green, false, 1.0f);
-
+		//DrawDebugSphere(GetWorld(), HitResult.Location, 16.0f, 12, FColor::Green, false, 1.0f);
+		UIManager->ShowClickEffect(HitResult.Location);
 		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetClickValue()), HitResult.Location);
 
 	}

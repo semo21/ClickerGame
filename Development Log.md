@@ -41,3 +41,7 @@
 ### 06.23.25.
 
 - Still in modularizing progress.
+
+### 06.24.25.
+
+- Still in modularizing progress.

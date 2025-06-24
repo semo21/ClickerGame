@@ -20,19 +20,22 @@ class CLICKERGAME_API AMyPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	AMyPlayerController();
 
 	// called when the button clicked
 	UFUNCTION()
 	void OnUpgradeClicked();
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 
-	void UpdateCurrencyUI();
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<AActor> ClickEffectClass;
 
+	AMyPlayerController();
+	void UpdateCurrencyUI();
 	FString FormatCurrency(float Value) const;
+
+	TSubclassOf<UUserWidget> HUDWidgetClass;
 
 protected:
 	virtual void BeginPlay() override;
@@ -81,7 +84,7 @@ private:
 	UFUNCTION()
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 	
-	TSubclassOf<UUserWidget> HUDWidgetClass;
+	
 	
 
 

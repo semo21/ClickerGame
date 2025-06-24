@@ -21,8 +21,12 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 	
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<AActor> ClickEffectClass;
+
 	void Initialize(AMyPlayerController* InController);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
+	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowHUD();
 	void HideHUD();
 	void UpdateScore(int32 NewScore);
@@ -34,6 +38,7 @@ private:
 	UUserWidget* HUDWidget;
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	FTimerHandle TimerHandle;
+	AActor* CurrentClickEffect = nullptr;
 
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 
