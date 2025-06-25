@@ -17,7 +17,7 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	PlayerController = InController;
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
 	HUDWidgetClass = InController->HUDWidgetClass;
-	ClickEffectClass = InController->ClickEffectClass;
+	ClickEffectAsset = InController->ClickEffectAsset;
 }
 
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -70,7 +70,7 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 }
 
 void UClickerUIManager::ShowClickEffect(const FVector& Location) {
-	if (!PlayerController || !ClickEffectClass) {
+	if (!PlayerController || !ClickEffectAsset) {
 		return;
 	}
 
@@ -83,6 +83,6 @@ void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 	if (World) {
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = PlayerController;
-		CurrentClickEffect = World->SpawnActor<AActor>(ClickEffectClass, Location, FRotator::ZeroRotator, SpawnParams);
+		//CurrentClickEffect = World->SpawnActor<AActor>(ClickEffectAsset, Location, FRotator::ZeroRotator, SpawnParams);
 	}
 }

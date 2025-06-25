@@ -9,6 +9,7 @@
 #include "Components/TextBlock.h"
 #include "ClickFloatingTextWidget.h"
 #include "ClickerUIManager.h"
+#include "NiagaraSystem.h"
 
 #include "MyPlayerController.generated.h"
 
@@ -28,8 +29,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<AActor> ClickEffectClass;
+	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
+	UNiagaraSystem* ClickEffectAsset;
 
 	AMyPlayerController();
 	void UpdateCurrencyUI();

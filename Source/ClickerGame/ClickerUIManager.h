@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "NiagaraSystem.h"
 
 #include "ClickerUIManager.generated.h"
 
@@ -21,8 +22,8 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 	
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<AActor> ClickEffectClass;
+	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
+	UNiagaraSystem* ClickEffectAsset;
 
 	void Initialize(AMyPlayerController* InController);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);

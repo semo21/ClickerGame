@@ -31,7 +31,6 @@
 
 - Resolved GitHub merge conflict.
 - Created new UI manager script as part of the refactoring effort.
-  <<<<<<< HEAD
 
 ### 06.20.25.
 
@@ -40,8 +39,13 @@
 
 ### 06.23.25.
 
-- Still in modularizing progress.
+- Continued modularizing HUD responsibilites within AMyPlayerController.
 
 ### 06.24.25.
 
-- Still in modularizing progress.
+- Ongoing modularization work. Minor internal structuring adjustments.
+
+### 06.25.25.
+
+- Created Niagara FX for click events.
+  - Currently configuring asset settings -- some issues are being worked through.
