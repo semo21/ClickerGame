@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "NiagaraSystem.h"
-
+#include "NiagaraFunctionLibrary.h"
 #include "ClickerUIManager.generated.h"
 
 
@@ -22,8 +22,7 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 	
 
 public:
-	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
-	UNiagaraSystem* ClickEffectAsset;
+	
 
 	void Initialize(AMyPlayerController* InController);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
@@ -40,7 +39,7 @@ private:
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	FTimerHandle TimerHandle;
 	AActor* CurrentClickEffect = nullptr;
-
+	UNiagaraSystem* ClickEffectAsset;
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 
 	

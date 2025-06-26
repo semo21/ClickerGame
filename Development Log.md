@@ -49,3 +49,8 @@
 
 - Created Niagara FX for click events.
   - Currently configuring asset settings -- some issues are being worked through.
+
+### 06.26.25.
+
+- Implemented Niagara FX for click events.
+  - Started refactoring the HUD logic inside the PlayerController script.

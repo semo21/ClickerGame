@@ -11,6 +11,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "TimerManager.h"
 
+
 void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
 
@@ -73,16 +74,6 @@ void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 	if (!PlayerController || !ClickEffectAsset) {
 		return;
 	}
-
-	if (CurrentClickEffect) {
-		CurrentClickEffect->Destroy();
-		CurrentClickEffect = nullptr;
-	}
-
-	UWorld* World = PlayerController->GetWorld();
-	if (World) {
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = PlayerController;
-		//CurrentClickEffect = World->SpawnActor<AActor>(ClickEffectAsset, Location, FRotator::ZeroRotator, SpawnParams);
-	}
+	
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, Location, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
 }
