@@ -54,3 +54,7 @@
 
 - Implemented Niagara FX for click events.
   - Started refactoring the HUD logic inside the PlayerController script.
+
+### 06.27.25.
+
+- Still refactoring the PlayerController script.

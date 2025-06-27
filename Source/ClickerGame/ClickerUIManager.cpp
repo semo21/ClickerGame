@@ -77,3 +77,57 @@ void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 	
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, Location, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
 }
+
+void UClickerUIManager::ShowHUD() {
+	if (!HUDWidgetClass || !PlayerController) return;
+
+	HUDWidget = CreateWidget<UUserWidget>(PlayerController, HUDWidgetClass);
+	if (HUDWidget) {
+		HUDWidget->AddToViewport();
+
+		// Bind Textblock by name
+		UWidget* CurrencyW = HUDWidget->GetWidgetFromName(TEXT("CurrencyText"));
+		CurrencyText = Cast<UTextBlock>(CurrencyW);
+
+		UWidget* ClickValueW = HUDWidget->GetWidgetFromName(TEXT("ClickValueText"));
+		ClickValueText = Cast<UTextBlock>(ClickValueW);
+
+		UWidget* UpgradeCostW = HUDWidget->GetWidgetFromName(TEXT("UpgradeCostText"));
+		UpgradeCostText = Cast<UTextBlock>(UpgradeCostW);
+
+		UWidget* PassiveIncomeW = HUDWidget->GetWidgetFromName(TEXT("PassiveIncomeText"));
+		PassiveIncomeText = Cast<UTextBlock>(PassiveIncomeW);
+
+		UWidget* UpgradeSuccessW = HUDWidget->GetWidgetFromName(TEXT("UpgradeSuccessText"));
+		UpgradeSuccessText = Cast<UTextBlock>(UpgradeSuccessW);
+
+		UWidget* UpgradeButtonW = HUDWidget->GetWidgetFromName(TEXT("UpgradeButton"));
+		UpgradeButton = Cast<UButton>(UpgradeButtonW);
+
+		if (UpgradeButton)
+			UpgradeButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnUpgradeClicked);
+
+		if (UpgradeSuccessText) {
+			UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+}
+
+void UClickerUIManager::UpdateScore(float Currency, float ClickValue, float UpgradeCost, float PassiveIncome) {
+	if (CurrencyText)	
+		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Currency)));
+
+	if (ClickValueText)	
+		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickValue)));
+
+	if (UpgradeCostText)	
+		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), UpgradeCost)));
+
+	if (PassiveIncomeText) 
+		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), PassiveIncome)));
+
+}
+
+UUserWidget* UClickerUIManager::GetHUDWidget() const {
+	return HUDWidget;
+}

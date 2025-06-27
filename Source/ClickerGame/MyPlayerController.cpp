@@ -23,51 +23,52 @@ void AMyPlayerController::BeginPlay() {
 
 	UIManager = NewObject<UClickerUIManager>(this);
 	UIManager->Initialize(this);
+	UIManager->ShowHUD();
 
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
 
-	if (WidgetClassRef) {
-		ClickerUI = CreateWidget<UUserWidget>(this, WidgetClassRef);
-		if (ClickerUI) {
-			ClickerUI->AddToViewport();
+	//if (WidgetClassRef) {
+	//	ClickerUI = CreateWidget<UUserWidget>(this, WidgetClassRef);
+	//	if (ClickerUI) {
+	//		ClickerUI->AddToViewport();
 
-			// 이름으로 위젯 내부 요소 바인딩
-			UWidget* FoundWidget = ClickerUI->GetWidgetFromName(TEXT("CurrencyText"));
-			CurrencyText = Cast<UTextBlock>(FoundWidget);
+	//		// 이름으로 위젯 내부 요소 바인딩
+	//		UWidget* FoundWidget = ClickerUI->GetWidgetFromName(TEXT("CurrencyText"));
+	//		CurrencyText = Cast<UTextBlock>(FoundWidget);
 
-			UWidget* ClickValueWidget = ClickerUI->GetWidgetFromName(TEXT("ClickValueText"));
-			ClickValueText = Cast<UTextBlock>(ClickValueWidget);
+	//		UWidget* ClickValueWidget = ClickerUI->GetWidgetFromName(TEXT("ClickValueText"));
+	//		ClickValueText = Cast<UTextBlock>(ClickValueWidget);
 
-			UWidget* UpgradeCostWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeCostText"));
-			UpgradeCostText = Cast<UTextBlock>(UpgradeCostWidget);
+	//		UWidget* UpgradeCostWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeCostText"));
+	//		UpgradeCostText = Cast<UTextBlock>(UpgradeCostWidget);
 
-			UWidget* PassiveIncomeWidget = ClickerUI->GetWidgetFromName(TEXT("PassiveIncomeText"));
-			PassiveIncomeText = Cast<UTextBlock>(PassiveIncomeWidget);
+	//		UWidget* PassiveIncomeWidget = ClickerUI->GetWidgetFromName(TEXT("PassiveIncomeText"));
+	//		PassiveIncomeText = Cast<UTextBlock>(PassiveIncomeWidget);
 
-			UWidget* UpgradeButtonWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeButton"));
-			UpgradeButton = Cast<UButton>(UpgradeButtonWidget);
+	//		UWidget* UpgradeButtonWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeButton"));
+	//		UpgradeButton = Cast<UButton>(UpgradeButtonWidget);
 
-			UWidget* UpgradeSuccessWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeSuccessText"));
-			UpgradeSuccessText = Cast<UTextBlock>(UpgradeSuccessWidget);
+	//		UWidget* UpgradeSuccessWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeSuccessText"));
+	//		UpgradeSuccessText = Cast<UTextBlock>(UpgradeSuccessWidget);
 
-			// 디버깅 로그
-			if (!CurrencyText) {
-				UE_LOG(LogTemp, Warning, TEXT("CurrencyText not found in widget!"));
-			}
+	//		// 디버깅 로그
+	//		if (!CurrencyText) {
+	//			UE_LOG(LogTemp, Warning, TEXT("CurrencyText not found in widget!"));
+	//		}
 
-			if (UpgradeButton) {
-				UpgradeButton->OnClicked.AddDynamic(this, &AMyPlayerController::OnUpgradeClicked);
-			}
+	//		if (UpgradeButton) {
+	//			UpgradeButton->OnClicked.AddDynamic(this, &AMyPlayerController::OnUpgradeClicked);
+	//		}
 
-			if (UpgradeSuccessText) {
-				UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-			}
-			else {
-				UE_LOG(LogTemp, Warning, TEXT("UpgradeSuccessText not found!"));
-			}
-		}
-	}
+	//		if (UpgradeSuccessText) {
+	//			UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
+	//		}
+	//		else {
+	//			UE_LOG(LogTemp, Warning, TEXT("UpgradeSuccessText not found!"));
+	//		}
+	//	}
+	//}
 
 	FInputModeGameAndUI InputMode;
 	InputMode.SetWidgetToFocus(ClickerUI->TakeWidget());
@@ -117,7 +118,7 @@ void AMyPlayerController::OnClick() {
 	if (ClickerComponent) {
 		ClickerComponent->HandleClick();
 		UpdateCurrencyUI();
-		//DrawDebugSphere(GetWorld(), HitResult.Location, 16.0f, 12, FColor::Green, false, 1.0f);
+
 		UIManager->ShowClickEffect(HitResult.Location);
 		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetClickValue()), HitResult.Location);
 
@@ -125,25 +126,31 @@ void AMyPlayerController::OnClick() {
 }
 
 void AMyPlayerController::UpdateCurrencyUI() {
-	if (ClickerComponent) {
-		float Current = ClickerComponent->GetCurrency();
-		float ClickValue = ClickerComponent->GetClickValue();
-		float UpgradeCost = ClickerComponent->GetUpgradeCost();
-		float PassiveIncome = ClickerComponent->GetCurrencyPerSecond();
+	UIManager->UpdateScore(
+		ClickerComponent->GetCurrency(), 
+		ClickerComponent->GetClickValue(),
+		ClickerComponent->GetUpgradeCost(),
+		ClickerComponent->GetCurrencyPerSecond()
+	);
+	//if (ClickerComponent) {
+	//	float Current = ClickerComponent->GetCurrency();
+	//	float ClickValue = ClickerComponent->GetClickValue();
+	//	float UpgradeCost = ClickerComponent->GetUpgradeCost();
+	//	float PassiveIncome = ClickerComponent->GetCurrencyPerSecond();
 
-		if (CurrencyText) {
-			CurrencyText->SetText(FText::FromString(FormatCurrency(Current)));
-		}
-		if (ClickValueText) {
-			ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickValue)));
-		}
-		if (UpgradeCostText) {
-			UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), UpgradeCost)));
-		}
-		if (PassiveIncomeText) {
-			PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), PassiveIncome)));
-		}
-	}
+	//	if (CurrencyText) {
+	//		CurrencyText->SetText(FText::FromString(FormatCurrency(Current)));
+	//	}
+	//	if (ClickValueText) {
+	//		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickValue)));
+	//	}
+	//	if (UpgradeCostText) {
+	//		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), UpgradeCost)));
+	//	}
+	//	if (PassiveIncomeText) {
+	//		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), PassiveIncome)));
+	//	}
+	//}
 }
 
 void AMyPlayerController::OnUpgradeClicked() {

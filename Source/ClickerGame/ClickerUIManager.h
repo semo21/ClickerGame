@@ -4,12 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+
+#include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
+#include "Components/Button.h"
+
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
+
 #include "ClickerUIManager.generated.h"
 
-
-class UUserWidget;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
 /**
@@ -20,27 +24,34 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 {
 	GENERATED_BODY()
 	
-
 public:
-	
-
 	void Initialize(AMyPlayerController* InController);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowHUD();
 	void HideHUD();
-	void UpdateScore(int32 NewScore);
+	UUserWidget* GetHUDWidget() const;
+	void UpdateScore(float Currency, float ClickValue, float UpgradeCost, float PassiveIncome);
 
 private:
 	AMyPlayerController* PlayerController;
+
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
-	TSubclassOf<UUserWidget> HUDWidgetClass;
-	UUserWidget* HUDWidget;
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
-	FTimerHandle TimerHandle;
+	
 	AActor* CurrentClickEffect = nullptr;
 	UNiagaraSystem* ClickEffectAsset;
-	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 
+	FTimerHandle TimerHandle;
+
+	TSubclassOf<UUserWidget> HUDWidgetClass;
+	UUserWidget* HUDWidget;
+	UTextBlock* CurrencyText;
+	UTextBlock* ClickValueText;
+	UTextBlock* UpgradeCostText;
+	UTextBlock* PassiveIncomeText;
+	UTextBlock* UpgradeSuccessText;
+	UButton* UpgradeButton;
 	
+	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 };
