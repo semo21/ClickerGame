@@ -58,3 +58,9 @@
 ### 06.27.25.
 
 - Still refactoring the PlayerController script.
+
+### 06.30.25.
+
+- Continued refactoring MyPlayerController script.
+  - Resolved an error caused by duplicate variable declarations.
+  - Further cleanup and modularization planned.

@@ -13,7 +13,7 @@
 
 
 void UClickerUIManager::Initialize(AMyPlayerController* InController) {
-	UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
+	//UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
 
 	PlayerController = InController;
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
@@ -22,7 +22,7 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 }
 
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
-	UE_LOG(LogTemp, Warning, TEXT("UIManager: ShowFloatingText called"));
+	//UE_LOG(LogTemp, Warning, TEXT("UIManager: ShowFloatingText called"));
 
 	if (!FloatingTextWidgetClass || !PlayerController)	return;
 
@@ -30,7 +30,7 @@ void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& 
 	UGameplayStatics::ProjectWorldToScreen(PlayerController, WorldLocation, ScreenPosition);
 	UClickFloatingTextWidget* Widget = GetFloatingTextWidgetFromPool();
 	if (!Widget) {
-		UE_LOG(LogTemp, Error, TEXT("Failed to get/create a floating text widget!"));
+		//UE_LOG(LogTemp, Error, TEXT("Failed to get/create a floating text widget!"));
 	}
 
 	if (!Widget) return;
@@ -79,6 +79,7 @@ void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 }
 
 void UClickerUIManager::ShowHUD() {
+	//UE_LOG(LogTemp, Warning, TEXT("UIManager: ShowHUD called"));
 	if (!HUDWidgetClass || !PlayerController) return;
 
 	HUDWidget = CreateWidget<UUserWidget>(PlayerController, HUDWidgetClass);
@@ -129,5 +130,6 @@ void UClickerUIManager::UpdateScore(float Currency, float ClickValue, float Upgr
 }
 
 UUserWidget* UClickerUIManager::GetHUDWidget() const {
+	//UE_LOG(LogTemp, Warning, TEXT("UIManager: GetHUDWidget called"));
 	return HUDWidget;
 }

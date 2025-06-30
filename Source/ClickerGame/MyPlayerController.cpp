@@ -14,7 +14,7 @@ AMyPlayerController::AMyPlayerController() {
 	bEnableClickEvents = true;	
 	static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClass(TEXT("/Game/Widgets/WBP_ClickerUI"));
 	if (WidgetClass.Succeeded()) {
-		WidgetClassRef = WidgetClass.Class;
+		HUDWidgetClass = WidgetClass.Class;
 	}
 }
 
@@ -28,53 +28,17 @@ void AMyPlayerController::BeginPlay() {
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
 
-	//if (WidgetClassRef) {
-	//	ClickerUI = CreateWidget<UUserWidget>(this, WidgetClassRef);
-	//	if (ClickerUI) {
-	//		ClickerUI->AddToViewport();
-
-	//		// 이름으로 위젯 내부 요소 바인딩
-	//		UWidget* FoundWidget = ClickerUI->GetWidgetFromName(TEXT("CurrencyText"));
-	//		CurrencyText = Cast<UTextBlock>(FoundWidget);
-
-	//		UWidget* ClickValueWidget = ClickerUI->GetWidgetFromName(TEXT("ClickValueText"));
-	//		ClickValueText = Cast<UTextBlock>(ClickValueWidget);
-
-	//		UWidget* UpgradeCostWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeCostText"));
-	//		UpgradeCostText = Cast<UTextBlock>(UpgradeCostWidget);
-
-	//		UWidget* PassiveIncomeWidget = ClickerUI->GetWidgetFromName(TEXT("PassiveIncomeText"));
-	//		PassiveIncomeText = Cast<UTextBlock>(PassiveIncomeWidget);
-
-	//		UWidget* UpgradeButtonWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeButton"));
-	//		UpgradeButton = Cast<UButton>(UpgradeButtonWidget);
-
-	//		UWidget* UpgradeSuccessWidget = ClickerUI->GetWidgetFromName(TEXT("UpgradeSuccessText"));
-	//		UpgradeSuccessText = Cast<UTextBlock>(UpgradeSuccessWidget);
-
-	//		// 디버깅 로그
-	//		if (!CurrencyText) {
-	//			UE_LOG(LogTemp, Warning, TEXT("CurrencyText not found in widget!"));
-	//		}
-
-	//		if (UpgradeButton) {
-	//			UpgradeButton->OnClicked.AddDynamic(this, &AMyPlayerController::OnUpgradeClicked);
-	//		}
-
-	//		if (UpgradeSuccessText) {
-	//			UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-	//		}
-	//		else {
-	//			UE_LOG(LogTemp, Warning, TEXT("UpgradeSuccessText not found!"));
-	//		}
-	//	}
-	//}
-
-	FInputModeGameAndUI InputMode;
-	InputMode.SetWidgetToFocus(ClickerUI->TakeWidget());
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	SetInputMode(InputMode);
-	bShowMouseCursor = true;
+	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
+	
+	//UE_LOG(LogTemp, Warning, TEXT("UIManager: %s"), *GetNameSafe(UIManager));
+	if (UIManager && UIManager->GetHUDWidget()) {
+		//UE_LOG(LogTemp, Warning, TEXT("UIManager: HUDWidget is valid"));
+		FInputModeGameAndUI InputMode;
+		InputMode.SetWidgetToFocus(UIManager->GetHUDWidget()->TakeWidget());
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(InputMode);
+		bShowMouseCursor = true;
+	}
 }
 
 FString AMyPlayerController::FormatCurrency(float Value) const {
@@ -132,25 +96,6 @@ void AMyPlayerController::UpdateCurrencyUI() {
 		ClickerComponent->GetUpgradeCost(),
 		ClickerComponent->GetCurrencyPerSecond()
 	);
-	//if (ClickerComponent) {
-	//	float Current = ClickerComponent->GetCurrency();
-	//	float ClickValue = ClickerComponent->GetClickValue();
-	//	float UpgradeCost = ClickerComponent->GetUpgradeCost();
-	//	float PassiveIncome = ClickerComponent->GetCurrencyPerSecond();
-
-	//	if (CurrencyText) {
-	//		CurrencyText->SetText(FText::FromString(FormatCurrency(Current)));
-	//	}
-	//	if (ClickValueText) {
-	//		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickValue)));
-	//	}
-	//	if (UpgradeCostText) {
-	//		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), UpgradeCost)));
-	//	}
-	//	if (PassiveIncomeText) {
-	//		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), PassiveIncome)));
-	//	}
-	//}
 }
 
 void AMyPlayerController::OnUpgradeClicked() {
@@ -171,34 +116,6 @@ void AMyPlayerController::HideUpgradeSuccessText() {
 		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
-
-//void AMyPlayerController::SpawnFloatingText(const FString& Text, const FVector2D& ScreenPosition) {
-//	if (!FloatingTextClass)	return;
-//
-//	UClickFloatingTextWidget* FloatingTextWidget = GetFloatingTextWidgetFromPool();
-//	if (!FloatingTextWidget) return;	
-//
-//	FloatingTextWidget->AddToViewport();
-//
-//	UTextBlock* TextBlock = Cast<UTextBlock>(FloatingTextWidget->GetWidgetFromName(TEXT("FloatingText")));
-//
-//	if (TextBlock) {
-//		TextBlock->SetText(FText::FromString(Text));
-//	}
-//	UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(FloatingTextWidget->Slot);
-//	if (CanvasSlot) {
-//		CanvasSlot->SetPosition(ScreenPosition);
-//	}
-//
-//	if (FloatingTextWidget->FloatUpFade) {
-//		FloatingTextWidget->PlayAnimation(FloatingTextWidget->FloatUpFade);
-//	}
-//
-//	FTimerHandle TempHandle;
-//	GetWorldTimerManager().SetTimer(TempHandle, FTimerDelegate::CreateLambda([FloatingTextWidget]() {
-//		FloatingTextWidget->RemoveFromParent();
-//		}), 1.0f, false);
-//}
 
 UClickFloatingTextWidget* AMyPlayerController::GetFloatingTextWidgetFromPool() {
 	for (UClickFloatingTextWidget* Widget : FloatingTextPool) {

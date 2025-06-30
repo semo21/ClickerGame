@@ -49,26 +49,23 @@ private:
 	UPROPERTY()
 	UClickerComponent* ClickerComponent;
 
-	UPROPERTY()
-	UUserWidget* ClickerUI;
+	//UPROPERTY()
+	//UUserWidget* ClickerUI;
 
-	UPROPERTY()
-	UTextBlock* CurrencyText;
+	//UPROPERTY()
+	//UTextBlock* CurrencyText;
 
-	UPROPERTY()
-	UTextBlock* ClickValueText;
+	//UPROPERTY()
+	//UTextBlock* ClickValueText;
 
-	UPROPERTY()
-	UTextBlock* UpgradeCostText;
+	//UPROPERTY()
+	//UTextBlock* UpgradeCostText;
 
-	UPROPERTY()
-	UTextBlock* PassiveIncomeText;
+	//UPROPERTY()
+	//UTextBlock* PassiveIncomeText;
 
-	UPROPERTY()
-	UButton* UpgradeButton;
-
-	UPROPERTY()
-	TSubclassOf<UUserWidget> WidgetClassRef;
+	//UPROPERTY()
+	//UButton* UpgradeButton;
 
 	UPROPERTY()
 	UTextBlock* UpgradeSuccessText;
@@ -76,8 +73,8 @@ private:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* FloatUpFade;
 
-	UPROPERTY()
-	TArray<UClickFloatingTextWidget*> FloatingTextPool;
+	//UPROPERTY()
+	//TArray<UClickFloatingTextWidget*> FloatingTextPool;
 
 	UPROPERTY()
 	UClickerUIManager* UIManager;
