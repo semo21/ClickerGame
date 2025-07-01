@@ -5,7 +5,7 @@
 #include "Blueprint/WidgetTree.h"
 #include "UObject/ConstructorHelpers.h"
 #include "ClickTargetActor.h"
-
+#include "ClickerComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Components/CanvasPanelSlot.h"

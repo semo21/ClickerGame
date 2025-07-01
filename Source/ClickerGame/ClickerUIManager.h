@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "ClickerComponent.h"
 
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
@@ -15,6 +14,7 @@
 
 #include "ClickerUIManager.generated.h"
 
+class UClickerComponent;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
 /**
@@ -35,7 +35,7 @@ public:
 	void UpdateScore();
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
-	void SetClickerComponent(ClickerComponent* Comp);
+	void SetClickerComponent(UClickerComponent* Comp);
 
 private:
 	AMyPlayerController* PlayerController;

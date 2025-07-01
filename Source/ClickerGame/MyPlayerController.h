@@ -12,13 +12,15 @@
 #include "MyPlayerController.generated.h"
 
 class UClickerComponent;
-
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION()
+	void OnUpgradeClicked();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 

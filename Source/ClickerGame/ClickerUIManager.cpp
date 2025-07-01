@@ -4,6 +4,7 @@
 #include "ClickerUIManager.h"
 #include "ClickFloatingTextWidget.h"
 #include "MyPlayerController.h"
+#include "ClickerComponent.h"
 
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"

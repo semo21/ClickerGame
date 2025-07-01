@@ -68,3 +68,7 @@
 ### 07.01.25.
 
 - Almost finished refactoring MyPlayerController script.
+
+### 07.02.25.
+
+-Finished refactoring MyPlayerController script.
