@@ -27,8 +27,7 @@ AClickTargetActor::AClickTargetActor()
 // Called when the game starts or when spawned
 void AClickTargetActor::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 void AClickTargetActor::Tick(float DeltaTime) {

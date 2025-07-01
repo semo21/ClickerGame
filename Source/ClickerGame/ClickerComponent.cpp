@@ -18,7 +18,6 @@ UClickerComponent::UClickerComponent()
 	CurrencyPerSecond = 2.0f;
 	UpgradeCost = 10.0f;
 	AccumulatedTime = 0.0f;
-
 }
 
 
@@ -26,8 +25,6 @@ UClickerComponent::UClickerComponent()
 void UClickerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-
 }
 
 
