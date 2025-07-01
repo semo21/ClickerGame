@@ -5,7 +5,7 @@
 #include "Blueprint/WidgetTree.h"
 #include "UObject/ConstructorHelpers.h"
 #include "ClickTargetActor.h"
-#include "ClickerComponent.h"
+
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Components/CanvasPanelSlot.h"
@@ -28,6 +28,7 @@ void AMyPlayerController::BeginPlay() {
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
 
+	UIManager->SetClickerComponent(ClickerComponent);
 	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
 	
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: %s"), *GetNameSafe(UIManager));
@@ -90,12 +91,7 @@ void AMyPlayerController::OnClick() {
 }
 
 void AMyPlayerController::UpdateCurrencyUI() {
-	UIManager->UpdateScore(
-		ClickerComponent->GetCurrency(), 
-		ClickerComponent->GetClickValue(),
-		ClickerComponent->GetUpgradeCost(),
-		ClickerComponent->GetCurrencyPerSecond()
-	);
+	UIManager->UpdateScore();
 }
 
 void AMyPlayerController::OnUpgradeClicked() {
@@ -103,30 +99,8 @@ void AMyPlayerController::OnUpgradeClicked() {
 		ClickerComponent->HandleUpgrade();
 		UpdateCurrencyUI();
 
-		if (UpgradeSuccessText) {
-			UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
-
-			GetWorldTimerManager().SetTimer(UpgradeSuccessTimerHandle, this, &AMyPlayerController::HideUpgradeSuccessText, 2.0f, false);
+		if (UIManager) {
+			UIManager->ShowUpgradeSuccessText();
 		}
 	}
-}
-
-void AMyPlayerController::HideUpgradeSuccessText() {
-	if (UpgradeSuccessText) {
-		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-	}
-}
-
-UClickFloatingTextWidget* AMyPlayerController::GetFloatingTextWidgetFromPool() {
-	for (UClickFloatingTextWidget* Widget : FloatingTextPool) {
-		if (!Widget->IsInViewport()) {
-			return Widget;
-		}
-	}
-
-	if (FloatingTextWidgetClass) {
-		UClickFloatingTextWidget* NewWidget = CreateWidget<UClickFloatingTextWidget>(this, FloatingTextWidgetClass);
-		return NewWidget;
-	}
-	return nullptr;
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "ClickerComponent.h"
 
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
@@ -31,7 +32,10 @@ public:
 	void ShowHUD();
 	void HideHUD();
 	UUserWidget* GetHUDWidget() const;
-	void UpdateScore(float Currency, float ClickValue, float UpgradeCost, float PassiveIncome);
+	void UpdateScore();
+	void ShowUpgradeSuccessText();
+	void HideUpgradeSuccessText();
+	void SetClickerComponent(ClickerComponent* Comp);
 
 private:
 	AMyPlayerController* PlayerController;
@@ -52,6 +56,9 @@ private:
 	UTextBlock* PassiveIncomeText;
 	UTextBlock* UpgradeSuccessText;
 	UButton* UpgradeButton;
-	
+	FTimerHandle UpgradeSuccessTimerHandle;
+	UClickerComponent* ClickerComponent;
+
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
+	
 };

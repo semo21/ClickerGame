@@ -114,22 +114,46 @@ void UClickerUIManager::ShowHUD() {
 	}
 }
 
-void UClickerUIManager::UpdateScore(float Currency, float ClickValue, float UpgradeCost, float PassiveIncome) {
+void UClickerUIManager::UpdateScore() {
 	if (CurrencyText)	
-		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Currency)));
+		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), ClickerComponent->GetCurrency())));
 
 	if (ClickValueText)	
-		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickValue)));
+		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickerComponent->GetClickValue())));
 
 	if (UpgradeCostText)	
-		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), UpgradeCost)));
+		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), ClickerComponent->GetUpgradeCost())));
 
 	if (PassiveIncomeText) 
-		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), PassiveIncome)));
+		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), ClickerComponent->GetCurrencyPerSecond())));
 
 }
 
 UUserWidget* UClickerUIManager::GetHUDWidget() const {
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: GetHUDWidget called"));
 	return HUDWidget;
+}
+
+void UClickerUIManager::ShowUpgradeSuccessText() {
+	if (UpgradeSuccessText) {
+		UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
+
+		PlayerController->GetWorldTimerManager().SetTimer(
+			UpgradeSuccessTimerHandle, 
+			this, 
+			&UClickerUIManager::HideUpgradeSuccessText, 
+			2.0f, 
+			false
+		);
+	}
+}
+
+void UClickerUIManager::HideUpgradeSuccessText() {
+	if (UpgradeSuccessText) {
+		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UClickerUIManager::SetClickerComponent(UClickerComponent* Comp) {
+	ClickerComponent = Comp;
 }

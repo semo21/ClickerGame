@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "MyPlayerController.h"
 
 #include "ClickerComponent.generated.h"
+
+class AMyPlayerController;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CLICKERGAME_API UClickerComponent : public UActorComponent
