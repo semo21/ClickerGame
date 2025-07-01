@@ -50,39 +50,23 @@ void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		if (CachedMyPlayerController) {
 			CachedMyPlayerController->UpdateCurrencyUI();
 		}
-
-		//if (APlayerController* PC = GetWorld()->GetFirstPlayerController()) {
-		//	AMyPlayerController* MyPC = Cast<AMyPlayerController>(PC);
-		//	if (MyPC) {
-		//		MyPC->UpdateCurrencyUI();
-		//	}
-		//}
-
 	}
 }
 
 void UClickerComponent::HandleClick() {
-	//UE_LOG(LogTemp, Warning, TEXT("Currency before: %.2f"), Currency);
 	
 	ClickCount++;
 	Currency += ClickValue;
-
-	//UE_LOG(LogTemp, Warning, TEXT("Currency after: %.2f"), Currency);
-
-
-
-	//GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Green, FString::Printf(TEXT("Clicked! Count: %d | Currency: %.2f"), ClickCount, Currency));
 }
 
 void UClickerComponent::HandleUpgrade() {
-	//UE_LOG(LogTemp, Warning, TEXT("Click detected!")); // 아주 기본적인 영어 로그
+
 	FString Message = TEXT("Click logic started");
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Message);
+
 	if (Currency >= UpgradeCost) {
 		Currency -= UpgradeCost;
 		ClickValue += 1.0f;
 		UpgradeCost *= 1.5f;
-		//UE_LOG(LogTemp, Log, TEXT("업그레이드 성공! 현재 클릭당 수익: %f"), ClickValue);
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("통화 부족!"));

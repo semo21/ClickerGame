@@ -26,9 +26,49 @@
 - Started refactoring the source code, focusing on AMyPlayerController.
   - Began separating responsibilities from AMyPlayerController as it had become too monolithic.
 - Investigated and resolved a branch synchronization issue between local and remote Git repositories, caused by misunderstanding how rebase merges affect commit histories
-  ++ Test Log for checking private email
-  ++ Test 2nd commit for checking author
-  ++ Test 3rd
-  ++ Test 4th
-  ++ Test 5th. i hate github grass.
-  ++ Test 6th. Added gpg key
+
+### 06.18.25.
+
+- Resolved GitHub merge conflict.
+- Created new UI manager script as part of the refactoring effort.
+
+### 06.20.25.
+
+- Began refactoring the HUD-related logic within the AMyPlayerController class, continuing the effort to modularize its responsibilities.
+- Added new branch named "refactor/ui-manager"
+
+### 06.23.25.
+
+- Continued modularizing HUD responsibilites within AMyPlayerController.
+
+### 06.24.25.
+
+- Ongoing modularization work. Minor internal structuring adjustments.
+
+### 06.25.25.
+
+- Created Niagara FX for click events.
+  - Currently configuring asset settings -- some issues are being worked through.
+
+### 06.26.25.
+
+- Implemented Niagara FX for click events.
+  - Started refactoring the HUD logic inside the PlayerController script.
+
+### 06.27.25.
+
+- Still refactoring the PlayerController script.
+
+### 06.30.25.
+
+- Continued refactoring MyPlayerController script.
+  - Resolved an error caused by duplicate variable declarations.
+  - Further cleanup and modularization planned.
+
+### 07.01.25.
+
+- Almost finished refactoring MyPlayerController script.
+
+### 07.02.25.
+
+-Finished refactoring MyPlayerController script.
