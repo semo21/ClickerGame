@@ -85,7 +85,7 @@ void AMyPlayerController::OnClick() {
 		UpdateCurrencyUI();
 
 		UIManager->ShowClickEffect(HitResult.Location);
-		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetClickValue()), HitResult.Location);
+		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetCurrencyPerClick()), HitResult.Location);
 
 	}
 }

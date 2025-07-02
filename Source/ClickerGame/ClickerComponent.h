@@ -8,6 +8,7 @@
 #include "ClickerComponent.generated.h"
 
 class AMyPlayerController;
+class UClickerSaveGame;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CLICKERGAME_API UClickerComponent : public UActorComponent
@@ -30,21 +31,27 @@ public:
 	void HandleClick();
 	void HandleUpgrade();
 	float GetCurrency() const;
-	float GetClickValue() const;
+	float GetCurrencyPerClick() const;
 	float GetUpgradeCost() const;
 	float GetCurrencyPerSecond() const;
+
+	void SaveProgress();
+	void LoadProgress();
 
 		
 private:
 	int32 ClickCount;
 	float Currency = 0.0f;
-	float Multiplier;
-	float CurrencyPerClick;
+	float Multiplier;	
 	float CurrencyPerSecond;
 	float AccumulatedTime;
-	float ClickValue = 1.0f;
-	float UpgradeCost = 10.0f;
+	float CurrencyPerClick = 1.0f;
+	float UpgradeCostBase;
+	int32 UpgradeLevel = 0;
 
 	UPROPERTY()
 	AMyPlayerController* CachedMyPlayerController = nullptr;
+
+	UFUNCTION()
+	void RecalculateStats();
 };

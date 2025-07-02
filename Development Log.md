@@ -67,10 +67,11 @@
 
 ### 07.01.25.
 
-- Almost finished refactoring MyPlayerController script.
+- Nearly finished refactoring the MyPlayerController script.
 
 ### 07.02.25.
 
-- Finished refactoring MyPlayerController script.
-- Removed refactor branch
-  - Created new feature branch named "feature/currency-persistence"
+- Completed refactoring of the MyPlayerController script.
+- Removed the refactor branch
+  - Created a new feature branch -- feature/currency-persistence
+- Implemented Save and Load system.

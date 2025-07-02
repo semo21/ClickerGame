@@ -120,7 +120,7 @@ void UClickerUIManager::UpdateScore() {
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), ClickerComponent->GetCurrency())));
 
 	if (ClickValueText)	
-		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickerComponent->GetClickValue())));
+		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickerComponent->GetCurrencyPerClick())));
 
 	if (UpgradeCostText)	
 		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), ClickerComponent->GetUpgradeCost())));
