@@ -27,6 +27,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
 	UNiagaraSystem* ClickEffectAsset;
 
+	UPROPERTY()
+	UClickerComponent* ClickerComponent;
+
 	AMyPlayerController();
 	void UpdateCurrencyUI();
 	FString FormatCurrency(float Value) const;
@@ -38,8 +41,7 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
-	UPROPERTY()
-	UClickerComponent* ClickerComponent;
+	
 
 	UPROPERTY()
 	UClickerUIManager* UIManager;

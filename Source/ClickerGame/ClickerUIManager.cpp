@@ -20,6 +20,10 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
 	HUDWidgetClass = InController->HUDWidgetClass;
 	ClickEffectAsset = InController->ClickEffectAsset;
+	ClickerComponent = InController->ClickerComponent;
+
+	ShowHUD();
+	UpdateScore();
 }
 
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -153,8 +157,4 @@ void UClickerUIManager::HideUpgradeSuccessText() {
 	if (UpgradeSuccessText) {
 		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 	}
-}
-
-void UClickerUIManager::SetClickerComponent(UClickerComponent* Comp) {
-	ClickerComponent = Comp;
 }

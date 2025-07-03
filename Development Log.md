@@ -72,6 +72,10 @@
 ### 07.02.25.
 
 - Completed refactoring of the MyPlayerController script.
-- Removed the refactor branch
-  - Created a new feature branch -- feature/currency-persistence
-- Implemented Save and Load system.
+- Removed the refactor branch.
+  - Created a new feature branch -- feature/currency-persistence.
+- Added Save and Load system.
+
+### 07.03.25.
+
+- Refactored Initialize function in the UIManager.

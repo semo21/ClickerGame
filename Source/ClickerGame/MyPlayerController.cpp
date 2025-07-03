@@ -21,14 +21,12 @@ AMyPlayerController::AMyPlayerController() {
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
-	UIManager = NewObject<UClickerUIManager>(this);
-	UIManager->Initialize(this);
-	UIManager->ShowHUD();
-
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
 
-	UIManager->SetClickerComponent(ClickerComponent);
+	UIManager = NewObject<UClickerUIManager>(this);
+	UIManager->Initialize(this);
+
 	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
 	
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: %s"), *GetNameSafe(UIManager));

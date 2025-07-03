@@ -30,6 +30,11 @@ void UClickerComponent::BeginPlay()
 	LoadProgress();
 }
 
+void UClickerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	SaveProgress();
+
+	Super::EndPlay(EndPlayReason);
+}
 
 // Called every frame
 void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -96,7 +101,8 @@ void UClickerComponent::SaveProgress() {
 		SaveGameInstance->CurrencyPerClick = CurrencyPerClick;
 		SaveGameInstance->CurrencyPerSecond = CurrencyPerSecond;
 		SaveGameInstance->UpgradeLevel = UpgradeLevel;
-
+		FString SaveDir = FPaths::ProjectSavedDir() + TEXT("SaveGames/");
+		UE_LOG(LogTemp, Warning, TEXT("Save directory: %s"), *SaveDir);
 		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("PlayerSaveSlot"), 0);
 	}
 }
