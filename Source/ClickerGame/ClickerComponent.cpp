@@ -5,7 +5,7 @@
 #include "Engine/Engine.h"	
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "ClickerSaveGame.h"
+#include "SaveManagerSubsystem.h"
 
 // Sets default values for this component's properties
 UClickerComponent::UClickerComponent() : UpgradeCostBase(10.0f)
@@ -34,6 +34,32 @@ void UClickerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	SaveProgress();
 
 	Super::EndPlay(EndPlayReason);
+}
+
+void UClickerComponent::SaveProgress() {
+	if (!GetWorld() || !GetWorld()->GetGameInstance()) return;
+	
+	EnsureSaveManager();
+
+	if (SaveManager) {
+		SaveManager->SaveProgress(this);
+	}
+}
+
+void UClickerComponent::LoadProgress() {
+	if (!GetWorld() || !GetWorld()->GetGameInstance()) return;
+
+	EnsureSaveManager();
+
+	if (SaveManager) {
+		SaveManager->LoadProgress(this);
+	}	
+}
+
+void UClickerComponent::EnsureSaveManager() {
+	if (!SaveManager) {
+		SaveManager = GetWorld()->GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+	}
 }
 
 // Called every frame
@@ -77,6 +103,10 @@ void UClickerComponent::HandleUpgrade() {
 	}
 }
 
+int32 UClickerComponent::GetUpgradeLevel() const {
+	return UpgradeLevel;
+}
+
 float UClickerComponent::GetCurrency() const {
 	return Currency;
 }
@@ -93,31 +123,20 @@ float UClickerComponent::GetCurrencyPerSecond() const {
 	return CurrencyPerSecond;
 }
 
-void UClickerComponent::SaveProgress() {
-	UClickerSaveGame* SaveGameInstance = Cast<UClickerSaveGame>(UGameplayStatics::CreateSaveGameObject(UClickerSaveGame::StaticClass()));
-
-	if (SaveGameInstance) {
-		SaveGameInstance->Currency = Currency;
-		SaveGameInstance->CurrencyPerClick = CurrencyPerClick;
-		SaveGameInstance->CurrencyPerSecond = CurrencyPerSecond;
-		SaveGameInstance->UpgradeLevel = UpgradeLevel;
-		FString SaveDir = FPaths::ProjectSavedDir() + TEXT("SaveGames/");
-		UE_LOG(LogTemp, Warning, TEXT("Save directory: %s"), *SaveDir);
-		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("PlayerSaveSlot"), 0);
-	}
+void UClickerComponent::SetUpgradeLevel(int32 NewUpgradeLevel) {
+	UpgradeLevel = NewUpgradeLevel;
 }
 
-void UClickerComponent::LoadProgress() {
-	if (UGameplayStatics::DoesSaveGameExist(TEXT("PlayerSaveSlot"), 0)) {
-		UClickerSaveGame* LoadedGame = Cast<UClickerSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("PlayerSaveSlot"), 0));
+void UClickerComponent::SetCurrency(float NewCurrency) {
+	Currency = NewCurrency;
+}
 
-		if (LoadedGame) {
-			Currency = LoadedGame->Currency;
-			CurrencyPerClick = LoadedGame->CurrencyPerClick;
-			CurrencyPerSecond = LoadedGame->CurrencyPerSecond;
-			UpgradeLevel = LoadedGame->UpgradeLevel;			
-		}
-	}
+void UClickerComponent::SetCurrencyPerClick(float NewCurrencyPerClick) {
+	CurrencyPerClick = NewCurrencyPerClick;
+}
+
+void UClickerComponent::SetCurrencyPerSecond(float NewCurrencyPerSecond) {
+	CurrencyPerSecond = NewCurrencyPerSecond;
 }
 
 void UClickerComponent::RecalculateStats() {

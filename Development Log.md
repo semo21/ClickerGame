@@ -78,4 +78,9 @@
 
 ### 07.03.25.
 
-- Refactored Initialize function in the UIManager.
+- Refactored Initialize function in UIManager to improve clarity and reduce redundancy.
+
+### 07.04.25.
+
+- Added autosave system when exiting the game.
+  - Added SaveManagerSubsystem to handle Load/Save operations.

@@ -8,8 +8,7 @@
 #include "ClickerComponent.generated.h"
 
 class AMyPlayerController;
-class UClickerSaveGame;
-
+class USaveManagerSubsystem;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CLICKERGAME_API UClickerComponent : public UActorComponent
 {
@@ -29,17 +28,18 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-
 	void HandleClick();
 	void HandleUpgrade();
+	int32 GetUpgradeLevel() const;
 	float GetCurrency() const;
 	float GetCurrencyPerClick() const;
 	float GetUpgradeCost() const;
 	float GetCurrencyPerSecond() const;
 
-	void SaveProgress();
-	void LoadProgress();
-
+	void SetUpgradeLevel(int32 NewUpgradeLevel);
+	void SetCurrency(float NewCurrency);
+	void SetCurrencyPerClick(float NewCurrencyPerClick);
+	void SetCurrencyPerSecond(float NewCurrencyPerSecond);
 		
 private:
 	int32 ClickCount;
@@ -54,6 +54,18 @@ private:
 	UPROPERTY()
 	AMyPlayerController* CachedMyPlayerController = nullptr;
 
+	UPROPERTY()
+	USaveManagerSubsystem* SaveManager;
+
 	UFUNCTION()
 	void RecalculateStats();
+
+	UFUNCTION()
+	void SaveProgress();
+
+	UFUNCTION()
+	void LoadProgress();
+
+	UFUNCTION()
+	void EnsureSaveManager();		
 };
