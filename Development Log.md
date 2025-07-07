@@ -84,3 +84,9 @@
 
 - Added autosave system when exiting the game.
   - Added SaveManagerSubsystem to handle Load/Save operations.
+
+### 07.07.25.
+
+- Added autosave system triggered every 60 seconds.
+- Added Save/Load buttons.
+  - Added messages for Save/Load actions.

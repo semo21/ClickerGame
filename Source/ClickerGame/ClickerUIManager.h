@@ -56,6 +56,8 @@ private:
 	UTextBlock* PassiveIncomeText;
 	UTextBlock* UpgradeSuccessText;
 	UButton* UpgradeButton;
+	UButton* SaveButton;
+	UButton* LoadButton;
 	FTimerHandle UpgradeSuccessTimerHandle;
 	UClickerComponent* ClickerComponent;
 

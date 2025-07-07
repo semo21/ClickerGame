@@ -21,6 +21,12 @@ public:
 	UFUNCTION()
 	void OnUpgradeClicked();
 
+	UFUNCTION()
+	void OnSaveClicked();
+
+	UFUNCTION()
+	void OnLoadClicked();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 
@@ -41,8 +47,6 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
-	
-
 	UPROPERTY()
 	UClickerUIManager* UIManager;
 		

@@ -40,6 +40,12 @@ public:
 	void SetCurrency(float NewCurrency);
 	void SetCurrencyPerClick(float NewCurrencyPerClick);
 	void SetCurrencyPerSecond(float NewCurrencyPerSecond);
+
+	UFUNCTION()
+	void SaveProgress();
+
+	UFUNCTION()
+	void LoadProgress();
 		
 private:
 	int32 ClickCount;
@@ -50,21 +56,16 @@ private:
 	float CurrencyPerClick = 1.0f;
 	float UpgradeCostBase;
 	int32 UpgradeLevel = 0;
+	FTimerHandle AutoSaveHandle;
 
 	UPROPERTY()
 	AMyPlayerController* CachedMyPlayerController = nullptr;
 
 	UPROPERTY()
 	USaveManagerSubsystem* SaveManager;
-
+		
 	UFUNCTION()
 	void RecalculateStats();
-
-	UFUNCTION()
-	void SaveProgress();
-
-	UFUNCTION()
-	void LoadProgress();
 
 	UFUNCTION()
 	void EnsureSaveManager();		

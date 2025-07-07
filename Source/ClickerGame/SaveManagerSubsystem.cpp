@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ClickerComponent.h"
 
-void USaveManagerSubsytem::SaveProgress(const UClickerComponent* ClickerComponent) {
+void USaveManagerSubsystem::SaveProgress(const UClickerComponent* ClickerComponent) {
 	if (!ClickerComponent) return;
 	
 	//FString SaveDir = FPaths::ProjectSavedDir() + TEXT("SaveGames/");
@@ -19,6 +19,10 @@ void USaveManagerSubsytem::SaveProgress(const UClickerComponent* ClickerComponen
 	SaveGameInstance->UpgradeLevel = ClickerComponent->GetUpgradeLevel();
 
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveSlotName, UserIndex);
+
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Cyan, TEXT("Saved!"));
+	}
 }
 
 void USaveManagerSubsystem::LoadProgress(UClickerComponent* ClickerComponent) {

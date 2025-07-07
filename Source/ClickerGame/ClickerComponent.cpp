@@ -28,9 +28,18 @@ void UClickerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	LoadProgress();
+
+	GetWorld()->GetTimerManager().SetTimer(
+		AutoSaveHandle,
+		this,
+		&UClickerComponent::SaveProgress,
+		60.0f,
+		true
+	);
 }
 
 void UClickerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	GetWorld()->GetTimerManager().ClearTimer(AutoSaveHandle);
 	SaveProgress();
 
 	Super::EndPlay(EndPlayReason);

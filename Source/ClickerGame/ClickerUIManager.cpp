@@ -110,8 +110,20 @@ void UClickerUIManager::ShowHUD() {
 		UWidget* UpgradeButtonW = HUDWidget->GetWidgetFromName(TEXT("UpgradeButton"));
 		UpgradeButton = Cast<UButton>(UpgradeButtonW);
 
+		UWidget* SaveButtonW = HUDWidget->GetWidgetFromName(TEXT("SaveButton"));
+		SaveButton = Cast<UButton>(SaveButtonW);
+
+		UWidget* LoadButtonW = HUDWidget->GetWidgetFromName(TEXT("LoadButton"));
+		LoadButton = Cast<UButton>(LoadButtonW);
+
 		if (UpgradeButton)
 			UpgradeButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnUpgradeClicked);
+
+		if (SaveButton)
+			SaveButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnSaveClicked);
+
+		if (LoadButton)
+			LoadButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnLoadClicked);
 
 		if (UpgradeSuccessText) {
 			UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);

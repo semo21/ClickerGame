@@ -88,10 +88,6 @@ void AMyPlayerController::OnClick() {
 	}
 }
 
-void AMyPlayerController::UpdateCurrencyUI() {
-	UIManager->UpdateScore();
-}
-
 void AMyPlayerController::OnUpgradeClicked() {
 	if (ClickerComponent) {
 		ClickerComponent->HandleUpgrade();
@@ -101,4 +97,23 @@ void AMyPlayerController::OnUpgradeClicked() {
 			UIManager->ShowUpgradeSuccessText();
 		}
 	}
+}
+
+void AMyPlayerController::OnSaveClicked() {
+	if (ClickerComponent) {
+		ClickerComponent->SaveProgress();
+		UpdateCurrencyUI();
+		UIManager->ShowFloatingText(TEXT("Saved!"), GetPawn()->GetActorLocation());
+	}
+}
+
+void AMyPlayerController::OnLoadClicked() {
+	if (ClickerComponent) {
+		ClickerComponent->LoadProgress();
+		UpdateCurrencyUI();
+		UIManager->ShowFloatingText(TEXT("Loaded!"), GetPawn()->GetActorLocation());
+	}
+}
+void AMyPlayerController::UpdateCurrencyUI() {
+	UIManager->UpdateScore();
 }
