@@ -90,3 +90,7 @@
 - Added autosave system triggered every 60 seconds.
 - Added Save/Load buttons.
   - Added messages for Save/Load actions.
+
+### 07.08.25.
+
+- Added offline reward.
