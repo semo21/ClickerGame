@@ -94,3 +94,7 @@
 ### 07.08.25.
 
 - Added offline reward.
+
+### 07.09.25.
+
+- Working on additional offline reward system.
