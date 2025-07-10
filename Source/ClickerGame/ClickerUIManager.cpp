@@ -75,6 +75,12 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 	return nullptr;
 }
 
+//void UClickerUIManager::ShowIdleReward(float Amount) {
+//	if (!IdleRewardWidgetClass || !PlayerController) return;
+//
+//	
+//}
+
 void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 	if (!PlayerController || !ClickEffectAsset) {
 		return;

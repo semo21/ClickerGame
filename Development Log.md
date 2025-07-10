@@ -98,3 +98,7 @@
 ### 07.09.25.
 
 - Working on additional offline reward system.
+
+### 07.10.25.
+
+- Working on offline reward message.

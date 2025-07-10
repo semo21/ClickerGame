@@ -36,6 +36,7 @@ public:
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 	void SetClickerComponent(UClickerComponent* Comp);
+	void ShowIdleReward(float Amount);
 
 private:
 	AMyPlayerController* PlayerController;
@@ -62,5 +63,4 @@ private:
 	UClickerComponent* ClickerComponent;
 
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
-	
 };
