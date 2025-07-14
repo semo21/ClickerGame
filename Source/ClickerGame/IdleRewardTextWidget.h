@@ -26,5 +26,5 @@ protected:
 	class UTextBlock* AmountText;
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	class UWidgetAnimation* FadeAnim;
+	class UWidgetAnimation* FadeInOut;
 };

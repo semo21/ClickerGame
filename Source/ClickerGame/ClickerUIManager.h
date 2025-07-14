@@ -17,6 +17,7 @@
 class UClickerComponent;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
+class UIdleRewardTextWidget;
 /**
  * 
  */
@@ -43,6 +44,8 @@ private:
 
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
+
+	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
 	
 	AActor* CurrentClickEffect = nullptr;
 	UNiagaraSystem* ClickEffectAsset;

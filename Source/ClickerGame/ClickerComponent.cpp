@@ -6,6 +6,7 @@
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "SaveManagerSubsystem.h"
+#include "ClickerUIManager.h"
 
 // Sets default values for this component's properties
 UClickerComponent::UClickerComponent() : UpgradeCostBase(10.0f)
@@ -28,7 +29,7 @@ void UClickerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	LoadProgress();
-
+	
 	GetWorld()->GetTimerManager().SetTimer(
 		AutoSaveHandle,
 		this,
@@ -43,6 +44,12 @@ void UClickerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	SaveProgress();
 
 	Super::EndPlay(EndPlayReason);
+}
+
+void UClickerComponent::SetUIManager(UClickerUIManager* InUIManager) {
+	if (InUIManager) {
+		ClickerUIManager = InUIManager;
+	}
 }
 
 void UClickerComponent::SaveProgress() {
@@ -80,6 +87,9 @@ void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	if (AccumulatedTime >= 1.0f)
 	{
 		Currency += CurrencyPerSecond;
+		if (ClickerUIManager) {
+			ClickerUIManager->ShowIdleReward(CurrencyPerSecond);
+		}
 		AccumulatedTime = 0.0f;
 
 		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Passive Income! Currency: %.2f"), Currency));

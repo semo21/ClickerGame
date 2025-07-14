@@ -5,6 +5,7 @@
 #include "ClickFloatingTextWidget.h"
 #include "MyPlayerController.h"
 #include "ClickerComponent.h"
+#include "IdleRewardTextWidget.h"
 
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"
@@ -21,6 +22,7 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	HUDWidgetClass = InController->HUDWidgetClass;
 	ClickEffectAsset = InController->ClickEffectAsset;
 	ClickerComponent = InController->ClickerComponent;
+	ClickerComponent->SetUIManager(this);
 
 	ShowHUD();
 	UpdateScore();
@@ -75,11 +77,20 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 	return nullptr;
 }
 
-//void UClickerUIManager::ShowIdleReward(float Amount) {
-//	if (!IdleRewardWidgetClass || !PlayerController) return;
-//
-//	
-//}
+void UClickerUIManager::ShowIdleReward(float Amount) {
+	if (!IdleRewardTextWidgetClass)		
+		return;
+
+	UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+
+	if (RewardWidget) {
+		RewardWidget->SetRewardAmount(Amount);
+		RewardWidget->AddToViewport();
+		RewardWidget->PlayFade();
+	}
+
+	
+}
 
 void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 	if (!PlayerController || !ClickEffectAsset) {

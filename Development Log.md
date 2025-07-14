@@ -102,3 +102,12 @@
 ### 07.10.25.
 
 - Working on offline reward message.
+
+### 07.11.25.
+
+- Fixed syntax error in the IdleRewardTextWidget script.
+
+### 07.14.25.
+
+- Working on Adding Idle Reward(Currency Per Second, Offline Reward) Text Widget.
+  - But Widget BP occurs some errors. Try to resolve it.

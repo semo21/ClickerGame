@@ -8,6 +8,7 @@
 #include "ClickerComponent.generated.h"
 
 class AMyPlayerController;
+class UClickerUIManager;
 class USaveManagerSubsystem;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CLICKERGAME_API UClickerComponent : public UActorComponent
@@ -25,6 +26,15 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
+	UPROPERTY()
+	UClickerUIManager* ClickerUIManager;
+
+	UFUNCTION()
+	void SaveProgress();
+
+	UFUNCTION()
+	void LoadProgress();
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -41,13 +51,21 @@ public:
 	void SetCurrencyPerClick(float NewCurrencyPerClick);
 	void SetCurrencyPerSecond(float NewCurrencyPerSecond);
 
-	UFUNCTION()
-	void SaveProgress();
+	void SetUIManager(UClickerUIManager* InUIManager);
+			
+private:
+	UPROPERTY()
+	AMyPlayerController* CachedMyPlayerController = nullptr;
+
+	UPROPERTY()
+	USaveManagerSubsystem* SaveManager;
 
 	UFUNCTION()
-	void LoadProgress();
-		
-private:
+	void RecalculateStats();
+
+	UFUNCTION()
+	void EnsureSaveManager();
+
 	int32 ClickCount;
 	float Currency = 0.0f;
 	float Multiplier;	
@@ -57,16 +75,4 @@ private:
 	float UpgradeCostBase;
 	int32 UpgradeLevel = 0;
 	FTimerHandle AutoSaveHandle;
-
-	UPROPERTY()
-	AMyPlayerController* CachedMyPlayerController = nullptr;
-
-	UPROPERTY()
-	USaveManagerSubsystem* SaveManager;
-		
-	UFUNCTION()
-	void RecalculateStats();
-
-	UFUNCTION()
-	void EnsureSaveManager();		
 };

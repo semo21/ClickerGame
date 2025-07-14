@@ -5,12 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "ClickFloatingTextWidget.h"
 #include "ClickerUIManager.h"
 #include "NiagaraSystem.h"
 
 #include "MyPlayerController.generated.h"
 
+class UClickFloatingTextWidget;
 class UClickerComponent;
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController

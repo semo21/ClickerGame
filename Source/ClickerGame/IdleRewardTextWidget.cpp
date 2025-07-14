@@ -3,6 +3,7 @@
 
 #include "Components/TextBlock.h"
 #include "IdleRewardTextWidget.h"
+#include "Animation/WidgetAnimation.h"
 
 void UIdleRewardTextWidget::SetRewardAmount(float Amount) {
 	if (AmountText) {
@@ -11,14 +12,14 @@ void UIdleRewardTextWidget::SetRewardAmount(float Amount) {
 }
 
 void UIdleRewardTextWidget::PlayFade() {
-	if (FadeAnim) {
-		PlayAnimation(FadeAnim);
+	if (FadeInOut) {
+		PlayAnimation(FadeInOut);
 
 		FTimerHandle RemoveTimer;
 		GetWorld()->GetTimerManager().SetTimer(
 			RemoveTimer, 
 			[this]() {RemoveFromParent();}, 
-			FadeAnim->GetEndTime(), 
+			FadeInOut->GetEndTime(),
 			false
 		);
 	}
