@@ -11,6 +11,7 @@
 #include "MyPlayerController.generated.h"
 
 class UClickFloatingTextWidget;
+class UIdleRewardTextWidget;
 class UClickerComponent;
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController
@@ -30,6 +31,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
+	
 	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
 	UNiagaraSystem* ClickEffectAsset;
 

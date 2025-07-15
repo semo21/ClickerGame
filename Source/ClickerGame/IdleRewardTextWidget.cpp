@@ -23,4 +23,6 @@ void UIdleRewardTextWidget::PlayFade() {
 			false
 		);
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
 }

@@ -110,4 +110,9 @@
 ### 07.14.25.
 
 - Working on Adding Idle Reward(Currency Per Second, Offline Reward) Text Widget.
-  - But Widget BP occurs some errors. Try to resolve it.
+  - But Widget BP occurs some errors. Now trying to resolve it.
+
+### 07.15.25.
+
+- Added Idle Reward Text Widget with Animation.
+- Resolved BP errors.
