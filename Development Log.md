@@ -116,3 +116,7 @@
 
 - Added Idle Reward Text Widget with Animation.
 - Resolved BP errors.
+
+### 07.16.25.
+
+- Clean up WBP structures.
