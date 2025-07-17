@@ -16,7 +16,7 @@ class CLICKERGAME_API UIdleRewardTextWidget : public UUserWidget
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetRewardAmount(float Amount);
+	void SetRewardAmount(float Amount, bool IsOfflineReward);
 
 	UFUNCTION(BlueprintCallable)
 	void PlayFade();

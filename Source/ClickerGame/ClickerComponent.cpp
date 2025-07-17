@@ -89,6 +89,7 @@ void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		Currency += CurrencyPerSecond;
 		if (ClickerUIManager) {
 			ClickerUIManager->ShowIdleReward(CurrencyPerSecond);
+			//UE_LOG(LogTemp, Warning, TEXT("ClickerComponent Tick"));
 		}
 		AccumulatedTime = 0.0f;
 
@@ -148,6 +149,13 @@ void UClickerComponent::SetUpgradeLevel(int32 NewUpgradeLevel) {
 
 void UClickerComponent::SetCurrency(float NewCurrency) {
 	Currency = NewCurrency;
+}
+
+void UClickerComponent::SetOfflineReward(float OfflineReward) {
+	Currency += OfflineReward;
+	//if (ClickerUIManager) {
+	//	ClickerUIManager->ShowOfflineReward(OfflineReward);
+	//}	
 }
 
 void UClickerComponent::SetCurrencyPerClick(float NewCurrencyPerClick) {

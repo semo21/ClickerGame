@@ -32,15 +32,17 @@ void USaveManagerSubsystem::LoadProgress(UClickerComponent* ClickerComponent) {
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, UserIndex)) {
 		UClickerSaveGame* LoadedGame = Cast<UClickerSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex));
 
-		const int32 Now = FDateTime::UtcNow().ToUnixTimestamp();
-		int32 DeltaSec = Now - LoadedGame->LastSaveUnixTime;
-		DeltaSec = FMath::Clamp(DeltaSec, 0, 3600 * 24 * 7);
-		
 		ClickerComponent->SetUpgradeLevel(LoadedGame->UpgradeLevel);		
 		ClickerComponent->SetCurrencyPerClick(LoadedGame->CurrencyPerClick);
 		ClickerComponent->SetCurrencyPerSecond(LoadedGame->CurrencyPerSecond);
-				
-		const float Reward = LoadedGame->CurrencyPerSecond * DeltaSec;
-		ClickerComponent->SetCurrency(LoadedGame->Currency + Reward);
+		ClickerComponent->SetCurrency(LoadedGame->Currency);
+
+		const int32 Now = FDateTime::UtcNow().ToUnixTimestamp();
+		int32 DeltaSec = Now - LoadedGame->LastSaveUnixTime;
+		DeltaSec = FMath::Clamp(DeltaSec, 0, 3600 * 24 * 7);
+		const float OfflineReward = LoadedGame->CurrencyPerSecond * DeltaSec;
+		ClickerComponent->SetOfflineReward(OfflineReward);
+		
+		
 	}
 }

@@ -24,7 +24,7 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	IdleRewardTextWidgetClass = InController->IdleRewardTextWidgetClass;
 	ClickerComponent = InController->ClickerComponent;
 	ClickerComponent->SetUIManager(this);
-
+	GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
 	ShowHUD();
 	UpdateScore();
@@ -85,10 +85,28 @@ void UClickerUIManager::ShowIdleReward(float Amount) {
 
 	UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
 
-	if (RewardWidget) {
-		RewardWidget->SetRewardAmount(Amount);
-		RewardWidget->AddToViewport();
-		RewardWidget->PlayFade();
+	FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
+	//FVector2D ViewportSize;
+	//GEngine->GameViewport->GetViewportSize(ViewportSize);
+	FVector2D CenterScreen = CachedViewportSize / 2.0f;
+
+	RewardWidget->SetPositionInViewport(CenterScreen + RandomOffset, false);
+	RewardWidget->SetRewardAmount(Amount, false);
+	RewardWidget->AddToViewport(10);
+	RewardWidget->PlayFade();
+	
+}
+
+void UClickerUIManager::ShowOfflineReward(float OfflineReward) {
+	if (!IdleRewardTextWidgetClass)
+		return;
+
+	UIdleRewardTextWidget* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+	if (OfflineWidget) {
+		OfflineWidget->SetPositionInViewport(CachedViewportSize / 2.0f, false);
+		OfflineWidget->SetRewardAmount(OfflineReward, true);
+		OfflineWidget->AddToViewport(10);
+		OfflineWidget->PlayFade();
 	}
 }
 

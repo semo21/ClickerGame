@@ -5,9 +5,14 @@
 #include "IdleRewardTextWidget.h"
 #include "Animation/WidgetAnimation.h"
 
-void UIdleRewardTextWidget::SetRewardAmount(float Amount) {
-	if (AmountText) {
+void UIdleRewardTextWidget::SetRewardAmount(float Amount, bool IsOfflineReward) {
+	if (AmountText && !IsOfflineReward) {
 		AmountText->SetText(FText::FromString(FString::Printf(TEXT("+%.0f Gold"), Amount)));
+		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget SetRewardAmount"));
+	}
+	else if (AmountText && IsOfflineReward) {
+		AmountText->SetText(FText::FromString(FString::Printf(TEXT("Offline Reward: +%.0f Gold"), Amount)));
+
 	}
 }
 
@@ -22,7 +27,6 @@ void UIdleRewardTextWidget::PlayFade() {
 			FadeInOut->GetEndTime(),
 			false
 		);
+		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
 }

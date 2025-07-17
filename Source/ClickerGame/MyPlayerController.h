@@ -31,7 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Idle Reward Text")
 	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
 	
 	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")

@@ -50,6 +50,7 @@ public:
 	void SetCurrency(float NewCurrency);
 	void SetCurrencyPerClick(float NewCurrencyPerClick);
 	void SetCurrencyPerSecond(float NewCurrencyPerSecond);
+	void SetOfflineReward(float OfflineReward);
 
 	void SetUIManager(UClickerUIManager* InUIManager);
 			
@@ -70,6 +71,7 @@ private:
 	float Currency = 0.0f;
 	float Multiplier;	
 	float CurrencyPerSecond;
+	float OFflineReward;
 	float AccumulatedTime;
 	float CurrencyPerClick = 1.0f;
 	float UpgradeCostBase;
