@@ -126,3 +126,7 @@
 - Added some animations to Idle reward text.
 - Added Offline Reward Text
 - Some errors int Clicomponent and ClickerUIManager. I'll figure them out tomorrow.
+
+### 07.18.25.
+
+- Try to resolve syntax error in scripts.

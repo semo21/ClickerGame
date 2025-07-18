@@ -22,6 +22,10 @@ UClickerComponent::UClickerComponent() : UpgradeCostBase(10.0f)
 	AccumulatedTime = 0.0f;
 }
 
+void UClickerComponent::Initialize() {
+
+}
+
 
 // Called when the game starts
 void UClickerComponent::BeginPlay()
@@ -153,9 +157,9 @@ void UClickerComponent::SetCurrency(float NewCurrency) {
 
 void UClickerComponent::SetOfflineReward(float OfflineReward) {
 	Currency += OfflineReward;
-	//if (ClickerUIManager) {
-	//	ClickerUIManager->ShowOfflineReward(OfflineReward);
-	//}	
+	if (ClickerUIManager) {
+		ClickerUIManager->ShowOfflineReward(OfflineReward);
+	}	
 }
 
 void UClickerComponent::SetCurrencyPerClick(float NewCurrencyPerClick) {
