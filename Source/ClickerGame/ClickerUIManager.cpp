@@ -84,10 +84,7 @@ void UClickerUIManager::ShowIdleReward(float Amount) {
 		return;
 
 	UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
-
 	FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
-	//FVector2D ViewportSize;
-	//GEngine->GameViewport->GetViewportSize(ViewportSize);
 	FVector2D CenterScreen = CachedViewportSize / 2.0f;
 
 	RewardWidget->SetPositionInViewport(CenterScreen + RandomOffset, false);
@@ -102,11 +99,12 @@ void UClickerUIManager::ShowOfflineReward(float OfflineReward) {
 		return;
 
 	UIdleRewardTextWidget* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+	
 	if (OfflineWidget) {
-		OfflineWidget->SetPositionInViewport(CachedViewportSize / 2.0f, false);
+		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y *0.15f), false);
 		OfflineWidget->SetRewardAmount(OfflineReward, true);
 		OfflineWidget->AddToViewport(10);
-		OfflineWidget->PlayFade();
+		OfflineWidget->PlayFade(0.4f);
 	}
 }
 

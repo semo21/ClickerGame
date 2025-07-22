@@ -110,11 +110,11 @@
 ### 07.14.25.
 
 - Working on Adding Idle Reward(Currency Per Second, Offline Reward) Text Widget.
-  - But Widget BP occurs some errors. Now trying to resolve it.
+  - Encountered some errors in the Widget BP. Currently working on fixing them.
 
 ### 07.15.25.
 
-- Added Idle Reward Text Widget with Animation.
+- Added Idle Reward Text Widget with animation.
 - Resolved BP errors.
 
 ### 07.16.25.
@@ -124,9 +124,19 @@
 ### 07.17.25.
 
 - Added some animations to Idle reward text.
-- Added Offline Reward Text
-- Some errors int Clicomponent and ClickerUIManager. I'll figure them out tomorrow.
+- ~~Added Offline Reward Text~~
+- Encountered some errors in ClickerComponent and ClickerUIManager. Planning to fix them tomorrow
 
 ### 07.18.25.
 
-- Try to resolve syntax error in scripts.
+- Attempted to resolve syntax errors in scripts.
+
+### 07.21.25.
+
+- Continued working on resolvving editor-related issues.
+
+### 07.22.25.
+
+- Resovled errors in ClickerComponent and ClickerUIManager.
+- Added Offline Reward Text
+  - Make the animation for Offline Reward Text more detailed.

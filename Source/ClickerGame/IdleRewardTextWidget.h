@@ -16,10 +16,10 @@ class CLICKERGAME_API UIdleRewardTextWidget : public UUserWidget
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetRewardAmount(float Amount, bool IsOfflineReward);
+	void SetRewardAmount(float Amount, bool bIsOfflineReward);
 
 	UFUNCTION(BlueprintCallable)
-	void PlayFade();
+	void PlayFade(float PlaybackSpeed = 1.0f);
 
 protected:
 	UPROPERTY(meta = (BindWidget))

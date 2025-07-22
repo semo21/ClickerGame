@@ -38,7 +38,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Initialize();
+	void Initialize(UClickerUIManager* InUIManager);
 	void HandleClick();
 	void HandleUpgrade();
 	int32 GetUpgradeLevel() const;
