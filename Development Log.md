@@ -140,3 +140,7 @@
 - Resovled errors in ClickerComponent and ClickerUIManager.
 - Added Offline Reward Text
   - Make the animation for Offline Reward Text more detailed.
+
+### 07.23.25.
+
+- Started to make object pooling for idle reward text.
