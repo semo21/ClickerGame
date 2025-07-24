@@ -17,6 +17,7 @@
 class UClickerComponent;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
+class UIdleRewardTextWidget;
 /**
  * 
  */
@@ -26,39 +27,71 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION()
+	UUserWidget* GetHUDWidget() const;
+
 	void Initialize(AMyPlayerController* InController);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowHUD();
-	void HideHUD();
-	UUserWidget* GetHUDWidget() const;
+	void HideHUD();	
 	void UpdateScore();
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 	void SetClickerComponent(UClickerComponent* Comp);
+	void ShowIdleReward(float Amount);
+	void ShowOfflineReward(float OfflineReward);
 
 private:
+	UPROPERTY()
 	AMyPlayerController* PlayerController;
 
-	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
-	TArray<UClickFloatingTextWidget*> FloatingTextPool;
-	
+	UPROPERTY()
 	AActor* CurrentClickEffect = nullptr;
+
+	UPROPERTY()
 	UNiagaraSystem* ClickEffectAsset;
 
-	FTimerHandle TimerHandle;
-
-	TSubclassOf<UUserWidget> HUDWidgetClass;
+	UPROPERTY()
 	UUserWidget* HUDWidget;
+
+	UPROPERTY()
 	UTextBlock* CurrencyText;
+
+	UPROPERTY()
 	UTextBlock* ClickValueText;
+
+	UPROPERTY()
 	UTextBlock* UpgradeCostText;
+
+	UPROPERTY()
 	UTextBlock* PassiveIncomeText;
+
+	UPROPERTY()
 	UTextBlock* UpgradeSuccessText;
+
+	UPROPERTY()
 	UButton* UpgradeButton;
+
+	UPROPERTY()
+	UButton* SaveButton;
+
+	UPROPERTY()
+	UButton* LoadButton;
+
+	UPROPERTY()
 	FTimerHandle UpgradeSuccessTimerHandle;
+
+	UPROPERTY()
 	UClickerComponent* ClickerComponent;
 
+	UFUNCTION()
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
-	
+
+	FVector2D CachedViewportSize;
+	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
+	TArray<UClickFloatingTextWidget*> FloatingTextPool;
+	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
+	FTimerHandle TimerHandle;
+	TSubclassOf<UUserWidget> HUDWidgetClass;
 };

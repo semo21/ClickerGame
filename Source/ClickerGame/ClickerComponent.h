@@ -8,7 +8,8 @@
 #include "ClickerComponent.generated.h"
 
 class AMyPlayerController;
-
+class UClickerUIManager;
+class USaveManagerSubsystem;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CLICKERGAME_API UClickerComponent : public UActorComponent
 {
@@ -22,29 +23,59 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:	
+	UPROPERTY()
+	UClickerUIManager* ClickerUIManager;
+
+	UFUNCTION()
+	void SaveProgress();
+
+	UFUNCTION()
+	void LoadProgress();
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-
+	void Initialize(UClickerUIManager* InUIManager);
 	void HandleClick();
 	void HandleUpgrade();
+	int32 GetUpgradeLevel() const;
 	float GetCurrency() const;
-	float GetClickValue() const;
+	float GetCurrencyPerClick() const;
 	float GetUpgradeCost() const;
 	float GetCurrencyPerSecond() const;
 
-		
-private:
-	int32 ClickCount;
-	float Currency = 0.0f;
-	float Multiplier;
-	float CurrencyPerClick;
-	float CurrencyPerSecond;
-	float AccumulatedTime;
-	float ClickValue = 1.0f;
-	float UpgradeCost = 10.0f;
+	void SetUpgradeLevel(int32 NewUpgradeLevel);
+	void SetCurrency(float NewCurrency);
+	void SetCurrencyPerClick(float NewCurrencyPerClick);
+	void SetCurrencyPerSecond(float NewCurrencyPerSecond);
+	void SetOfflineReward(float OfflineReward);
 
+	void SetUIManager(UClickerUIManager* InUIManager);
+			
+private:
 	UPROPERTY()
 	AMyPlayerController* CachedMyPlayerController = nullptr;
+
+	UPROPERTY()
+	USaveManagerSubsystem* SaveManager;
+
+	UFUNCTION()
+	void RecalculateStats();
+
+	UFUNCTION()
+	void EnsureSaveManager();
+
+	int32 ClickCount;
+	float Currency = 0.0f;
+	float Multiplier;	
+	float CurrencyPerSecond;
+	float OFflineReward;
+	float AccumulatedTime;
+	float CurrencyPerClick = 1.0f;
+	float UpgradeCostBase;
+	int32 UpgradeLevel = 0;
+	FTimerHandle AutoSaveHandle;
 };

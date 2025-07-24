@@ -5,6 +5,7 @@
 #include "ClickFloatingTextWidget.h"
 #include "MyPlayerController.h"
 #include "ClickerComponent.h"
+#include "IdleRewardTextWidget.h"
 
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"
@@ -20,6 +21,13 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
 	HUDWidgetClass = InController->HUDWidgetClass;
 	ClickEffectAsset = InController->ClickEffectAsset;
+	IdleRewardTextWidgetClass = InController->IdleRewardTextWidgetClass;
+	ClickerComponent = InController->ClickerComponent;
+	ClickerComponent->SetUIManager(this);
+	GEngine->GameViewport->GetViewportSize(CachedViewportSize);
+
+	ShowHUD();
+	UpdateScore();
 }
 
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -52,7 +60,7 @@ void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& 
 
 	PlayerController->GetWorldTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([Widget]() {
 		Widget->RemoveFromParent();
-		}), 1.0f, false);	
+		}), 1.0f, false);
 }
 
 UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
@@ -71,11 +79,40 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 	return nullptr;
 }
 
+void UClickerUIManager::ShowIdleReward(float Amount) {
+	if (!IdleRewardTextWidgetClass)
+		return;
+
+	UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+	FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
+	FVector2D CenterScreen = CachedViewportSize / 2.0f;
+
+	RewardWidget->SetPositionInViewport(CenterScreen + RandomOffset, false);
+	RewardWidget->SetRewardAmount(Amount, false);
+	RewardWidget->AddToViewport(10);
+	RewardWidget->PlayFade();
+	
+}
+
+void UClickerUIManager::ShowOfflineReward(float OfflineReward) {
+	if (!IdleRewardTextWidgetClass)
+		return;
+
+	UIdleRewardTextWidget* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+	
+	if (OfflineWidget) {
+		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y *0.15f), false);
+		OfflineWidget->SetRewardAmount(OfflineReward, true);
+		OfflineWidget->AddToViewport(10);
+		OfflineWidget->PlayFade(0.4f);
+	}
+}
+
 void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 	if (!PlayerController || !ClickEffectAsset) {
 		return;
 	}
-	
+
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, Location, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
 }
 
@@ -106,8 +143,20 @@ void UClickerUIManager::ShowHUD() {
 		UWidget* UpgradeButtonW = HUDWidget->GetWidgetFromName(TEXT("UpgradeButton"));
 		UpgradeButton = Cast<UButton>(UpgradeButtonW);
 
+		UWidget* SaveButtonW = HUDWidget->GetWidgetFromName(TEXT("SaveButton"));
+		SaveButton = Cast<UButton>(SaveButtonW);
+
+		UWidget* LoadButtonW = HUDWidget->GetWidgetFromName(TEXT("LoadButton"));
+		LoadButton = Cast<UButton>(LoadButtonW);
+
 		if (UpgradeButton)
 			UpgradeButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnUpgradeClicked);
+
+		if (SaveButton)
+			SaveButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnSaveClicked);
+
+		if (LoadButton)
+			LoadButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnLoadClicked);
 
 		if (UpgradeSuccessText) {
 			UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
@@ -116,16 +165,16 @@ void UClickerUIManager::ShowHUD() {
 }
 
 void UClickerUIManager::UpdateScore() {
-	if (CurrencyText)	
+	if (CurrencyText)
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), ClickerComponent->GetCurrency())));
 
-	if (ClickValueText)	
-		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickerComponent->GetClickValue())));
+	if (ClickValueText)
+		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), ClickerComponent->GetCurrencyPerClick())));
 
-	if (UpgradeCostText)	
+	if (UpgradeCostText)
 		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), ClickerComponent->GetUpgradeCost())));
 
-	if (PassiveIncomeText) 
+	if (PassiveIncomeText)
 		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), ClickerComponent->GetCurrencyPerSecond())));
 
 }
@@ -140,10 +189,10 @@ void UClickerUIManager::ShowUpgradeSuccessText() {
 		UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
 
 		PlayerController->GetWorldTimerManager().SetTimer(
-			UpgradeSuccessTimerHandle, 
-			this, 
-			&UClickerUIManager::HideUpgradeSuccessText, 
-			2.0f, 
+			UpgradeSuccessTimerHandle,
+			this,
+			&UClickerUIManager::HideUpgradeSuccessText,
+			2.0f,
 			false
 		);
 	}
@@ -153,8 +202,4 @@ void UClickerUIManager::HideUpgradeSuccessText() {
 	if (UpgradeSuccessText) {
 		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 	}
-}
-
-void UClickerUIManager::SetClickerComponent(UClickerComponent* Comp) {
-	ClickerComponent = Comp;
 }

@@ -21,14 +21,13 @@ AMyPlayerController::AMyPlayerController() {
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
-	UIManager = NewObject<UClickerUIManager>(this);
-	UIManager->Initialize(this);
-	UIManager->ShowHUD();
-
 	ClickerComponent = NewObject<UClickerComponent>(this);
 	ClickerComponent->RegisterComponent();
+	
+	UIManager = NewObject<UClickerUIManager>(this);
+	UIManager->Initialize(this);
 
-	UIManager->SetClickerComponent(ClickerComponent);
+	ClickerComponent->Initialize(UIManager);
 	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
 	
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: %s"), *GetNameSafe(UIManager));
@@ -85,13 +84,9 @@ void AMyPlayerController::OnClick() {
 		UpdateCurrencyUI();
 
 		UIManager->ShowClickEffect(HitResult.Location);
-		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetClickValue()), HitResult.Location);
+		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetCurrencyPerClick()), HitResult.Location);
 
 	}
-}
-
-void AMyPlayerController::UpdateCurrencyUI() {
-	UIManager->UpdateScore();
 }
 
 void AMyPlayerController::OnUpgradeClicked() {
@@ -103,4 +98,23 @@ void AMyPlayerController::OnUpgradeClicked() {
 			UIManager->ShowUpgradeSuccessText();
 		}
 	}
+}
+
+void AMyPlayerController::OnSaveClicked() {
+	if (ClickerComponent) {
+		ClickerComponent->SaveProgress();
+		UpdateCurrencyUI();
+		UIManager->ShowFloatingText(TEXT("Saved!"), GetPawn()->GetActorLocation());
+	}
+}
+
+void AMyPlayerController::OnLoadClicked() {
+	if (ClickerComponent) {
+		ClickerComponent->LoadProgress();
+		UpdateCurrencyUI();
+		UIManager->ShowFloatingText(TEXT("Loaded!"), GetPawn()->GetActorLocation());
+	}
+}
+void AMyPlayerController::UpdateCurrencyUI() {
+	UIManager->UpdateScore();
 }

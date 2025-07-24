@@ -67,8 +67,80 @@
 
 ### 07.01.25.
 
-- Almost finished refactoring MyPlayerController script.
+- Nearly finished refactoring the MyPlayerController script.
 
 ### 07.02.25.
 
--Finished refactoring MyPlayerController script.
+- Completed refactoring of the MyPlayerController script.
+- Removed the refactor branch.
+  - Created a new feature branch -- feature/currency-persistence.
+- Added Save and Load system.
+
+### 07.03.25.
+
+- Refactored Initialize function in UIManager to improve clarity and reduce redundancy.
+
+### 07.04.25.
+
+- Added autosave system when exiting the game.
+  - Added SaveManagerSubsystem to handle Load/Save operations.
+
+### 07.07.25.
+
+- Added autosave system triggered every 60 seconds.
+- Added Save/Load buttons.
+  - Added messages for Save/Load actions.
+
+### 07.08.25.
+
+- Added offline reward.
+
+### 07.09.25.
+
+- Working on additional offline reward system.
+
+### 07.10.25.
+
+- Working on offline reward message.
+
+### 07.11.25.
+
+- Fixed syntax error in the IdleRewardTextWidget script.
+
+### 07.14.25.
+
+- Working on Adding Idle Reward(Currency Per Second, Offline Reward) Text Widget.
+  - Encountered some errors in the Widget BP. Currently working on fixing them.
+
+### 07.15.25.
+
+- Added Idle Reward Text Widget with animation.
+- Resolved BP errors.
+
+### 07.16.25.
+
+- Clean up WBP structures.
+
+### 07.17.25.
+
+- Added some animations to Idle reward text.
+- ~~Added Offline Reward Text~~
+- Encountered some errors in ClickerComponent and ClickerUIManager. Planning to fix them tomorrow
+
+### 07.18.25.
+
+- Attempted to resolve syntax errors in scripts.
+
+### 07.21.25.
+
+- Continued working on resolvving editor-related issues.
+
+### 07.22.25.
+
+- Resovled errors in ClickerComponent and ClickerUIManager.
+- Added Offline Reward Text
+  - Make the animation for Offline Reward Text more detailed.
+
+### 07.23.25.
+
+- Started to make object pooling for idle reward text.

@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "ClickFloatingTextWidget.h"
 #include "ClickerUIManager.h"
 #include "NiagaraSystem.h"
 
 #include "MyPlayerController.generated.h"
 
+class UClickFloatingTextWidget;
+class UIdleRewardTextWidget;
 class UClickerComponent;
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController
@@ -21,11 +22,23 @@ public:
 	UFUNCTION()
 	void OnUpgradeClicked();
 
+	UFUNCTION()
+	void OnSaveClicked();
+
+	UFUNCTION()
+	void OnLoadClicked();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
 	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Idle Reward Text")
+	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
+	
 	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
 	UNiagaraSystem* ClickEffectAsset;
+
+	UPROPERTY()
+	UClickerComponent* ClickerComponent;
 
 	AMyPlayerController();
 	void UpdateCurrencyUI();
@@ -38,9 +51,6 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
-	UPROPERTY()
-	UClickerComponent* ClickerComponent;
-
 	UPROPERTY()
 	UClickerUIManager* UIManager;
 		
