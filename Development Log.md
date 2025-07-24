@@ -144,3 +144,9 @@
 ### 07.23.25.
 
 - Started to make object pooling for idle reward text.
+
+### 07.24.25.
+
+- Added new branch for adding ObjectPooling.
+- Deleted old branch --currency-persistence.
+- Working on implementing object pooling for idle rewards.

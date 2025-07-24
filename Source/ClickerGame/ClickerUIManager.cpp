@@ -26,6 +26,16 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	ClickerComponent->SetUIManager(this);
 	GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
+	for (int32 i = 0; i < PoolSize; i++) {
+		UIdleRewardTextWidget* NewWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+
+		if (NewWidget) {
+			NewWidget->AddToViewport(10);
+			NewWidget->SetVisibility(ESlateVisibility::Collapsed);
+			RewardTextPool.Add(NewWidget);
+		}
+	}
+	
 	ShowHUD();
 	UpdateScore();
 }

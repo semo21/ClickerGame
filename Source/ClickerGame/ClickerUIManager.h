@@ -31,6 +31,7 @@ public:
 	UUserWidget* GetHUDWidget() const;
 
 	void Initialize(AMyPlayerController* InController);
+	void InitializeWidgetPool();
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowHUD();
@@ -84,6 +85,9 @@ private:
 
 	UPROPERTY()
 	UClickerComponent* ClickerComponent;
+
+	UPROPERTY()
+	TArray<UIdleRewardTextWidget*> RewardTextPool;
 
 	UFUNCTION()
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
