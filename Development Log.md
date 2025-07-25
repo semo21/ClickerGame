@@ -150,3 +150,8 @@
 - Added new branch for adding ObjectPooling.
 - Deleted old branch --currency-persistence.
 - Working on implementing object pooling for idle rewards.
+
+### 07.25.25.
+
+- Implemented visual effect using object pooling for IdleRewardTextWidget.
+- However, a somewhat unfamiliar warning sign appears during runtime. Planning to investigate and resolve it.
