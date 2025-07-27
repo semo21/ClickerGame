@@ -155,3 +155,8 @@
 
 - Implemented visual effect using object pooling for IdleRewardTextWidget.
 - However, a somewhat unfamiliar warning sign appears during runtime. Planning to investigate and resolve it.
+
+### 07.27.25.
+
+- Core game system is now complete.
+- Started searching for suitable graphic assets.
