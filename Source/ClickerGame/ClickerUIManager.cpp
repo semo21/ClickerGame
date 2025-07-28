@@ -90,11 +90,23 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 	return nullptr;
 }
 
+UIdleRewardTextWidget* UClickerUIManager::GetRewardWidgetFromPool() {
+	int i = 0;
+	for (UIdleRewardTextWidget* Widget : RewardTextPool) {
+		i++;
+		if (!Widget->IsAnimationPlaying()) {
+			UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget from Pool: %d"), i)
+			return Widget;
+		}
+	}
+	return nullptr;
+}
+
 void UClickerUIManager::ShowIdleReward(float Amount) {
 	if (!IdleRewardTextWidgetClass)
 		return;
 
-	UIdleRewardTextWidget* RewardWidget = GetPooledRewardWidget();
+	UIdleRewardTextWidget* RewardWidget = GetRewardWidgetFromPool();
 	if (!RewardWidget) {
 		UE_LOG(LogTemp, Warning, TEXT("No available reward widget in pool."));
 		return;
@@ -220,11 +232,4 @@ void UClickerUIManager::HideUpgradeSuccessText() {
 	}
 }
 
-UIdleRewardTextWidget* UClickerUIManager::GetPooledRewardWidget() {
-	for (UIdleRewardTextWidget* Widget : RewardTextPool) {
-		if (!Widget->IsAnimationPlaying()) {
-			return Widget;
-		}
-	}
-	return nullptr;
-}
+

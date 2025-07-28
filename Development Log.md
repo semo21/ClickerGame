@@ -160,3 +160,8 @@
 
 - Core game system is now complete.
 - Started searching for suitable graphic assets.
+
+### 07.28.25.
+
+- Idle Widget Pooling completed.
+- Started implementing sound system.

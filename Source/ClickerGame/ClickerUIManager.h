@@ -42,7 +42,7 @@ public:
 	void SetClickerComponent(UClickerComponent* Comp);
 	void ShowIdleReward(float Amount);
 	void ShowOfflineReward(float OfflineReward);
-	UIdleRewardTextWidget* GetPooledRewardWidget();
+	UIdleRewardTextWidget* GetRewardWidgetFromPool();
 
 private:
 	UPROPERTY()
