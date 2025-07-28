@@ -26,6 +26,17 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	ClickerComponent->SetUIManager(this);
 	GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
+	int32 RewardTextPoolSize = 10;
+	for (int32 i = 0; i < RewardTextPoolSize; i++) {
+		UIdleRewardTextWidget* NewWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+
+		if (NewWidget) {
+			NewWidget->AddToViewport(10);
+			NewWidget->SetVisibility(ESlateVisibility::Collapsed);
+			RewardTextPool.Add(NewWidget);
+		}
+	}
+	
 	ShowHUD();
 	UpdateScore();
 }
@@ -79,11 +90,28 @@ UClickFloatingTextWidget* UClickerUIManager::GetFloatingTextWidgetFromPool() {
 	return nullptr;
 }
 
+UIdleRewardTextWidget* UClickerUIManager::GetRewardWidgetFromPool() {
+	int i = 0;
+	for (UIdleRewardTextWidget* Widget : RewardTextPool) {
+		i++;
+		if (!Widget->IsAnimationPlaying()) {
+			UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget from Pool: %d"), i)
+			return Widget;
+		}
+	}
+	return nullptr;
+}
+
 void UClickerUIManager::ShowIdleReward(float Amount) {
 	if (!IdleRewardTextWidgetClass)
 		return;
 
-	UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
+	UIdleRewardTextWidget* RewardWidget = GetRewardWidgetFromPool();
+	if (!RewardWidget) {
+		UE_LOG(LogTemp, Warning, TEXT("No available reward widget in pool."));
+		return;
+	}
+	//UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
 	FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
 	FVector2D CenterScreen = CachedViewportSize / 2.0f;
 
@@ -203,3 +231,5 @@ void UClickerUIManager::HideUpgradeSuccessText() {
 		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
+
+

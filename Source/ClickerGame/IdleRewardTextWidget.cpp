@@ -12,22 +12,26 @@ void UIdleRewardTextWidget::SetRewardAmount(float Amount, bool bIsOfflineReward)
 	}
 	else if (AmountText && bIsOfflineReward) {
 		AmountText->SetText(FText::FromString(FString::Printf(TEXT("Offline Reward: +%.0f Gold"), Amount)));
-		
+
 		UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget OfflineReward"));
 	}
 }
 
 void UIdleRewardTextWidget::PlayFade(float PlaybackSpeed) {
 	if (FadeInOut) {
+		bIsPlaying = true;
+		SetVisibility(ESlateVisibility::Visible);
 		PlayAnimation(FadeInOut, 0, 1, EUMGSequencePlayMode::Forward, PlaybackSpeed);
 
 		FTimerHandle RemoveTimer;
+		float Duration = FadeInOut->GetEndTime() / PlaybackSpeed;
 		GetWorld()->GetTimerManager().SetTimer(
-			RemoveTimer, 
-			[this]() {RemoveFromParent();}, 
-			FadeInOut->GetEndTime()/PlaybackSpeed,
-			false
-		);
+			RemoveTimer,
+			[this]() {
+				SetVisibility(ESlateVisibility::Collapsed);
+				bIsPlaying = false;
+			},
+			Duration, false);
 		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
 	}
 }

@@ -144,3 +144,24 @@
 ### 07.23.25.
 
 - Started to make object pooling for idle reward text.
+
+### 07.24.25.
+
+- Added new branch for adding ObjectPooling.
+- Deleted old branch --currency-persistence.
+- Working on implementing object pooling for idle rewards.
+
+### 07.25.25.
+
+- Implemented visual effect using object pooling for IdleRewardTextWidget.
+- However, a somewhat unfamiliar warning sign appears during runtime. Planning to investigate and resolve it.
+
+### 07.27.25.
+
+- Core game system is now complete.
+- Started searching for suitable graphic assets.
+
+### 07.28.25.
+
+- Idle Widget Pooling completed.
+- Started implementing sound system.
