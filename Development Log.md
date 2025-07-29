@@ -166,3 +166,9 @@
 - Idle Widget Pooling completed.
 - Started implementing sound system.
 - Created feature/SoundSystem branch.
+
+### 07.29.25.
+
+- Searching Audio source.
+  - Added audio package to project.
+- Implemented core audio system.

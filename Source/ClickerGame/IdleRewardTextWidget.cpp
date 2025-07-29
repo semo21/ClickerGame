@@ -4,6 +4,7 @@
 #include "Components/TextBlock.h"
 #include "IdleRewardTextWidget.h"
 #include "Animation/WidgetAnimation.h"
+#include "Kismet/GameplayStatics.h"
 
 void UIdleRewardTextWidget::SetRewardAmount(float Amount, bool bIsOfflineReward) {
 	if (AmountText && !bIsOfflineReward) {
@@ -18,7 +19,9 @@ void UIdleRewardTextWidget::SetRewardAmount(float Amount, bool bIsOfflineReward)
 }
 
 void UIdleRewardTextWidget::PlayFade(float PlaybackSpeed) {
-	if (FadeInOut) {
+	if (FadeInOut && RewardSound) {
+		UGameplayStatics::PlaySound2D(this, RewardSound);
+
 		bIsPlaying = true;
 		SetVisibility(ESlateVisibility::Visible);
 		PlayAnimation(FadeInOut, 0, 1, EUMGSequencePlayMode::Forward, PlaybackSpeed);

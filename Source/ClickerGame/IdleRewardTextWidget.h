@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+
 #include "IdleRewardTextWidget.generated.h"
 
 /**
  *
  */
+class USoundBase;
 UCLASS()
 class CLICKERGAME_API UIdleRewardTextWidget : public UUserWidget
 {
@@ -32,4 +34,8 @@ protected:
 
 	UPROPERTY()
 	bool bIsPlaying = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* RewardSound;
+
 };
