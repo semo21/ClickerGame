@@ -7,10 +7,10 @@
 
 #include "IdleRewardTextWidget.generated.h"
 
+class USoundBase;
 /**
  *
  */
-class USoundBase;
 UCLASS()
 class CLICKERGAME_API UIdleRewardTextWidget : public UUserWidget
 {
@@ -21,7 +21,7 @@ public:
 	void SetRewardAmount(float Amount, bool bIsOfflineReward);
 
 	UFUNCTION(BlueprintCallable)
-	void PlayFade(float PlaybackSpeed = 1.0f);
+	void PlayFade(float PlaybackSpeed, USoundBase* Sound);
 
 	bool IsAnimationPlaying() const { return bIsPlaying; }
 
@@ -34,8 +34,4 @@ protected:
 
 	UPROPERTY()
 	bool bIsPlaying = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
-	USoundBase* RewardSound;
-
 };

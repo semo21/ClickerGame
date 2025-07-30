@@ -118,7 +118,7 @@ void UClickerUIManager::ShowIdleReward(float Amount) {
 	RewardWidget->SetPositionInViewport(CenterScreen + RandomOffset, false);
 	RewardWidget->SetRewardAmount(Amount, false);
 	RewardWidget->AddToViewport(10);
-	RewardWidget->PlayFade();
+	RewardWidget->PlayFade(1, IdleRewardSound);
 	
 }
 
@@ -132,7 +132,7 @@ void UClickerUIManager::ShowOfflineReward(float OfflineReward) {
 		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y *0.15f), false);
 		OfflineWidget->SetRewardAmount(OfflineReward, true);
 		OfflineWidget->AddToViewport(10);
-		OfflineWidget->PlayFade(0.4f);
+		OfflineWidget->PlayFade(0.5f, OfflineRewardSound);
 	}
 }
 

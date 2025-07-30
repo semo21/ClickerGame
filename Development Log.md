@@ -169,6 +169,12 @@
 
 ### 07.29.25.
 
-- Searching Audio source.
-  - Added audio package to project.
-- Implemented core audio system.
+- Searched Audio source.
+  - Added audio package to the project.
+- Implemented the core audio system.
+
+### 07.30.25.
+
+- Began refactoring UIManager, AudioConfigDataAsset and MyPLayerController scripts.
+  - Realized that some script is handling too many responsibilites.
+  - Realized the need for a global coordinator to manage communication between systems like UIManager, audio sources, and AudioConfigDataAsset.

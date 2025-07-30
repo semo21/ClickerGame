@@ -18,6 +18,7 @@ class UClickerComponent;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
+class USoundBase;
 /**
  * 
  */
@@ -27,6 +28,12 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* IdleRewardSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	USoundBase* OfflineRewardSound;
+
 	UFUNCTION()
 	UUserWidget* GetHUDWidget() const;
 

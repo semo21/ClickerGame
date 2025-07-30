@@ -18,9 +18,9 @@ void UIdleRewardTextWidget::SetRewardAmount(float Amount, bool bIsOfflineReward)
 	}
 }
 
-void UIdleRewardTextWidget::PlayFade(float PlaybackSpeed) {
-	if (FadeInOut && RewardSound) {
-		UGameplayStatics::PlaySound2D(this, RewardSound);
+void UIdleRewardTextWidget::PlayFade(float PlaybackSpeed, USoundBase* Sound) {
+	if (FadeInOut && Sound) {
+		UGameplayStatics::PlaySound2D(this, Sound);
 
 		bIsPlaying = true;
 		SetVisibility(ESlateVisibility::Visible);
