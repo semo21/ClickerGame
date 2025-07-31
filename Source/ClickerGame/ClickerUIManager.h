@@ -106,4 +106,6 @@ private:
 	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
 	FTimerHandle TimerHandle;
 	TSubclassOf<UUserWidget> HUDWidgetClass;
+
+	void InitSoundSource();
 };

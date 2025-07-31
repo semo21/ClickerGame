@@ -178,3 +178,8 @@
 - Began refactoring UIManager, AudioConfigDataAsset and MyPLayerController scripts.
   - Realized that some script is handling too many responsibilites.
   - Realized the need for a global coordinator to manage communication between systems like UIManager, audio sources, and AudioConfigDataAsset.
+
+### 07.31.25.
+
+- Investigated architecture strategies for connecting UIManager with AudioConfigDataAsset.
+  - Focused on designing a global coordinator -- or initializer, manager etc -- for better decoupling and system communication.

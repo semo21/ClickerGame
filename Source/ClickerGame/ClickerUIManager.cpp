@@ -41,6 +41,10 @@ void UClickerUIManager::Initialize(AMyPlayerController* InController) {
 	UpdateScore();
 }
 
+void InitSoundSource() {
+	
+}
+
 void UClickerUIManager::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: ShowFloatingText called"));
 

@@ -25,6 +25,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UpgradeSound")
 	USoundBase* UpgradeSound;
 
+	UFUNCTION()
+	USoundBase* GetRewardSound() const { return RewardSound; }
+
+	UFUNCTION()
+	USoundBase* GetUpgradeSound() const { return UpgradeSound; }
+
+	UFUNCTION()
+	USoundBase* GetClickSound() const { return ClickSound; }
+
 private:
 
 };
