@@ -183,3 +183,8 @@
 
 - Investigated architecture strategies for connecting UIManager with AudioConfigDataAsset.
   - Focused on designing a global coordinator -- or initializer, manager etc -- for better decoupling and system communication.
+
+### 08.01.25.
+
+- Added GameManager script to the game.
+  - Added a plan to refactor existing scripts around the GameManager as the central coordinator.
