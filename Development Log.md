@@ -188,3 +188,7 @@
 
 - Added GameManager script to the game.
   - Added a plan to refactor existing scripts around the GameManager as the central coordinator.
+
+### 08.04.25.
+
+- Searched suitable asset in my Fab library.
