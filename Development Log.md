@@ -192,3 +192,7 @@
 ### 08.04.25.
 
 - Searched suitable asset in my Fab library.
+
+### 08.05.25.
+
+- Redesigned the flow of the scripts.
