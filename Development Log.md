@@ -196,3 +196,7 @@
 ### 08.05.25.
 
 - Redesigned the flow of the scripts.
+
+### 08.06.25.
+
+- Started refactoring existing scripts around the GameManager as the central manager.
