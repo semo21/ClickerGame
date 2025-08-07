@@ -13,12 +13,16 @@
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
 class UClickerComponent;
+class UGameManager;
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION()
+	void Initialize(UGameManager* InGameManager);
+
 	UFUNCTION()
 	void OnUpgradeClicked();
 
@@ -28,19 +32,6 @@ public:
 	UFUNCTION()
 	void OnLoadClicked();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating Text")
-	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Idle Reward Text")
-	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
-	
-	UPROPERTY(EditDefaultsOnly, BluePrintReadWrite, Category = "Click Effect")
-	UNiagaraSystem* ClickEffectAsset;
-
-	UPROPERTY()
-	UClickerComponent* ClickerComponent;
-
-	AMyPlayerController();
 	void UpdateCurrencyUI();
 	FString FormatCurrency(float Value) const;
 
@@ -51,8 +42,12 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
-	UPROPERTY()
 	UClickerUIManager* UIManager;
-		
+	UClickerComponent* ClickerComponent;
+	UNiagaraSystem* ClickEffectAsset;
+	UClickFloatingTextWidget* FloatingTextWidget;
+	UIdleRewardTextWidget* IdleRewardTextWidget;
+
+	AMyPlayerController();
 	void OnClick();
 };

@@ -5,19 +5,20 @@
 #include "ClickerUIManager.h"
 #include "AudioConfigDataAsset.h"
 
-//void UGameManager::Init() {
-//	Super::Init();
-//
-//	UIManager = NewObject<UClickerUIManager>(this);
-//
-//	if (UIManager && AudioConfig) {
-//		UIManager->Initialize(AudioConfig);
-//	}
-//}
-//
-//UClickerUIManager* UGameManager::GetUIManager() const {
-//	if (!UIManager) {
-//		UE_LOG(LogTemp, Warning, TEXT("UIManager is not initialized!"));
-//	}
-//	return UIManager;
-//}
+
+
+void UGameManager::Init() {
+	Super::Init();
+
+	Initialize();
+}
+
+void UGameManager::Initialize() {
+	ClickerComponent = NewObject<UClickerComponent>(this, ClickerComponentClass);
+	UIManager = NewObject<UClickerUIManager>(this, UIManagerClass);
+
+	PlayerController = NewObject<AMyPlayerController>(this, PlayerControllerClass);
+	PlayerController->Initialize(this);
+
+	HUDWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+}

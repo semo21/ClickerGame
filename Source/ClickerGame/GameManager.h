@@ -4,7 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "AudioConfigDataAsset.h"
+#include "ClickerUIManager.h"
+#include "MyPlayerController.h"
+#include "ClickFloatingTextWidget.h"
+#include "ClickerComponent.h"
+#include "IdleRewardTextWidget.h"
+#include "NiagaraSystem.h"
+#include "UserWidget.h"
+
 #include "GameManager.generated.h"
+
 
 class UAudioConfigDataAsset;
 class UClickerUIManager;
@@ -17,6 +27,8 @@ class CLICKERGAME_API UGameManager : public UGameInstance
 	GENERATED_BODY()
 	
 public:
+	virtual void Init() override;
+
 	void Initialize();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio Configuration Data Asset")
@@ -40,6 +52,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clicker Component")
 	TSubclassOf<UClickerComponent> ClickerComponentClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD Widget")
+	TSubclassOf<UUserWidget> HUDWidgetClass;
 
-	UClickerUIManager* GetUIManager() const;
+
+	UClickerUIManager* GetUIManager() const { return UIManager; }
+	UAudioConfigDataAsset* GetAudioConfigDataAsset() const { return AudioConfigDataAsset; }
+	AMyPlayerController* GetPlayerController() const { return PlayerController; }
+	UClickerComponent* GetClickerComponent() const { return ClickerComponent; }
+	UClickFloatingTextWidget* GetFloatingTextWidget() const { return FloatingTextWidget; }
+	UIdleRewardTextWidget* GetIdleRewardTextWidget() const { return IdleRewardTextWidget; }
+	UNiagaraSystem* GetClickEffectAsset() const { return ClickEffectAsset; }
+	UUserWIdget* GetHUDWidget() const { return HUDWidget; }
+
+private:
+	UAudioConfigDataAsset* AudioConfigDataAsset;
+	UClickerUIManager* UIManager;
+	AMyPlayerController* PlayerController;
+	UClickerComponent* ClickerComponent;
+	UClickerFloatingTextWidget* FloatingTextWidget;
+	UIdleRewardTextWidget* IdleRewardTextWidget;
+	UNiagaraSystem* ClickEffectAsset;
+	UUserWidget* HUDWidget;
 };

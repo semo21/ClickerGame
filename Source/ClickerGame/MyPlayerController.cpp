@@ -9,25 +9,22 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Components/CanvasPanelSlot.h"
+#include "GameManager.h"
 
 AMyPlayerController::AMyPlayerController() {
-	bEnableClickEvents = true;	
-	static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClass(TEXT("/Game/Widgets/WBP_ClickerUI"));
-	if (WidgetClass.Succeeded()) {
-		HUDWidgetClass = WidgetClass.Class;
-	}
+	
 }
 
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
-	ClickerComponent = NewObject<UClickerComponent>(this);
-	ClickerComponent->RegisterComponent();
+	//ClickerComponent = NewObject<UClickerComponent>(this);
+	//ClickerComponent->RegisterComponent();
 	
-	UIManager = NewObject<UClickerUIManager>(this);
-	UIManager->Initialize(this);
+	//UIManager = NewObject<UClickerUIManager>(this);
+	//UIManager->Initialize(this);
 
-	ClickerComponent->Initialize(UIManager);
+	//ClickerComponent->Initialize(UIManager);
 	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
 	
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: %s"), *GetNameSafe(UIManager));
@@ -39,6 +36,21 @@ void AMyPlayerController::BeginPlay() {
 		SetInputMode(InputMode);
 		bShowMouseCursor = true;
 	}
+}
+
+void AMyPlayerController::Initialize(UGameManager* InGameManager) {
+	bEnableClickEvents = true;	
+	//static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClass(TEXT("/Game/Widgets/WBP_ClickerUI"));
+	//if (WidgetClass.Succeeded()) {
+	//	HUDWidgetClass = WidgetClass.Class;
+	//}
+
+
+	ClickerComponent = InGameManager->GetClickerComponent();
+	UIManager = InGameManager->GetUIManager();
+	ClickEffectAsset = InGameManager->GetClickEffectAsset();
+	FloatingTextWidget = InGameManager->GetFloatingTextWidget();
+	IdleRewardTextWidget = InGameManager->GetIdleRewardTextWidget();
 }
 
 FString AMyPlayerController::FormatCurrency(float Value) const {
@@ -65,7 +77,7 @@ void AMyPlayerController::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 
-	if (!HitResult.bBlockingHit)	return;
+	if (!HitResult.bBlockingHit) return;
 
 	AActor* HitActor = HitResult.GetActor();
 	if (!IsValid(HitActor))	return;

@@ -200,3 +200,7 @@
 ### 08.06.25.
 
 - Started refactoring existing scripts around the GameManager as the central manager.
+
+### 08.07.25.
+
+- Refactoring is on progress.

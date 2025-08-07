@@ -14,10 +14,10 @@
 #include "TimerManager.h"
 
 
-void UClickerUIManager::Initialize(AMyPlayerController* InController) {
+void UClickerUIManager::Initialize(UGameManager* GameManager) {
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
 
-	PlayerController = InController;
+	PlayerController = GameManager->PlayerController;
 	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
 	HUDWidgetClass = InController->HUDWidgetClass;
 	ClickEffectAsset = InController->ClickEffectAsset;
@@ -122,7 +122,7 @@ void UClickerUIManager::ShowIdleReward(float Amount) {
 	RewardWidget->SetPositionInViewport(CenterScreen + RandomOffset, false);
 	RewardWidget->SetRewardAmount(Amount, false);
 	RewardWidget->AddToViewport(10);
-	RewardWidget->PlayFade(1, IdleRewardSound);
+	//RewardWidget->PlayFade(1, IdleRewardSound);
 	
 }
 
@@ -136,7 +136,7 @@ void UClickerUIManager::ShowOfflineReward(float OfflineReward) {
 		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y *0.15f), false);
 		OfflineWidget->SetRewardAmount(OfflineReward, true);
 		OfflineWidget->AddToViewport(10);
-		OfflineWidget->PlayFade(0.5f, OfflineRewardSound);
+		//OfflineWidget->PlayFade(0.5f, OfflineRewardSound);
 	}
 }
 

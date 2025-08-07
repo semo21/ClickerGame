@@ -19,6 +19,7 @@ class AMyPlayerController;
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
 class USoundBase;
+class UGameManager;
 /**
  * 
  */
@@ -31,7 +32,7 @@ public:
 	UFUNCTION()
 	UUserWidget* GetHUDWidget() const;
 
-	void Initialize(AMyPlayerController* InController);
+	void Initialize(UGmaeManager* InGameManager);
 	void InitializeWidgetPool();
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowClickEffect(const FVector& WorldLocation);
@@ -46,6 +47,9 @@ public:
 	UIdleRewardTextWidget* GetRewardWidgetFromPool();
 
 private:
+	UPROPERTY()
+	UGameManager* GameManager;
+
 	UPROPERTY()
 	AMyPlayerController* PlayerController;
 
