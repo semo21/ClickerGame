@@ -10,10 +10,11 @@
 
 #include "MyPlayerController.generated.h"
 
+class UGameManager;
+class UClickerComponent;
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
-class UClickerComponent;
-class UGameManager;
+
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController
 {

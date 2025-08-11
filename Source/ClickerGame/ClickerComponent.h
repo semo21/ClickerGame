@@ -7,6 +7,7 @@
 
 #include "ClickerComponent.generated.h"
 
+class UGameManager;
 class AMyPlayerController;
 class UClickerUIManager;
 class USaveManagerSubsystem;
@@ -26,19 +27,18 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
-	UPROPERTY()
-	UClickerUIManager* ClickerUIManager;
-
 	UFUNCTION()
 	void SaveProgress();
 
 	UFUNCTION()
 	void LoadProgress();
 
+	UFUNCTION()
+	void Initialize(UGameManager* InGameManager);
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Initialize(UClickerUIManager* InUIManager);
 	void HandleClick();
 	void HandleUpgrade();
 	int32 GetUpgradeLevel() const;
@@ -56,6 +56,9 @@ public:
 	void SetUIManager(UClickerUIManager* InUIManager);
 			
 private:
+	UPROPERTY()
+	UClickerUIManager* UIManager;
+
 	UPROPERTY()
 	AMyPlayerController* CachedMyPlayerController = nullptr;
 

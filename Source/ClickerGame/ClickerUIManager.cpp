@@ -2,10 +2,6 @@
 
 
 #include "ClickerUIManager.h"
-#include "ClickFloatingTextWidget.h"
-#include "MyPlayerController.h"
-#include "ClickerComponent.h"
-#include "IdleRewardTextWidget.h"
 
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"
@@ -13,17 +9,23 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "TimerManager.h"
 
+#include "GameManager.h"
+#include "MyPlayerController.h"
+#include "ClickerComponent.h"
+#include "ClickFloatingTextWidget.h"
+#include "IdleRewardTextWidget.h"
 
-void UClickerUIManager::Initialize(UGameManager* GameManager) {
+void UClickerUIManager::Initialize(UGameManager* InGameManager) {
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: Initialize called"));
 
-	PlayerController = GameManager->PlayerController;
-	FloatingTextWidgetClass = InController->FloatingTextWidgetClass;
-	HUDWidgetClass = InController->HUDWidgetClass;
-	ClickEffectAsset = InController->ClickEffectAsset;
-	IdleRewardTextWidgetClass = InController->IdleRewardTextWidgetClass;
-	ClickerComponent = InController->ClickerComponent;
-	ClickerComponent->SetUIManager(this);
+	GameManager = InGameManager;
+	PlayerController = InGameManager->GetPlayerController();
+	FloatingTextWidgetClass = InGameManager->FloatingTextWidgetClass;
+	HUDWidget = InGameManager->GetHUDWidget();
+	ClickEffectAsset = InGameManager->GetClickEffectAsset();
+	IdleRewardTextWidgetClass = InGameManager->IdleRewardTextWidgetClass;
+	ClickerComponent = InGameManager->GetClickerComponent();
+
 	GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
 	int32 RewardTextPoolSize = 10;
@@ -115,14 +117,12 @@ void UClickerUIManager::ShowIdleReward(float Amount) {
 		UE_LOG(LogTemp, Warning, TEXT("No available reward widget in pool."));
 		return;
 	}
-	//UIdleRewardTextWidget* RewardWidget = CreateWidget<UIdleRewardTextWidget>(GetWorld(), IdleRewardTextWidgetClass);
 	FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
 	FVector2D CenterScreen = CachedViewportSize / 2.0f;
 
 	RewardWidget->SetPositionInViewport(CenterScreen + RandomOffset, false);
 	RewardWidget->SetRewardAmount(Amount, false);
 	RewardWidget->AddToViewport(10);
-	//RewardWidget->PlayFade(1, IdleRewardSound);
 	
 }
 
@@ -136,7 +136,6 @@ void UClickerUIManager::ShowOfflineReward(float OfflineReward) {
 		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y *0.15f), false);
 		OfflineWidget->SetRewardAmount(OfflineReward, true);
 		OfflineWidget->AddToViewport(10);
-		//OfflineWidget->PlayFade(0.5f, OfflineRewardSound);
 	}
 }
 
@@ -150,11 +149,10 @@ void UClickerUIManager::ShowClickEffect(const FVector& Location) {
 
 void UClickerUIManager::ShowHUD() {
 	//UE_LOG(LogTemp, Warning, TEXT("UIManager: ShowHUD called"));
-	if (!HUDWidgetClass || !PlayerController) return;
+	if (!HUDWidget || !PlayerController) return;
 
-	HUDWidget = CreateWidget<UUserWidget>(PlayerController, HUDWidgetClass);
 	if (HUDWidget) {
-		HUDWidget->AddToViewport();
+		//HUDWidget->AddToViewport();
 
 		// Bind Textblock by name
 		UWidget* CurrencyW = HUDWidget->GetWidgetFromName(TEXT("CurrencyText"));
@@ -209,11 +207,6 @@ void UClickerUIManager::UpdateScore() {
 	if (PassiveIncomeText)
 		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), ClickerComponent->GetCurrencyPerSecond())));
 
-}
-
-UUserWidget* UClickerUIManager::GetHUDWidget() const {
-	//UE_LOG(LogTemp, Warning, TEXT("UIManager: GetHUDWidget called"));
-	return HUDWidget;
 }
 
 void UClickerUIManager::ShowUpgradeSuccessText() {

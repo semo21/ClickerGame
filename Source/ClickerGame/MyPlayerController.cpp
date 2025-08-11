@@ -2,14 +2,16 @@
 
 
 #include "MyPlayerController.h"
+
 #include "Blueprint/WidgetTree.h"
 #include "UObject/ConstructorHelpers.h"
-#include "ClickTargetActor.h"
-#include "ClickerComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "Components/CanvasPanelSlot.h"
+
 #include "GameManager.h"
+#include "ClickTargetActor.h"
+#include "ClickerComponent.h"
 
 AMyPlayerController::AMyPlayerController() {
 	
@@ -17,40 +19,22 @@ AMyPlayerController::AMyPlayerController() {
 
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
-
-	//ClickerComponent = NewObject<UClickerComponent>(this);
-	//ClickerComponent->RegisterComponent();
-	
-	//UIManager = NewObject<UClickerUIManager>(this);
-	//UIManager->Initialize(this);
-
-	//ClickerComponent->Initialize(UIManager);
-	//UE_LOG(LogTemp, Warning, TEXT("Begin Play"));
-	
-	//UE_LOG(LogTemp, Warning, TEXT("UIManager: %s"), *GetNameSafe(UIManager));
-	if (UIManager && UIManager->GetHUDWidget()) {
-		//UE_LOG(LogTemp, Warning, TEXT("UIManager: HUDWidget is valid"));
-		FInputModeGameAndUI InputMode;
-		InputMode.SetWidgetToFocus(UIManager->GetHUDWidget()->TakeWidget());
-		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		SetInputMode(InputMode);
-		bShowMouseCursor = true;
-	}
 }
 
 void AMyPlayerController::Initialize(UGameManager* InGameManager) {
 	bEnableClickEvents = true;	
-	//static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClass(TEXT("/Game/Widgets/WBP_ClickerUI"));
-	//if (WidgetClass.Succeeded()) {
-	//	HUDWidgetClass = WidgetClass.Class;
-	//}
-
-
+	
 	ClickerComponent = InGameManager->GetClickerComponent();
 	UIManager = InGameManager->GetUIManager();
-	ClickEffectAsset = InGameManager->GetClickEffectAsset();
-	FloatingTextWidget = InGameManager->GetFloatingTextWidget();
-	IdleRewardTextWidget = InGameManager->GetIdleRewardTextWidget();
+	ClickEffectAsset = InGameManager->GetClickEffectAsset();	
+	if (UIManager && InGameManager->GetHUDWidget()) {
+		//UE_LOG(LogTemp, Warning, TEXT("UIManager: HUDWidget is valid"));
+		FInputModeGameAndUI InputMode;
+		InputMode.SetWidgetToFocus(InGameManager->GetHUDWidget()->TakeWidget());
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(InputMode);
+		bShowMouseCursor = true;
+	}
 }
 
 FString AMyPlayerController::FormatCurrency(float Value) const {

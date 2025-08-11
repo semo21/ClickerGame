@@ -2,11 +2,14 @@
 
 
 #include "ClickerComponent.h"
-#include "Engine/Engine.h"	
-#include "MyPlayerController.h"
+
 #include "Kismet/GameplayStatics.h"
-#include "SaveManagerSubsystem.h"
+#include "Engine/Engine.h"	
+
+#include "GameManager.h"
+#include "MyPlayerController.h"
 #include "ClickerUIManager.h"
+#include "SaveManagerSubsystem.h"
 
 // Sets default values for this component's properties
 UClickerComponent::UClickerComponent() : UpgradeCostBase(10.0f)
@@ -22,9 +25,9 @@ UClickerComponent::UClickerComponent() : UpgradeCostBase(10.0f)
 	AccumulatedTime = 0.0f;
 }
 
-void UClickerComponent::Initialize(UClickerUIManager* InUIManager) {
+void UClickerComponent::Initialize(UGameManager* InGameManager) {
 	UE_LOG(LogTemp, Warning, TEXT("ClickerComponent Initialize called"));
-	ClickerUIManager = InUIManager;
+	UIManager = InGameManager->GetUIManager();
 
 	LoadProgress();
 
@@ -42,16 +45,6 @@ void UClickerComponent::Initialize(UClickerUIManager* InUIManager) {
 void UClickerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//LoadProgress();
-	//
-	//GetWorld()->GetTimerManager().SetTimer(
-	//	AutoSaveHandle,
-	//	this,
-	//	&UClickerComponent::SaveProgress,
-	//	60.0f,
-	//	true
-	//);
 }
 
 void UClickerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -63,7 +56,7 @@ void UClickerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 
 void UClickerComponent::SetUIManager(UClickerUIManager* InUIManager) {
 	if (InUIManager) {
-		ClickerUIManager = InUIManager;
+		UIManager = InUIManager;
 	}
 }
 
@@ -97,20 +90,18 @@ void UClickerComponent::EnsureSaveManager() {
 // Called every frame
 void UClickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	if (ClickerUIManager) {
+	if (UIManager) {
 		Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 		AccumulatedTime += DeltaTime;
 		if (AccumulatedTime >= 1.0f)
 		{
 			Currency += CurrencyPerSecond;
-			if (ClickerUIManager) {
-				ClickerUIManager->ShowIdleReward(CurrencyPerSecond);
+			if (UIManager) {
+				UIManager->ShowIdleReward(CurrencyPerSecond);
 				//UE_LOG(LogTemp, Warning, TEXT("ClickerComponent Tick"));
 			}
 			AccumulatedTime = 0.0f;
-
-			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Passive Income! Currency: %.2f"), Currency));
 
 			if (!CachedMyPlayerController) {
 				CachedMyPlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
@@ -171,9 +162,9 @@ void UClickerComponent::SetCurrency(float NewCurrency) {
 
 void UClickerComponent::SetOfflineReward(float OfflineReward) {	
 	UE_LOG(LogTemp, Warning, TEXT("SetOfflineReward"));
-	if (ClickerUIManager) {
+	if (UIManager) {
 		Currency += OfflineReward;
-		ClickerUIManager->ShowOfflineReward(OfflineReward);
+		UIManager->ShowOfflineReward(OfflineReward);
 	}	
 }
 

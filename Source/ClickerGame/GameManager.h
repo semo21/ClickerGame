@@ -11,7 +11,7 @@
 #include "ClickerComponent.h"
 #include "IdleRewardTextWidget.h"
 #include "NiagaraSystem.h"
-#include "UserWidget.h"
+#include "Blueprint/UserWidget.h"
 
 #include "GameManager.generated.h"
 
@@ -28,6 +28,7 @@ class CLICKERGAME_API UGameManager : public UGameInstance
 	
 public:
 	virtual void Init() override;
+	virtual void OnStart() override;
 
 	void Initialize();
 
@@ -60,18 +61,16 @@ public:
 	UAudioConfigDataAsset* GetAudioConfigDataAsset() const { return AudioConfigDataAsset; }
 	AMyPlayerController* GetPlayerController() const { return PlayerController; }
 	UClickerComponent* GetClickerComponent() const { return ClickerComponent; }
-	UClickFloatingTextWidget* GetFloatingTextWidget() const { return FloatingTextWidget; }
-	UIdleRewardTextWidget* GetIdleRewardTextWidget() const { return IdleRewardTextWidget; }
 	UNiagaraSystem* GetClickEffectAsset() const { return ClickEffectAsset; }
-	UUserWIdget* GetHUDWidget() const { return HUDWidget; }
+	UUserWidget* GetHUDWidget() const { return HUDWidget; }
 
 private:
+	bool bInitialized = false;
+
 	UAudioConfigDataAsset* AudioConfigDataAsset;
 	UClickerUIManager* UIManager;
 	AMyPlayerController* PlayerController;
 	UClickerComponent* ClickerComponent;
-	UClickerFloatingTextWidget* FloatingTextWidget;
-	UIdleRewardTextWidget* IdleRewardTextWidget;
 	UNiagaraSystem* ClickEffectAsset;
 	UUserWidget* HUDWidget;
 };

@@ -204,3 +204,7 @@
 ### 08.07.25.
 
 - Refactoring is on progress.
+
+### 08.11.25.
+
+- Struggling for refactoring.

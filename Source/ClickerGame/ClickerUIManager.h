@@ -4,22 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
-
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 
 #include "ClickerUIManager.generated.h"
 
+class USoundBase;
+class UGameManager;
 class UClickerComponent;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
-class USoundBase;
-class UGameManager;
+
 /**
  * 
  */
@@ -29,10 +28,7 @@ class CLICKERGAME_API UClickerUIManager : public UObject
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION()
-	UUserWidget* GetHUDWidget() const;
-
-	void Initialize(UGmaeManager* InGameManager);
+	void Initialize(UGameManager* InGameManager);
 	void InitializeWidgetPool();
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowClickEffect(const FVector& WorldLocation);
@@ -103,7 +99,6 @@ private:
 	TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
 	FTimerHandle TimerHandle;
-	TSubclassOf<UUserWidget> HUDWidgetClass;
 
 	void InitSoundSource();
 };

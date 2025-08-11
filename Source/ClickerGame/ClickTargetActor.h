@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "ClickTargetActor.generated.h"
 
 UCLASS()
@@ -24,5 +25,4 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Mesh;
-
 };
