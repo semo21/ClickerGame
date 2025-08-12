@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ClickerComponent.h"
 
 #include "Kismet/GameplayStatics.h"
@@ -39,7 +38,6 @@ void UClickerComponent::Initialize(UGameManager* InGameManager) {
 		true
 	);
 }
-
 
 // Called when the game starts
 void UClickerComponent::BeginPlay()

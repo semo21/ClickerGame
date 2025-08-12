@@ -207,4 +207,10 @@
 
 ### 08.11.25.
 
-- Struggling for refactoring.
+- Continued working on refactoring GameManager script.
+
+### 08.12.25.
+
+- Gained a deeper understanding of UE5 class inheritance.
+- Decided to adjust the refactoring structure accordingly.
+  - Sketched out the new structure.
