@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 
-#include "ClickerUIManager.generated.h"
+#include "ClickerUISubsystem.generated.h"
 
 class USoundBase;
 class UGameManager;
@@ -18,21 +19,26 @@ class UClickerComponent;
 class AMyPlayerController;
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
-
 /**
  * 
  */
 UCLASS()
-class CLICKERGAME_API UClickerUIManager : public UObject
+class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-	
+
 public:
+	UPROPERTY(EditAnywhere)
+	USoundBase* ClickRewardSound;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* OfflineRewardSound;
+
 	void InitializeWidgetPool();
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowHUD();
-	void HideHUD();	
+	void HideHUD();
 	void UpdateScore();
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
@@ -42,8 +48,6 @@ public:
 	UIdleRewardTextWidget* GetRewardWidgetFromPool();
 
 private:
-	
-
 	UPROPERTY()
 	AMyPlayerController* PlayerController;
 

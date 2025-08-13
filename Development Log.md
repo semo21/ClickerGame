@@ -214,3 +214,9 @@
 - Gained a deeper understanding of UE5 class inheritance.
 - Decided to adjust the refactoring structure accordingly.
   - Sketched out the new structure.
+
+### 08.13.25.
+
+- Deleted GameManager script
+- Created ClickerUISubsystem, ClickerEconomySubsystem scripts.
+- Started to refactor UIManager and ClickerComponent, PlayerController scripts.
