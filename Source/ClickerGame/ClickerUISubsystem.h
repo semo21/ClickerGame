@@ -5,22 +5,16 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 
-#include "Blueprint/UserWidget.h"
-#include "Components/TextBlock.h"
-#include "Components/Button.h"
-#include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
-
 #include "ClickerUISubsystem.generated.h"
 
-class USoundBase;
-class UGameManager;
-class UClickerComponent;
-class AMyPlayerController;
-class UClickFloatingTextWidget;
-class UIdleRewardTextWidget;
+class USoundBase; class UUserWidget; class UButton;
+class UTextBlock; class UNiagaraSystem;
+
+class UClickerEconomySubsystem; class AMyPlayerController;
+class UClickFloatingTextWidget; class UIdleRewardTextWidget;
+struct FEconomySnapshot;
 /**
- * 
+ *
  */
 UCLASS()
 class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
@@ -28,79 +22,50 @@ class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
-	USoundBase* ClickRewardSound;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 
-	UPROPERTY(EditAnywhere)
-	USoundBase* OfflineRewardSound;
-
-	void InitializeWidgetPool();
-	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
-	void ShowClickEffect(const FVector& WorldLocation);
-	void ShowHUD();
-	void HideHUD();
-	void UpdateScore();
-	void ShowUpgradeSuccessText();
-	void HideUpgradeSuccessText();
-	void SetClickerComponent(UClickerComponent* Comp);
-	void ShowIdleReward(float Amount);
-	void ShowOfflineReward(float OfflineReward);
-	UIdleRewardTextWidget* GetRewardWidgetFromPool();
-
-private:
-	UPROPERTY()
-	AMyPlayerController* PlayerController;
-
-	UPROPERTY()
-	AActor* CurrentClickEffect = nullptr;
-
-	UPROPERTY()
-	UNiagaraSystem* ClickEffectAsset;
-
-	UPROPERTY()
-	UUserWidget* HUDWidget;
-
-	UPROPERTY()
-	UTextBlock* CurrencyText;
-
-	UPROPERTY()
-	UTextBlock* ClickValueText;
-
-	UPROPERTY()
-	UTextBlock* UpgradeCostText;
-
-	UPROPERTY()
-	UTextBlock* PassiveIncomeText;
-
-	UPROPERTY()
-	UTextBlock* UpgradeSuccessText;
-
-	UPROPERTY()
-	UButton* UpgradeButton;
-
-	UPROPERTY()
-	UButton* SaveButton;
-
-	UPROPERTY()
-	UButton* LoadButton;
-
-	UPROPERTY()
-	FTimerHandle UpgradeSuccessTimerHandle;
-
-	UPROPERTY()
-	UClickerComponent* ClickerComponent;
-
-	UPROPERTY()
-	TArray<UIdleRewardTextWidget*> RewardTextPool;
+	void ShowHUD(UWorld* World);
 
 	UFUNCTION()
+	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+
+	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
+	void ShowIdleReward(float Amount);
+	void ShowClickEffect(const FVector& WorldLocation);
+	void ShowOfflineReward(float OfflineReward);
+	void ShowUpgradeSuccessText();
+	void HideUpgradeSuccessText();
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UUserWidget> HUDWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "UI") UNiagaraSystem* ClickEffectAsset = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "FX") TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")	USoundBase* ClickRewardSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")	USoundBase* OfflineRewardSound;
+
+private:
+	void UpdateScore(const FEconomySnapshot& S);
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
+	UIdleRewardTextWidget* GetRewardWidgetFromPool();
 
-	FVector2D CachedViewportSize;
-	TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
-	TArray<UClickFloatingTextWidget*> FloatingTextPool;
-	TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
-	FTimerHandle TimerHandle;
+	TWeakObjectPtr<APlayerController> PlayerController;
+	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 
-	void InitSoundSource();
+	UPROPERTY()	UUserWidget* HUDWidget;
+	UPROPERTY()	UTextBlock* CurrencyText;
+	UPROPERTY()	UTextBlock* ClickValueText;
+	UPROPERTY()	UTextBlock* UpgradeCostText;
+	UPROPERTY()	UTextBlock* PassiveIncomeText;
+	UPROPERTY()	UTextBlock* UpgradeSuccessText;
+	UPROPERTY()	UButton* UpgradeButton;
+	UPROPERTY()	UButton* SaveButton;
+	UPROPERTY()	UButton* LoadButton;
+
+	UPROPERTY() TArray<UClickFloatingTextWidget*> FloatingTextPool;
+	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
+	FTimerHandle UpgradeSuccessTimerHandle;
+
+	TWeakObjectPtr< UClickerEconomySubsystem> EconomySubsystemRef;
+
 };

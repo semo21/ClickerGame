@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class CLICKERGAME_API UAudioConfigDataAsset : public UDataAsset
 {
 	GENERATED_BODY()

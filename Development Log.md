@@ -220,3 +220,5 @@
 - Deleted GameManager script
 - Created ClickerUISubsystem, ClickerEconomySubsystem scripts.
 - Started to refactor UIManager and ClickerComponent, PlayerController scripts.
+- Completed refactoring UISubsystem and EconomySubsystem.
+  - Added FEconomySnapshot structure script for handling economic data.
