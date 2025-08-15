@@ -18,12 +18,13 @@ class UIdleRewardTextWidget;
 UCLASS()
 class CLICKERGAME_API AMyPlayerController : public APlayerController
 {
-	GENERATED_BODY()
-	
+	GENERATED_BODY()	
 public:
-	UFUNCTION()
-	void Initialize(UGameManager* InGameManager);
 
+protected:
+	virtual void BeginPlay() override;
+
+private:
 	UFUNCTION()
 	void OnUpgradeClicked();
 
@@ -33,22 +34,6 @@ public:
 	UFUNCTION()
 	void OnLoadClicked();
 
-	void UpdateCurrencyUI();
-	FString FormatCurrency(float Value) const;
-
-	TSubclassOf<UUserWidget> HUDWidgetClass;
-
-protected:
-	virtual void BeginPlay() override;
-	virtual void SetupInputComponent() override;
-
-private:
-	UClickerUIManager* UIManager;
-	UClickerComponent* ClickerComponent;
-	UNiagaraSystem* ClickEffectAsset;
-	UClickFloatingTextWidget* FloatingTextWidget;
-	UIdleRewardTextWidget* IdleRewardTextWidget;
-
-	AMyPlayerController();
+	UFUNCTION()
 	void OnClick();
 };

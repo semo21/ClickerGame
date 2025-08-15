@@ -222,3 +222,9 @@
 - Started to refactor UIManager and ClickerComponent, PlayerController scripts.
 - Completed refactoring UISubsystem and EconomySubsystem.
   - Added FEconomySnapshot structure script for handling economic data.
+
+### 08.14.25.
+
+- Still in progress of refactoring
+  - Finished ClickerComponent and PlayerController scripts.
+  - Working on refactoring Save system structure.

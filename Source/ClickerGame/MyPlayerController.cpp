@@ -9,108 +9,62 @@
 #include "Engine/World.h"
 #include "Components/CanvasPanelSlot.h"
 
-#include "GameManager.h"
+#include "ClickerEconomySubsystem.h"
+#include "ClickerUISubsystem.h"
 #include "ClickTargetActor.h"
 #include "ClickerComponent.h"
 
-AMyPlayerController::AMyPlayerController() {
-	
-}
-
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
-}
 
-void AMyPlayerController::Initialize(UGameManager* InGameManager) {
-	bEnableClickEvents = true;	
-	
-	ClickerComponent = InGameManager->GetClickerComponent();
-	UIManager = InGameManager->GetUIManager();
-	ClickEffectAsset = InGameManager->GetClickEffectAsset();	
-	if (UIManager && InGameManager->GetHUDWidget()) {
-		//UE_LOG(LogTemp, Warning, TEXT("UIManager: HUDWidget is valid"));
-		FInputModeGameAndUI InputMode;
-		InputMode.SetWidgetToFocus(InGameManager->GetHUDWidget()->TakeWidget());
-		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		SetInputMode(InputMode);
-		bShowMouseCursor = true;
-	}
-}
+	bEnableClickEvents = true;
+	bShowMouseCursor = true;
+	FInputModeGameAndUI InputMode; 
+	//InputMode.SetWidgetToFocus(InGameManager->GetHUDWidget()->TakeWidget());
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(InputMode);
 
-FString AMyPlayerController::FormatCurrency(float Value) const {
-	if (Value >= 1e9f)
-		return FString::Printf(TEXT("%.2fB"), Value / 1e9f);
-	else if (Value >= 1e6f)
-		return FString::Printf(TEXT("%.2fM"), Value / 1e6f);
-	else if (Value >= 1e3f)
-		return FString::Printf(TEXT("%.2fK"), Value / 1e3f);
-	else
-		return FString::Printf(TEXT("%.0f"), Value);
-}
+	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>())
+		Eco->StartWorld(GetWorld());
 
-void AMyPlayerController::SetupInputComponent() {
-	Super::SetupInputComponent();
-
-	if (InputComponent)
-	{
-		InputComponent->BindAction("Click", IE_Pressed, this, &AMyPlayerController::OnClick);
-	}
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>())
+		UI->ShowHUD(GetWorld());
 }
 
 void AMyPlayerController::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 
-	if (!HitResult.bBlockingHit) return;
-
-	AActor* HitActor = HitResult.GetActor();
-	if (!IsValid(HitActor))	return;
-
-	if (!HitActor->IsA(AClickTargetActor::StaticClass())) {
-		return;
-	}
-
-	AClickTargetActor* ClickedActor = Cast<AClickTargetActor>(HitActor);
-	if (!IsValid(ClickedActor)) {
-		return;
-	}
-
-	if (ClickerComponent) {
-		ClickerComponent->HandleClick();
-		UpdateCurrencyUI();
-
-		UIManager->ShowClickEffect(HitResult.Location);
-		UIManager->ShowFloatingText(TEXT("+") + FormatCurrency(ClickerComponent->GetCurrencyPerClick()), HitResult.Location);
-
+	if (!HitResult.bBlockingHit || !HitResult.GetActor() || !HitResult.GetActor()->IsA(AClickTargetActor::StaticClass())) return;
+		
+	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+		Eco->OnClicked();
+		if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+			UI->ShowClickEffect(HitResult.Location);
+			UI->ShowFloatingText(TEXT("%d", Eco->MakeSnapshot().CurrencyPerClick), HitResult.Location);
+		}
 	}
 }
 
 void AMyPlayerController::OnUpgradeClicked() {
-	if (ClickerComponent) {
-		ClickerComponent->HandleUpgrade();
-		UpdateCurrencyUI();
-
-		if (UIManager) {
-			UIManager->ShowUpgradeSuccessText();
+	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+		const bool bSuccess = Eco->TryUpgrade();
+		if (bSuccess) {
+			if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+				UI->ShowUpgradeSuccessText();
+			}
 		}
 	}
 }
 
 void AMyPlayerController::OnSaveClicked() {
-	if (ClickerComponent) {
-		ClickerComponent->SaveProgress();
-		UpdateCurrencyUI();
-		UIManager->ShowFloatingText(TEXT("Saved!"), GetPawn()->GetActorLocation());
+	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+		Eco->RequestSave();
 	}
 }
 
 void AMyPlayerController::OnLoadClicked() {
-	if (ClickerComponent) {
-		ClickerComponent->LoadProgress();
-		UpdateCurrencyUI();
-		UIManager->ShowFloatingText(TEXT("Loaded!"), GetPawn()->GetActorLocation());
+	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+		Eco->RequestLoad();
 	}
-}
-void AMyPlayerController::UpdateCurrencyUI() {
-	UIManager->UpdateScore();
 }

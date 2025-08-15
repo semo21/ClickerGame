@@ -18,7 +18,7 @@ struct FEconomySnapshot
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) double UpgradeCostBase = 10.0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) double UpgradeGrowth = 1.5;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64  LastSaveTime = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly) double UpgradeCost = FMath::Pow(UpgradeGrowth, UpgradeLevel + 1) * UpgradeCostBase;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly) double UpgradeCost = FMath::Pow(UpgradeGrowth, UpgradeLevel + 1) * UpgradeCostBase;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
