@@ -100,6 +100,16 @@ FEconomySnapshot UClickerEconomySubsystem::MakeSnapshot() const {
 	return EconomySnapshot;
 }
 
+void UClickerEconomySubsystem::ApplySnapshot(const FEconomySnapshot& In) {
+	EconomySnapshot.UpgradeLevel = In.UpgradeLevel;
+	EconomySnapshot.Currency = In.Currency;
+	EconomySnapshot.CurrencyPerClick = In.CurrencyPerClick;
+	EconomySnapshot.CurrencyPerSecond = In.CurrencyPerSecond;
+	EconomySnapshot.UpgradeCostBase = In.UpgradeCostBase;
+	EconomySnapshot.UpgradeGrowth = In.UpgradeGrowth;	
+	Broadcast();
+}
+
 void UClickerEconomySubsystem::Broadcast() {
 	OnEconomyChanged.Broadcast(EconomySnapshot);
 }

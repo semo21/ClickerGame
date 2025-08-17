@@ -20,7 +20,7 @@
 #include "IdleRewardTextWidget.h"
 
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
-	Super::Initialize(C);
+	Super::Initialize(Collection);
 
 	if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
 		EconomySubsystemRef = EconomySubsystem;
@@ -29,7 +29,7 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 }
 
 void UClickerUISubsystem::Deinitialize() {
-	if (auto* Eco = EconomyRef.Get()) {
+	if (auto* Eco = EconomySubsystemRef.Get()) {
 		Eco->OnEconomyChanged.RemoveDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 	}
 
@@ -43,12 +43,12 @@ void UClickerUISubsystem::Deinitialize() {
 	FloatingTextPool.Empty();
 	RewardTextPool.Empty();
 	PlayerController.Reset();
-	EconomyRef.Reset();
+	EconomySubsystemRef.Reset();
 
 	Super::Deinitialize();
 }
 
-void UClickerUISubsystem::ShowHUD() {
+void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (!World || HUDWidget || !HUDWidgetClass) return;
 
 	if (!PlayerController.IsValid())
@@ -57,7 +57,7 @@ void UClickerUISubsystem::ShowHUD() {
 	if (GEngine && GEngine->GameViewport)
 		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
-	HUDWidget = CreateWidget<UUserWIdget>(World, HUDWidgetClass);
+	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
 	if (!HUDWidget) return;
 	HUDWidget->AddToViewport();
 
@@ -74,13 +74,13 @@ void UClickerUISubsystem::ShowHUD() {
 
 	if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
 		if (UpgradeButton)
-			UpgradeButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnUpgradeClicked);
+			UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
 
 		if (SaveButton)
-			SaveButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnSaveClicked);
+			SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
 
 		if (LoadButton)
-			LoadButton->OnClicked.AddDynamic(PlayerController, &AMyPlayerController::OnLoadClicked);
+			LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
 	}
 
 	const int32 PoolSize = 10;
@@ -140,7 +140,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 				[FloatingWidget]() {FloatingWidget->RemoveFromParent(); }),
 				1.0f,
 				false
-			)
+			);
 		}
 	}
 }
@@ -176,14 +176,14 @@ void UClickerUISubsystem::ShowIdleReward(float Amount) {
 		const FVector2D Center = CachedViewportSize / 2.0f;
 		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
 
-		Widget->SetPositionInViewport(CenterScreen + RandomOffset, false);
+		Widget->SetPositionInViewport(Center + RandomOffset, false);
 		Widget->SetRewardAmount(Amount, false);
 		Widget->AddToViewport(10);
 	}
 }
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	if (!IdleRewardTextWidgetClass || !PlayerController.IsVaild())	return;
+	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
 		
 	if (auto* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
 		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f), false);
@@ -192,7 +192,7 @@ void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
 	}
 }
 
-void UClickerUISubsystem::ShowClickEffect(const FVector& Location) {
+void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, Location, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);

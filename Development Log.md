@@ -228,3 +228,8 @@
 - Still in progress of refactoring
   - Finished ClickerComponent and PlayerController scripts.
   - Working on refactoring Save system structure.
+
+### 08.17.25.
+
+- Still in progress of refactoring.
+  - Few typos and grammar errors are corrected.

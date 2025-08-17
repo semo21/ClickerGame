@@ -31,6 +31,10 @@ void AMyPlayerController::BeginPlay() {
 		UI->ShowHUD(GetWorld());
 }
 
+void AMyPlayerController::SetupInputComponent() {
+
+}
+
 void AMyPlayerController::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);

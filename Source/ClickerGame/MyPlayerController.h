@@ -26,6 +26,9 @@ protected:
 
 private:
 	UFUNCTION()
+	void SetupInputComponent();
+
+	UFUNCTION()
 	void OnUpgradeClicked();
 
 	UFUNCTION()

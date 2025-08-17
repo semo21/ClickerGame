@@ -60,7 +60,12 @@ void USaveManagerSubsystem::SaveProgress(const FEconomySnapshot& S) {
 bool USaveManagerSubsystem::LoadProgress(FEconomySnapshot& Out) {
 	if (USaveGame* Loaded = UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex)) {
 		if (auto* SaveObj = Cast<UClickerSaveGame>(Loaded))){
+			Out.Currency = SaveObj->Currency;
+			Out.CurrencyPerClick = SaveObj->CurrencyPerClick;
+			Out.CurrencyPerSecond = SaveObj->CurrencyPerSecond;
+			Out.UpgradeLevel = SaveObj->UpgradeLevel;
 			
+			return true;
 		}
 	}
 }
