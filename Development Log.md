@@ -217,7 +217,7 @@
 
 ### 08.13.25.
 
-- Deleted GameManager script
+- Deleted GameManager script.
 - Created ClickerUISubsystem, ClickerEconomySubsystem scripts.
 - Started to refactor UIManager and ClickerComponent, PlayerController scripts.
 - Completed refactoring UISubsystem and EconomySubsystem.
@@ -225,9 +225,15 @@
 
 ### 08.14.25.
 
-- Still in progress of refactoring
-  - Finished ClickerComponent and PlayerController scripts.
+- Still in progress of refactoring.
+  - Completed refactoring ClickerComponent and PlayerController scripts.
   - Working on refactoring Save system structure.
+
+### 08.15.25.
+
+- Still in progress of refactoring.
+  - Few corrections in UISubsystem and EconomySubsystem.
+  - Completed refactoring SaveSubsystem.
 
 ### 08.17.25.
 
