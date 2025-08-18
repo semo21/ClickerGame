@@ -49,8 +49,7 @@ void UClickerUISubsystem::Deinitialize() {
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	if (!World || HUDWidget || !HUDWidgetClass) return;
-
+	if (!World || HUDWidget || !HUDWidgetClass) return;	
 	if (!PlayerController.IsValid())
 		PlayerController = World->GetFirstPlayerController();
 
@@ -96,6 +95,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (auto* Eco = EconomySubsystemRef.Get()) {
 		OnEconomyChanged(Eco->MakeSnapshot());
 	}
+	UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
@@ -195,7 +195,7 @@ void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
 void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
 
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, Location, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, WorldLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
 }
 
 void UClickerUISubsystem::ShowUpgradeSuccessText() {
@@ -205,7 +205,7 @@ void UClickerUISubsystem::ShowUpgradeSuccessText() {
 		PlayerController->GetWorldTimerManager().SetTimer(
 			UpgradeSuccessTimerHandle,
 			this,
-			&UClickerUIManager::HideUpgradeSuccessText,
+			&UClickerUISubsystem::HideUpgradeSuccessText,
 			2.0f,
 			false
 		);

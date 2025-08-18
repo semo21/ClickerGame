@@ -239,3 +239,8 @@
 
 - Still in progress of refactoring.
   - Few typos and grammar errors are corrected.
+
+### 08.18.25.
+
+- Corrected some typos and details in whole project.
+- Fixing Initializing error.

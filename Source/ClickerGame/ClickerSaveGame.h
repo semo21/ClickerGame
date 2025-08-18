@@ -14,14 +14,10 @@ class CLICKERGAME_API UClickerSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 
-public:
-	UPROPERTY()	float Currency;
-
-	UPROPERTY()	float CurrencyPerSecond;
-
-	UPROPERTY()	float CurrencyPerClick;
-
+public:	
+	UPROPERTY()	double Currency;
+	UPROPERTY()	double CurrencyPerClick;
+	UPROPERTY()	double CurrencyPerSecond;
 	UPROPERTY()	int32 UpgradeLevel;
-
-	UPROPERTY()	int32 LastSaveUnixTime = 0;
+	UPROPERTY()	int64 LastSaveUnixTime = 0;
 };

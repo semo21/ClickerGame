@@ -12,26 +12,26 @@
 #include "ClickerEconomySubsystem.h"
 #include "ClickerUISubsystem.h"
 #include "ClickTargetActor.h"
-#include "ClickerComponent.h"
 
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
-
-	bEnableClickEvents = true;
-	bShowMouseCursor = true;
-	FInputModeGameAndUI InputMode; 
-	//InputMode.SetWidgetToFocus(InGameManager->GetHUDWidget()->TakeWidget());
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	SetInputMode(InputMode);
 
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>())
 		Eco->StartWorld(GetWorld());
 
 	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>())
 		UI->ShowHUD(GetWorld());
+
+	SetupInputComponent();
 }
 
 void AMyPlayerController::SetupInputComponent() {
+	UE_LOG(LogTemp, Warning, TEXT("SetupInputComponent Called"));
+	bEnableClickEvents = true;
+	bShowMouseCursor = true;
+	FInputModeGameAndUI InputMode;
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(InputMode);
 
 }
 
@@ -45,7 +45,7 @@ void AMyPlayerController::OnClick() {
 		Eco->OnClicked();
 		if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
 			UI->ShowClickEffect(HitResult.Location);
-			UI->ShowFloatingText(TEXT("%d", Eco->MakeSnapshot().CurrencyPerClick), HitResult.Location);
+			UI->ShowFloatingText(FString::Printf(TEXT("%f"), Eco->MakeSnapshot().CurrencyPerClick), HitResult.Location);
 		}
 	}
 }

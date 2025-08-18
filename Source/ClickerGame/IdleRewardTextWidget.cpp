@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Components/TextBlock.h"
 #include "IdleRewardTextWidget.h"
+#include "Components/TextBlock.h"
 #include "Animation/WidgetAnimation.h"
 #include "Kismet/GameplayStatics.h"
 

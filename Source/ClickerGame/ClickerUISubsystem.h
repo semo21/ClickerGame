@@ -16,7 +16,7 @@ struct FEconomySnapshot;
 /**
  *
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()

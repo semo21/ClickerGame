@@ -25,6 +25,7 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 
 	RequestLoad();
 	StartAutoSaveTimer();
+	UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::StartWorld Called"));
 }
 
 void UClickerEconomySubsystem::StartAutoSaveTimer() {

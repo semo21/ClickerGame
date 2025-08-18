@@ -5,13 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "ClickerUIManager.h"
 #include "NiagaraSystem.h"
 
 #include "MyPlayerController.generated.h"
 
-class UGameManager;
-class UClickerComponent;
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
 
@@ -20,23 +17,12 @@ class CLICKERGAME_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()	
 public:
-
+	UFUNCTION()	void OnUpgradeClicked();
+	UFUNCTION()	void OnSaveClicked();
+	UFUNCTION()	void OnLoadClicked();
+	UFUNCTION()	void OnClick();
 protected:
 	virtual void BeginPlay() override;
-
 private:
-	UFUNCTION()
-	void SetupInputComponent();
-
-	UFUNCTION()
-	void OnUpgradeClicked();
-
-	UFUNCTION()
-	void OnSaveClicked();
-
-	UFUNCTION()
-	void OnLoadClicked();
-
-	UFUNCTION()
-	void OnClick();
+	UFUNCTION()	void SetupInputComponent();
 };
