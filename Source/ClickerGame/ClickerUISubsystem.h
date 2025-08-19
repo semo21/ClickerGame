@@ -12,11 +12,11 @@ class UTextBlock; class UNiagaraSystem;
 
 class UClickerEconomySubsystem; class AMyPlayerController;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
-struct FEconomySnapshot;
+struct FEconomySnapshot;		class UClickerUISettings;
 /**
  *
  */
-UCLASS(Blueprintable)
+UCLASS(Config=Game, DefaultConfig)
 class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
@@ -37,14 +37,17 @@ public:
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY(EditDefaultsOnly, Category = "UI") UNiagaraSystem* ClickEffectAsset = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
-	UPROPERTY(EditDefaultsOnly, Category = "FX") TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
-	UPROPERTY(EditDefaultsOnly, Category = "Sound")	USoundBase* ClickRewardSound;
-	UPROPERTY(EditDefaultsOnly, Category = "Sound")	USoundBase* OfflineRewardSound;
+	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
+	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
+	UPROPERTY() TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
+	UPROPERTY() TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
+	UPROPERTY()	USoundBase* ClickRewardSound = nullptr;
+	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
 
 private:
+	UPROPERTY(Config, EditAnywhere, Category="Settings")
+	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
+
 	void UpdateScore(const FEconomySnapshot& S);
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 	UIdleRewardTextWidget* GetRewardWidgetFromPool();

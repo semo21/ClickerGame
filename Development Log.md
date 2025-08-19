@@ -244,3 +244,8 @@
 
 - Corrected some typos and details in whole project.
 - Fixing Initializing error.
+
+### 08.19.25.
+
+- Created DataAsset scipt to handling assets.
+- Try Resolving Editor crash when the game is started.

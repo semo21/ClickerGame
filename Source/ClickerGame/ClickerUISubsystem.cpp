@@ -18,6 +18,7 @@
 #include "MyPlayerController.h"
 #include "ClickFloatingTextWidget.h"
 #include "IdleRewardTextWidget.h"
+#include "ClickerUISettings.h"
 
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
@@ -26,6 +27,28 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 		EconomySubsystemRef = EconomySubsystem;
 		EconomySubsystem->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 	}
+
+	if (!UISettingsAsset.IsNull()) {
+		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
+			ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
+				TEXT("HUDWidgetClass must derive from UUserWidget"));
+			HUDWidgetClass = Settings->HUDWidgetClass;
+			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
+			ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
+				TEXT("IdleRewardTextWidgetClass must derive from UIdleRewardTextWidget"));
+			IdleRewardTextWidgetClass = Settings->IdleRewardTextWidgetClass;
+			ensureMsgf(FloatingTextWidgetClass && FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
+				TEXT("FloatingTextWidgetClass must derive from UClickFloatingTextWidget"));
+			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
+			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
+			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
+
+
+
+
+
+		}
+	}		
 }
 
 void UClickerUISubsystem::Deinitialize() {
