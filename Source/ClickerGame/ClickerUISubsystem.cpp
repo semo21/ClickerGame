@@ -22,6 +22,15 @@
 
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
+	UE_LOG(LogTemp, Warning, TEXT("[UI] SoftPath=%s"), *UISettingsAsset.ToString());
+
+	// 1) Soft 로드
+	auto* S1 = UISettingsAsset.LoadSynchronous();
+	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadSynchronous -> %s"), *GetNameSafe(S1));
+
+	// 2) 강제 로드
+	auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
 
 	if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
 		EconomySubsystemRef = EconomySubsystem;
@@ -29,24 +38,17 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	}
 
 	if (!UISettingsAsset.IsNull()) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
+
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
-			ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
-				TEXT("HUDWidgetClass must derive from UUserWidget"));
+			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize DA Load"));
+
 			HUDWidgetClass = Settings->HUDWidgetClass;
 			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
-			ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
-				TEXT("IdleRewardTextWidgetClass must derive from UIdleRewardTextWidget"));
 			IdleRewardTextWidgetClass = Settings->IdleRewardTextWidgetClass;
-			ensureMsgf(FloatingTextWidgetClass && FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
-				TEXT("FloatingTextWidgetClass must derive from UClickFloatingTextWidget"));
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
 			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
-
-
-
-
-
 		}
 	}		
 }
@@ -72,6 +74,18 @@ void UClickerUISubsystem::Deinitialize() {
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
+	UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
+
+	if (!World) return;
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD World Exists."));
+
+	if (HUDWidget)	return;
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidget is null."));
+
+	if (!HUDWidgetClass) return;
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidgetClass Exists."));
+
+
 	if (!World || HUDWidget || !HUDWidgetClass) return;	
 	if (!PlayerController.IsValid())
 		PlayerController = World->GetFirstPlayerController();
@@ -118,7 +132,6 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (auto* Eco = EconomySubsystemRef.Get()) {
 		OnEconomyChanged(Eco->MakeSnapshot());
 	}
-	UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {

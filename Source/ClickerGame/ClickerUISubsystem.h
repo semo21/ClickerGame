@@ -37,6 +37,8 @@ public:
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 
+	UPROPERTY(Config, EditAnywhere, Category = "Settings")
+	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
 	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
 	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
 	UPROPERTY() TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
@@ -45,8 +47,7 @@ public:
 	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
 
 private:
-	UPROPERTY(Config, EditAnywhere, Category="Settings")
-	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
+
 
 	void UpdateScore(const FEconomySnapshot& S);
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();

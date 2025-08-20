@@ -248,4 +248,11 @@
 ### 08.19.25.
 
 - Created DataAsset scipt to handling assets.
-- Try Resolving Editor crash when the game is started.
+- Try to Resolve Editor crash when the game is started.
+
+### 08.20.25.
+
+- Try to resolve Editor crash and initialize errors.
+  - Found the source of errors and resolved.
+  - New error found but can start game.
+  - Added UISettings data asset for handling assets in the editor.
