@@ -82,9 +82,13 @@ void UClickerEconomySubsystem::RequestSave() {
 }
 
 void UClickerEconomySubsystem::RequestLoad() {
+	UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request Called"));
+
 	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
+		UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request Load Instance Exists."));
 		if (Load->LoadProgress(In)) {
+			UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress Succeeded."));
 			const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
 			const int64 DeltaSec = Now - In.LastSaveTime;
 			In.Currency += In.CurrencyPerSecond * DeltaSec / 30;

@@ -23,6 +23,7 @@ public:
 	UFUNCTION()	void OnClick();
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 private:
-	UFUNCTION()	void SetupInputComponent();
+	
 };

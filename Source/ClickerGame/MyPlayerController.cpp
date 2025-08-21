@@ -21,18 +21,23 @@ void AMyPlayerController::BeginPlay() {
 
 	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>())
 		UI->ShowHUD(GetWorld());
-
-	SetupInputComponent();
 }
 
 void AMyPlayerController::SetupInputComponent() {
-	UE_LOG(LogTemp, Warning, TEXT("SetupInputComponent Called"));
-	bEnableClickEvents = true;
-	bShowMouseCursor = true;
-	FInputModeGameAndUI InputMode;
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	SetInputMode(InputMode);
+	Super::SetupInputComponent();
 
+	if (IsLocalController()) {
+		UE_LOG(LogTemp, Warning, TEXT("SetupInputComponent Called"));
+
+		bEnableClickEvents = true;
+		bShowMouseCursor = true;
+
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(InputMode);
+
+		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AMyPlayerController::OnClick);
+	}
 }
 
 void AMyPlayerController::OnClick() {

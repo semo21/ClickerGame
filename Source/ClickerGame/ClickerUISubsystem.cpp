@@ -135,6 +135,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));
 	UpdateScore(Snapshot);
 }
 

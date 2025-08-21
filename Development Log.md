@@ -256,3 +256,9 @@
   - Found the source of errors and resolved.
   - New error found but can start game.
   - Added UISettings data asset for handling assets in the editor.
+
+### 08.21.25.
+
+- Found serious fault in soource code -- cause of game malfunctioning.
+  - Made a plan to fix it.
+    - It's from refactoring -- I missed some core codes when write some classes.
