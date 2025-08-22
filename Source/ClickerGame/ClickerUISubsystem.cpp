@@ -76,16 +76,14 @@ void UClickerUISubsystem::Deinitialize() {
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
 
-	if (!World) return;
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD World Exists."));
+	//if (!World) return;
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD World Exists."));
 
-	if (HUDWidget)	return;
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidget is null."));
+	//if (HUDWidget)	return;
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidget is null."));
 
-	if (!HUDWidgetClass) return;
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidgetClass Exists."));
-
-
+	//if (!HUDWidgetClass) return;
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidgetClass Exists."));
 	if (!World || HUDWidget || !HUDWidgetClass) return;	
 	if (!PlayerController.IsValid())
 		PlayerController = World->GetFirstPlayerController();
@@ -215,6 +213,10 @@ void UClickerUISubsystem::ShowIdleReward(float Amount) {
 
 		Widget->SetPositionInViewport(Center + RandomOffset, false);
 		Widget->SetRewardAmount(Amount, false);
+		
+		Widget->SetVisibility(ESlateVisibility::Visible);
+		Widget->PlayFade(1.0f, OfflineRewardSound);
+
 		Widget->AddToViewport(10);
 	}
 }

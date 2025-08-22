@@ -7,14 +7,18 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "SaveManagerSubsystem.h"
+#include "ClickerUISubsystem.h"
 #include "Kismet/KismetMathLibrary.h"
 
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
+
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
 	StopAutoSaveTimer();
+	StopTickTimer();
+
 	Super::Deinitialize();
 }
 
@@ -25,6 +29,8 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 
 	RequestLoad();
 	StartAutoSaveTimer();
+	StartTickTimer();
+
 	UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::StartWorld Called"));
 }
 
@@ -39,12 +45,27 @@ void UClickerEconomySubsystem::StartAutoSaveTimer() {
 	}
 }
 
+void UClickerEconomySubsystem::StartTickTimer() {
+	if (UWorld* W = GetWorld()) {
+		W->GetTimerManager().SetTimer(
+			TickHandle,
+			this, &UClickerEconomySubsystem::OnTick1Second,
+			1.0f,
+			true
+		);
+	}
+}
+
 void UClickerEconomySubsystem::StopAutoSaveTimer() {
 	if (UWorld* W = GetWorld()) {
 		W->GetTimerManager().ClearTimer(AutoSaveHandle);
 	}
 }
-
+void UClickerEconomySubsystem::StopTickTimer() {
+	if (UWorld* W = GetWorld()) {
+		W->GetTimerManager().ClearTimer(TickHandle);
+	}
+}
 void UClickerEconomySubsystem::OnClicked() {
 	EconomySnapshot.Currency += EconomySnapshot.CurrencyPerClick;
 	Broadcast();
@@ -94,6 +115,10 @@ void UClickerEconomySubsystem::RequestLoad() {
 			In.Currency += In.CurrencyPerSecond * DeltaSec / 30;
 
 			ApplySnapshot(In);
+
+			if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+				UI->ShowOfflineReward(In.CurrencyPerSecond * DeltaSec / 30);
+			}
 		}
 		else {
 			Broadcast();

@@ -58,11 +58,14 @@ public:
 private:
 	void Broadcast();
 	void StartAutoSaveTimer();
+	void StartTickTimer();
 	void StopAutoSaveTimer();
+	void StopTickTimer();
 
 private:
 	FEconomySnapshot EconomySnapshot;
 	FTimerHandle AutoSaveHandle;
+	FTimerHandle TickHandle;
 	bool bWorldStarted = false;
 
 };
