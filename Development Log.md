@@ -262,3 +262,12 @@
 - Found serious fault in soource code -- cause of game malfunctioning.
   - Made a plan to fix it.
     - It's from refactoring -- I missed some core codes when write some classes.
+
+### 08.22.25.
+
+- Adding core UI and input codes.
+
+### 08.23.25.
+
+- Serious assertion crash occurs.
+  - Still looking for the cause.

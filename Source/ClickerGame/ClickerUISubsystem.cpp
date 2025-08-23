@@ -120,6 +120,13 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	const int32 PoolSize = 10;
 	for (int32 i = 0; i < PoolSize; i++) {
 		if (!IdleRewardTextWidgetClass) break;
+		ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
+			TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
+
+		for (UClass* It = IdleRewardTextWidgetClass; It; It = It->GetSuperClass())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UI] IdleRewardTextWidgetClass chain: %s"), *It->GetName());
+		}
 		if (auto* W = CreateWidget<UIdleRewardTextWidget>(World, IdleRewardTextWidgetClass)) {
 			W->AddToViewport(10);
 			W->SetVisibility(ESlateVisibility::Collapsed);
@@ -188,6 +195,14 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 	}
 
 	if (FloatingTextWidgetClass && PlayerController.IsValid()) {
+		ensureMsgf(FloatingTextWidgetClass && FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
+			TEXT("FloatingTextWidgetClass invalid: %s"), *GetNameSafe(FloatingTextWidgetClass));
+
+		for (UClass* It = FloatingTextWidgetClass; It; It = It->GetSuperClass())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UI] FloatingTextWidgetClass chain: %s"), *It->GetName());
+		}
+
 		auto* NewWidget = CreateWidget<UClickFloatingTextWidget>(PlayerController.Get(), FloatingTextWidgetClass);
 		FloatingTextPool.Add(NewWidget);
 		return NewWidget;
@@ -223,7 +238,13 @@ void UClickerUISubsystem::ShowIdleReward(float Amount) {
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
 	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
-		
+	ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
+		TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
+
+	for (UClass* It = IdleRewardTextWidgetClass; It; It = It->GetSuperClass())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[UI] IdleRewardTextWidgetClass chain: %s"), *It->GetName());
+	}
 	if (auto* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
 		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f), false);
 		OfflineWidget->SetRewardAmount(OfflineReward, true);

@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "SaveManagerSubsystem.h"
+#include "IdleRewardTextWidget.h"
 #include "ClickerUISubsystem.h"
 #include "Kismet/KismetMathLibrary.h"
 
