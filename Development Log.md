@@ -271,3 +271,9 @@
 
 - Serious assertion crash occurs.
   - Still looking for the cause.
+
+### 08.25.25.
+
+- Solved assertion crash.
+- Fixed missing idle reward text.
+- Noticed error about save/load.

@@ -91,6 +91,8 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (GEngine && GEngine->GameViewport)
 		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
+	ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
+		TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass));
 	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
 	if (!HUDWidget) return;
 	HUDWidget->AddToViewport();
@@ -140,7 +142,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));	
 	UpdateScore(Snapshot);
 }
 

@@ -17,6 +17,7 @@ void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) 
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
+	RequestSave();
 	StopAutoSaveTimer();
 	StopTickTimer();
 
@@ -74,6 +75,9 @@ void UClickerEconomySubsystem::OnClicked() {
 
 void UClickerEconomySubsystem::OnTick1Second() {
 	EconomySnapshot.Currency += EconomySnapshot.CurrencyPerSecond;
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+		UI->ShowIdleReward(EconomySnapshot.CurrencyPerSecond);
+	}
 	Broadcast();
 }
 
