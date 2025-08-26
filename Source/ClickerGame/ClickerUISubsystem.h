@@ -24,18 +24,15 @@ class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
-
 	void ShowHUD(UWorld* World);
-
-	UFUNCTION()
-	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
-
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowIdleReward(float Amount);
 	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowOfflineReward(float OfflineReward);
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
+	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+
 
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")
 	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;

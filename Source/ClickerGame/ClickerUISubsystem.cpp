@@ -225,6 +225,7 @@ UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
 
 void UClickerUISubsystem::ShowIdleReward(float Amount) {
 	if (auto* Widget = GetRewardWidgetFromPool()) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
 		const FVector2D Center = CachedViewportSize / 2.0f;
 		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
 

@@ -277,3 +277,8 @@
 - Solved assertion crash.
 - Fixed missing idle reward text.
 - Noticed error about save/load.
+
+### 08.26.25.
+
+- An assertion crash occurs but immidiately resolved.
+- Still looking for the cause of save error.
