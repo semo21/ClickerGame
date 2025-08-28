@@ -33,9 +33,7 @@ public:
 	void HideUpgradeSuccessText();
 	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
 
-
-	UPROPERTY(Config, EditAnywhere, Category = "Settings")
-	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
+	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
 	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
 	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
 	UPROPERTY() TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
@@ -44,14 +42,9 @@ public:
 	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
 
 private:
-
-
 	void UpdateScore(const FEconomySnapshot& S);
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 	UIdleRewardTextWidget* GetRewardWidgetFromPool();
-
-	TWeakObjectPtr<APlayerController> PlayerController;
-	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 
 	UPROPERTY()	UUserWidget* HUDWidget;
 	UPROPERTY()	UTextBlock* CurrencyText;
@@ -62,11 +55,10 @@ private:
 	UPROPERTY()	UButton* UpgradeButton;
 	UPROPERTY()	UButton* SaveButton;
 	UPROPERTY()	UButton* LoadButton;
-
 	UPROPERTY() TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	FTimerHandle UpgradeSuccessTimerHandle;
-
 	TWeakObjectPtr< UClickerEconomySubsystem> EconomySubsystemRef;
-
+	TWeakObjectPtr<APlayerController> PlayerController;
+	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 };

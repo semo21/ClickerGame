@@ -37,23 +37,16 @@ class CLICKERGAME_API UClickerEconomySubsystem : public UGameInstanceSubsystem
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
-
 	void StartWorld(UWorld* World);
-
 	void OnClicked();
 	void OnTick1Second();
 	bool TryUpgrade();
-
 	void RequestSave();
 	void RequestLoad();
-
 	FEconomySnapshot MakeSnapshot() const;
 	void ApplySnapshot(const FEconomySnapshot& In);
-
 	double GetUpgradeCost() const;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnEconomyChanged OnEconomyChanged;
+	UPROPERTY(BlueprintAssignable)	FOnEconomyChanged OnEconomyChanged;
 
 private:
 	void Broadcast();

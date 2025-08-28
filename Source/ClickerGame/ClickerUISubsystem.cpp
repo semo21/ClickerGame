@@ -20,6 +20,7 @@
 #include "IdleRewardTextWidget.h"
 #include "ClickerUISettings.h"
 
+// public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 	UE_LOG(LogTemp, Warning, TEXT("[UI] SoftPath=%s"), *UISettingsAsset.ToString());
@@ -141,26 +142,6 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	}
 }
 
-void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));	
-	UpdateScore(Snapshot);
-}
-
-void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
-	if (CurrencyText)
-		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
-
-	if (ClickValueText)
-		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), Snapshot.CurrencyPerClick)));
-
-	if (UpgradeCostText)
-		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase)));
-
-	if (PassiveIncomeText)
-		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), Snapshot.CurrencyPerSecond)));
-
-}
-
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
 	if (!FloatingTextWidgetClass || !PlayerController.IsValid())	return;
 
@@ -189,6 +170,82 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 	}
 }
 
+void UClickerUISubsystem::ShowIdleReward(float Amount) {
+	if (auto* Widget = GetRewardWidgetFromPool()) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
+		const FVector2D Center = CachedViewportSize / 2.0f;
+		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
+
+		Widget->SetPositionInViewport(Center + RandomOffset, false);
+		Widget->SetRewardAmount(Amount, false);
+
+		Widget->SetVisibility(ESlateVisibility::Visible);
+		Widget->PlayFade(1.0f, OfflineRewardSound);
+
+		Widget->AddToViewport(10);
+	}
+}
+
+void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
+	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
+
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, WorldLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
+}
+
+void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
+	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
+	
+	if (auto* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
+		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f), false);
+		OfflineWidget->SetRewardAmount(OfflineReward, true);
+		OfflineWidget->SetVisibility(ESlateVisibility::Visible);
+		OfflineWidget->PlayFade(0.5f, OfflineRewardSound);
+
+		OfflineWidget->AddToViewport(10);
+	}
+}
+
+void UClickerUISubsystem::ShowUpgradeSuccessText() {
+	if (UpgradeSuccessText && PlayerController.IsValid()) {
+		UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
+
+		PlayerController->GetWorldTimerManager().SetTimer(
+			UpgradeSuccessTimerHandle,
+			this,
+			&UClickerUISubsystem::HideUpgradeSuccessText,
+			2.0f,
+			false
+		);
+	}
+}
+
+void UClickerUISubsystem::HideUpgradeSuccessText() {
+	if (UpgradeSuccessText) {
+		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));	
+	UpdateScore(Snapshot);
+}
+
+// private field
+void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
+	if (CurrencyText)
+		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
+
+	if (ClickValueText)
+		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), Snapshot.CurrencyPerClick)));
+
+	if (UpgradeCostText)
+		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase)));
+
+	if (PassiveIncomeText)
+		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), Snapshot.CurrencyPerSecond)));
+
+}
+
 UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 	for (auto* Widget : FloatingTextPool) {
 		if (Widget && !Widget->IsInViewport()) {
@@ -214,69 +271,10 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 }
 
 UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
-
 	for (auto* Widget : RewardTextPool) {
 		if (Widget && !Widget->IsAnimationPlaying()) {			
 				return Widget;
 		}
 	}
 	return nullptr;
-}
-
-void UClickerUISubsystem::ShowIdleReward(float Amount) {
-	if (auto* Widget = GetRewardWidgetFromPool()) {
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
-		const FVector2D Center = CachedViewportSize / 2.0f;
-		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
-
-		Widget->SetPositionInViewport(Center + RandomOffset, false);
-		Widget->SetRewardAmount(Amount, false);
-		
-		Widget->SetVisibility(ESlateVisibility::Visible);
-		Widget->PlayFade(1.0f, OfflineRewardSound);
-
-		Widget->AddToViewport(10);
-	}
-}
-
-void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
-	ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
-		TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
-
-	for (UClass* It = IdleRewardTextWidgetClass; It; It = It->GetSuperClass())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[UI] IdleRewardTextWidgetClass chain: %s"), *It->GetName());
-	}
-	if (auto* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
-		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f), false);
-		OfflineWidget->SetRewardAmount(OfflineReward, true);
-		OfflineWidget->AddToViewport(10);
-	}
-}
-
-void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
-	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
-
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, WorldLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
-}
-
-void UClickerUISubsystem::ShowUpgradeSuccessText() {
-	if (UpgradeSuccessText && PlayerController.IsValid()) {
-		UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
-
-		PlayerController->GetWorldTimerManager().SetTimer(
-			UpgradeSuccessTimerHandle,
-			this,
-			&UClickerUISubsystem::HideUpgradeSuccessText,
-			2.0f,
-			false
-		);
-	}
-}
-
-void UClickerUISubsystem::HideUpgradeSuccessText() {
-	if (UpgradeSuccessText) {
-		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-	}
 }

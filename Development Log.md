@@ -282,3 +282,14 @@
 
 - An assertion crash occurs but immidiately resolved.
 - Still looking for the cause of save error.
+
+### 08.27.25.
+
+- Still figuring out the cause of save error.
+
+### 08.28.25.
+
+- Structure refactoring is completed.
+- But still trying to resolve save errors.
+  - Save time null error resolved.
+- Noticed UI update doesn't working.

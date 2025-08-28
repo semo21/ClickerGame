@@ -15,9 +15,9 @@ class CLICKERGAME_API UClickerSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:	
-	UPROPERTY()	double Currency;
-	UPROPERTY()	double CurrencyPerClick;
-	UPROPERTY()	double CurrencyPerSecond;
-	UPROPERTY()	int32 UpgradeLevel;
-	UPROPERTY()	int64 LastSaveUnixTime = 0;
+	UPROPERTY(SaveGame)	double Currency = 0.0;
+	UPROPERTY(SaveGame)	double CurrencyPerClick = 0.0;
+	UPROPERTY(SaveGame)	double CurrencyPerSecond = 0.0;
+	UPROPERTY(SaveGame)	int32 UpgradeLevel = 0;
+	UPROPERTY(SaveGame)	int64 LastSaveUnixTime = 0;
 };

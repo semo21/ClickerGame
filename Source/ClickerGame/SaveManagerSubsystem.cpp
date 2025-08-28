@@ -22,6 +22,7 @@ bool USaveManagerSubsystem::LoadProgress(FEconomySnapshot& Out) {
 			Out.CurrencyPerClick = SaveObj->CurrencyPerClick;
 			Out.CurrencyPerSecond = SaveObj->CurrencyPerSecond;
 			Out.UpgradeLevel = SaveObj->UpgradeLevel;
+			Out.LastSaveTime = SaveObj->LastSaveUnixTime;
 			
 			return true;
 		}
