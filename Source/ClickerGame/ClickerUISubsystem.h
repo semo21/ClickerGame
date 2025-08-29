@@ -31,6 +31,8 @@ public:
 	void ShowOfflineReward(float OfflineReward);
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
+
+	UFUNCTION()
 	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
 
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;

@@ -293,3 +293,8 @@
 - But still trying to resolve save errors.
   - Save time null error resolved.
 - Noticed UI update doesn't working.
+
+### 08.29.25.
+
+- Resolving delegate error.
+- Studying UBT, UHT, Reflection structure of UE5.
