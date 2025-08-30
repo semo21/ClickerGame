@@ -298,3 +298,7 @@
 
 - Resolving delegate error.
 - Studying UBT, UHT, Reflection structure of UE5.
+
+### 08.30.25.
+
+- Checking errors again.
