@@ -252,53 +252,66 @@
 
 ### 08.20.25.
 
-- Try to resolve Editor crash and initialize errors.
-  - Found the source of errors and resolved.
-  - New error found but can start game.
-  - Added UISettings data asset for handling assets in the editor.
+- Trying to resolve Editor crash and initialization errors.
+  - Found the sources and fixed them.
+  - New error appeared, but the game can start.
+  - Added a UISettings DataAsset for editor-side asset handling.
 
 ### 08.21.25.
 
-- Found serious fault in soource code -- cause of game malfunctioning.
-  - Made a plan to fix it.
-    - It's from refactoring -- I missed some core codes when write some classes.
+- Found a serious fault in soource code causing malfunction.
+  - Planned the fix.
+    - Introduced during refactor -- missed some core code in a fuew classes.
 
 ### 08.22.25.
 
-- Adding core UI and input codes.
+- Adding core UI and input code.
 
 ### 08.23.25.
 
-- Serious assertion crash occurs.
-  - Still looking for the cause.
+- Serious assertion crash occured.
+  - Still investigating the cause.
 
 ### 08.25.25.
 
-- Solved assertion crash.
-- Fixed missing idle reward text.
-- Noticed error about save/load.
+- Resolved the assertion crash.
+- Fixed missing idle-reward text.
+- Noticed an issue with save/load.
 
 ### 08.26.25.
 
-- An assertion crash occurs but immidiately resolved.
-- Still looking for the cause of save error.
+- Assertion crash occured but was resolved immediately.
+- Still investigating the save error.
 
 ### 08.27.25.
 
-- Still figuring out the cause of save error.
+- Still tracking down the save error.
 
 ### 08.28.25.
 
-- Structure refactoring is completed.
-- But still trying to resolve save errors.
-  - Save time null error resolved.
-- Noticed UI update doesn't working.
+- Completed structural refactor.
+- Still working on save errors.
+  - Resolved "save time null" error.
+- Noticed UI updates not working.
 
 ### 08.29.25.
 
-- Resolving delegate error.
-- Studying UBT, UHT, Reflection structure of UE5.
+- Resolving delegate-related error.
+- Studying UBT/UHT and the UE5 reflection system.
 
 ### 08.30.25.
 
-- Checking errors again.
+- Re-checking errors.
+
+### 09.02.25.
+
+- Deciding to write more detailed logs:
+  - What I did, what I’ll do next, and what I learned (instead of just “refactor done”, “save error”, etc.).
+- IsA Assertion crash occured; needed to understand UBT/UHT caching.
+  - Suspected a stale ("ghost") cache in UE.
+  - Deleted saved, binaries, intermidiate folders, regenerated VS files, and rebuilt the project in the editor.
+  - **[Solved]**
+- Verified the project runs well after the refactor.
+  - Save/Load, UI system, and economy systems are working.
+- Need to clean up an output-log warning:
+  - **_LogScript: Warning: Script Msg: The widget 'WBP_IdleRewardText_C_0' was already added to the screen._**
