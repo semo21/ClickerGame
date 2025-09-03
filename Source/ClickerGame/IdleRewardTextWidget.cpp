@@ -35,6 +35,6 @@ void UIdleRewardTextWidget::PlayFade(float PlaybackSpeed, USoundBase* Sound) {
 				bIsPlaying = false;
 			},
 			Duration, false);
-		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
+		UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
 	}
 }

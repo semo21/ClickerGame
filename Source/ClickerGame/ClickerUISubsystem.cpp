@@ -120,6 +120,8 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 			LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
 	}
 
+
+	// Make IdleRewardText Widget Pool
 	const int32 PoolSize = 10;
 	for (int32 i = 0; i < PoolSize; i++) {
 		if (!IdleRewardTextWidgetClass) break;
@@ -180,7 +182,7 @@ void UClickerUISubsystem::ShowIdleReward(float Amount) {
 		Widget->SetRewardAmount(Amount, false);
 
 		Widget->SetVisibility(ESlateVisibility::Visible);
-		Widget->PlayFade(1.0f, OfflineRewardSound);
+		Widget->PlayFade(0.3f, OfflineRewardSound);
 
 		Widget->AddToViewport(10);
 	}
@@ -271,8 +273,13 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 }
 
 UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
+	int i = 0;
 	for (auto* Widget : RewardTextPool) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool %d"), i);
+		i++;
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Looping Pool"));
 		if (Widget && !Widget->IsAnimationPlaying()) {			
+			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Returning Widget"));
 				return Widget;
 		}
 	}

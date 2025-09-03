@@ -315,3 +315,10 @@
   - Save/Load, UI system, and economy systems are working.
 - Need to clean up an output-log warning:
   - **_LogScript: Warning: Script Msg: The widget 'WBP_IdleRewardText_C_0' was already added to the screen._**
+  - UISubsystem의 ShowIdleReward에서 IsAnimationPlaying() 함수가 문제일 것이라고 추측중.
+
+### 09.03.25.
+
+- IdleRewardText의 에러의 원인을 찾은 것 같음.
+  - IdleRewarTextWidget의 IsAnimationPlaying()함수는 정상작동.
+  - 뷰포트에 Add한 후에 제거하지 않은 채로 다시 Add를 하려해서 나는 경고였다고 생각중.
