@@ -184,7 +184,7 @@ void UClickerUISubsystem::ShowIdleReward(float Amount) {
 		Widget->SetVisibility(ESlateVisibility::Visible);
 		Widget->PlayFade(0.3f, OfflineRewardSound);
 
-		Widget->AddToViewport(10);
+		//Widget->AddToViewport(10);
 	}
 }
 
