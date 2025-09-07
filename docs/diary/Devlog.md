@@ -322,3 +322,24 @@
 - IdleRewardText의 에러의 원인을 찾은 것 같음.
   - IdleRewarTextWidget의 IsAnimationPlaying()함수는 정상작동.
   - 뷰포트에 Add한 후에 제거하지 않은 채로 다시 Add를 하려해서 나는 경고였다고 생각중.
+
+### 09.04.25.
+
+- 앞으로의 Devlog format
+  - what: 결과
+  - why: 원인/의도
+  - how: 취한 조치
+  - proof: 로그/스크린샷/커밋 링크 등
+
+### 09.05.25.
+
+- what
+  - ChangeLog 내용 작성
+- why
+  - 변경점 정리 목적
+  - 기존 Devlog가 ChangeLog의 내용까지 포함하고 있었음
+- how
+  - Devlog 내용을 바탕으로 ChangeLog 일별 변경점 작성
+- proof
+  - docs/logs/ChangeLog.md 확인
+  - 또는 깃헙 커밋 링크 확인.
