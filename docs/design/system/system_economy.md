@@ -14,8 +14,8 @@
 
 - CPC = f(UpgradeLevel) = Base \* L
 - CPS = f(UpgradeLevel) = Base \* L / 2
-- 오프라인 보상 = CPS \* 오프라인시간(초) / 30
-  - 제한: 8시간
+- 오프라인 보상 = CPS \* 오프라인시간(초) / 2 (Idle 보상 효율 2배 감소)
+  - 오프라인 보상 누적 제한: 16시간
 
 ## 컴텐츠 맵(요약)
 

@@ -1,221 +1,223 @@
-### 06.11.25.
+# Dev Log
+
+## 06.11.25.
 
 - Fixed an issue where Actors' meshes disappeared after restarting the editor -- the problem was resolved by building the solution in Visual Studio with the Development Editor configuration.
 - Additionally, reviewed the C++ source code and fixed some syntax errors.
 
-### 06.12.25.
+## 06.12.25.
 
 - Fixed an issue where _UpgradeCost_ text was not displayed.
 - Updated the currency display format.
 
-### 06.13.25.
+## 06.13.25.
 
 - Implemented Floating Text to appear on click.
 
-### 06.15.25.
+## 06.15.25.
 
 - Studied the detailed architecture of the Unreal Engine C++ build system.
   - Covered concepts like DLLs, UHT, UBT, etc.
 
-### 06.16.25.
+## 06.16.25.
 
 - Added animation to FloatingText for better visual feedback.
 
-### 06.17.25.
+## 06.17.25.
 
 - Started refactoring the source code, focusing on AMyPlayerController.
   - Began separating responsibilities from AMyPlayerController as it had become too monolithic.
 - Investigated and resolved a branch synchronization issue between local and remote Git repositories, caused by misunderstanding how rebase merges affect commit histories
 
-### 06.18.25.
+## 06.18.25.
 
 - Resolved GitHub merge conflict.
 - Created new UI manager script as part of the refactoring effort.
 
-### 06.20.25.
+## 06.20.25.
 
 - Began refactoring the HUD-related logic within the AMyPlayerController class, continuing the effort to modularize its responsibilities.
 - Added new branch named "refactor/ui-manager"
 
-### 06.23.25.
+## 06.23.25.
 
 - Continued modularizing HUD responsibilites within AMyPlayerController.
 
-### 06.24.25.
+## 06.24.25.
 
 - Ongoing modularization work. Minor internal structuring adjustments.
 
-### 06.25.25.
+## 06.25.25.
 
 - Created Niagara FX for click events.
   - Currently configuring asset settings -- some issues are being worked through.
 
-### 06.26.25.
+## 06.26.25.
 
 - Implemented Niagara FX for click events.
   - Started refactoring the HUD logic inside the PlayerController script.
 
-### 06.27.25.
+## 06.27.25.
 
 - Still refactoring the PlayerController script.
 
-### 06.30.25.
+## 06.30.25.
 
 - Continued refactoring MyPlayerController script.
   - Resolved an error caused by duplicate variable declarations.
   - Further cleanup and modularization planned.
 
-### 07.01.25.
+## 07.01.25.
 
 - Nearly finished refactoring the MyPlayerController script.
 
-### 07.02.25.
+## 07.02.25.
 
 - Completed refactoring of the MyPlayerController script.
 - Removed the refactor branch.
   - Created a new feature branch -- feature/currency-persistence.
 - Added Save and Load system.
 
-### 07.03.25.
+## 07.03.25.
 
 - Refactored Initialize function in UIManager to improve clarity and reduce redundancy.
 
-### 07.04.25.
+## 07.04.25.
 
 - Added autosave system when exiting the game.
   - Added SaveManagerSubsystem to handle Load/Save operations.
 
-### 07.07.25.
+## 07.07.25.
 
 - Added autosave system triggered every 60 seconds.
 - Added Save/Load buttons.
   - Added messages for Save/Load actions.
 
-### 07.08.25.
+## 07.08.25.
 
 - Added offline reward.
 
-### 07.09.25.
+## 07.09.25.
 
 - Working on additional offline reward system.
 
-### 07.10.25.
+## 07.10.25.
 
 - Working on offline reward message.
 
-### 07.11.25.
+## 07.11.25.
 
 - Fixed syntax error in the IdleRewardTextWidget script.
 
-### 07.14.25.
+## 07.14.25.
 
 - Working on Adding Idle Reward(Currency Per Second, Offline Reward) Text Widget.
   - Encountered some errors in the Widget BP. Currently working on fixing them.
 
-### 07.15.25.
+## 07.15.25.
 
 - Added Idle Reward Text Widget with animation.
 - Resolved BP errors.
 
-### 07.16.25.
+## 07.16.25.
 
 - Clean up WBP structures.
 
-### 07.17.25.
+## 07.17.25.
 
 - Added some animations to Idle reward text.
 - ~~Added Offline Reward Text~~
 - Encountered some errors in ClickerComponent and ClickerUIManager. Planning to fix them tomorrow
 
-### 07.18.25.
+## 07.18.25.
 
 - Attempted to resolve syntax errors in scripts.
 
-### 07.21.25.
+## 07.21.25.
 
 - Continued working on resolvving editor-related issues.
 
-### 07.22.25.
+## 07.22.25.
 
 - Resovled errors in ClickerComponent and ClickerUIManager.
 - Added Offline Reward Text
   - Make the animation for Offline Reward Text more detailed.
 
-### 07.23.25.
+## 07.23.25.
 
 - Started to make object pooling for idle reward text.
 
-### 07.24.25.
+## 07.24.25.
 
 - Added new branch for adding ObjectPooling.
 - Deleted old branch --currency-persistence.
 - Working on implementing object pooling for idle rewards.
 
-### 07.25.25.
+## 07.25.25.
 
 - Implemented visual effect using object pooling for IdleRewardTextWidget.
 - However, a somewhat unfamiliar warning sign appears during runtime. Planning to investigate and resolve it.
 
-### 07.27.25.
+## 07.27.25.
 
 - Core game system is now complete.
 - Started searching for suitable graphic assets.
 
-### 07.28.25.
+## 07.28.25.
 
 - Idle Widget Pooling completed.
 - Started implementing sound system.
 - Created feature/SoundSystem branch.
 
-### 07.29.25.
+## 07.29.25.
 
 - Searched Audio source.
   - Added audio package to the project.
 - Implemented the core audio system.
 
-### 07.30.25.
+## 07.30.25.
 
 - Began refactoring UIManager, AudioConfigDataAsset and MyPLayerController scripts.
   - Realized that some script is handling too many responsibilites.
   - Realized the need for a global coordinator to manage communication between systems like UIManager, audio sources, and AudioConfigDataAsset.
 
-### 07.31.25.
+## 07.31.25.
 
 - Investigated architecture strategies for connecting UIManager with AudioConfigDataAsset.
   - Focused on designing a global coordinator -- or initializer, manager etc -- for better decoupling and system communication.
 
-### 08.01.25.
+## 08.01.25.
 
 - Added GameManager script to the game.
   - Added a plan to refactor existing scripts around the GameManager as the central coordinator.
 
-### 08.04.25.
+## 08.04.25.
 
 - Searched suitable asset in my Fab library.
 
-### 08.05.25.
+## 08.05.25.
 
 - Redesigned the flow of the scripts.
 
-### 08.06.25.
+## 08.06.25.
 
 - Started refactoring existing scripts around the GameManager as the central manager.
 
-### 08.07.25.
+## 08.07.25.
 
 - Refactoring is on progress.
 
-### 08.11.25.
+## 08.11.25.
 
 - Continued working on refactoring GameManager script.
 
-### 08.12.25.
+## 08.12.25.
 
 - Gained a deeper understanding of UE5 class inheritance.
 - Decided to adjust the refactoring structure accordingly.
   - Sketched out the new structure.
 
-### 08.13.25.
+## 08.13.25.
 
 - Deleted GameManager script.
 - Created ClickerUISubsystem, ClickerEconomySubsystem scripts.
@@ -223,87 +225,87 @@
 - Completed refactoring UISubsystem and EconomySubsystem.
   - Added FEconomySnapshot structure script for handling economic data.
 
-### 08.14.25.
+## 08.14.25.
 
 - Still in progress of refactoring.
   - Completed refactoring ClickerComponent and PlayerController scripts.
   - Working on refactoring Save system structure.
 
-### 08.15.25.
+## 08.15.25.
 
 - Still in progress of refactoring.
   - Few corrections in UISubsystem and EconomySubsystem.
   - Completed refactoring SaveSubsystem.
 
-### 08.17.25.
+## 08.17.25.
 
 - Still in progress of refactoring.
   - Few typos and grammar errors are corrected.
 
-### 08.18.25.
+## 08.18.25.
 
 - Corrected some typos and details in whole project.
 - Fixing Initializing error.
 
-### 08.19.25.
+## 08.19.25.
 
 - Created DataAsset scipt to handling assets.
 - Try to Resolve Editor crash when the game is started.
 
-### 08.20.25.
+## 08.20.25.
 
 - Trying to resolve Editor crash and initialization errors.
   - Found the sources and fixed them.
   - New error appeared, but the game can start.
   - Added a UISettings DataAsset for editor-side asset handling.
 
-### 08.21.25.
+## 08.21.25.
 
 - Found a serious fault in soource code causing malfunction.
   - Planned the fix.
     - Introduced during refactor -- missed some core code in a fuew classes.
 
-### 08.22.25.
+## 08.22.25.
 
 - Adding core UI and input code.
 
-### 08.23.25.
+## 08.23.25.
 
 - Serious assertion crash occured.
   - Still investigating the cause.
 
-### 08.25.25.
+## 08.25.25.
 
 - Resolved the assertion crash.
 - Fixed missing idle-reward text.
 - Noticed an issue with save/load.
 
-### 08.26.25.
+## 08.26.25.
 
 - Assertion crash occured but was resolved immediately.
 - Still investigating the save error.
 
-### 08.27.25.
+## 08.27.25.
 
 - Still tracking down the save error.
 
-### 08.28.25.
+## 08.28.25.
 
 - Completed structural refactor.
 - Still working on save errors.
   - Resolved "save time null" error.
 - Noticed UI updates not working.
 
-### 08.29.25.
+## 08.29.25.
 
 - Resolving delegate-related error.
 - Studying UBT/UHT and the UE5 reflection system.
 
-### 08.30.25.
+## 08.30.25.
 
 - Re-checking errors.
 
-### 09.02.25.
+## 09.02.25.
 
 - Deciding to write more detailed logs:
   - What I did, what I’ll do next, and what I learned (instead of just “refactor done”, “save error”, etc.).
@@ -317,13 +319,13 @@
   - **_LogScript: Warning: Script Msg: The widget 'WBP_IdleRewardText_C_0' was already added to the screen._**
   - UISubsystem의 ShowIdleReward에서 IsAnimationPlaying() 함수가 문제일 것이라고 추측중.
 
-### 09.03.25.
+## 09.03.25.
 
 - IdleRewardText의 에러의 원인을 찾은 것 같음.
   - IdleRewarTextWidget의 IsAnimationPlaying()함수는 정상작동.
   - 뷰포트에 Add한 후에 제거하지 않은 채로 다시 Add를 하려해서 나는 경고였다고 생각중.
 
-### 09.04.25.
+## 09.04.25.
 
 - 앞으로의 Devlog format
   - what: 결과
@@ -331,7 +333,7 @@
   - how: 취한 조치
   - proof: 로그/스크린샷/커밋 링크 등
 
-### 09.05.25.
+## 09.05.25.
 
 - what
   - ChangeLog 내용 작성

@@ -2,12 +2,17 @@
 
 ## UClickerEconomySubsystem
 
-- void RequestLoad()
-- void RequestSave()
-- const FEconomySnapshot& GetSnapshot() cosnt
-- FOnEconomyChanged OnEconomyChanged
+- void RequestLoad():
+- void RequestSave():
+- const FEconomySnapshot& GetSnapshot() const:
+- FOnEconomyChanged OnEconomyChanged:
 
 ## UClickerUISubsystem
 
-- void ShowIdleReward(double Amount)
-- void ShowFloatingText(const FText& Text, FVector2D ScreenPos)
+- void ShowIdleReward(double Amount):
+- void ShowFloatingText(const FText& Text, FVector2D ScreenPos):
+
+## USaveManagerSubsystem
+
+- void SaveProgress(const FEconomySnapshot& Snapshot):
+- bool LoadProgress(FEconomySnapshot& OutSnapshot):

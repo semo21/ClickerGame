@@ -3,7 +3,7 @@ ChangeLog.md
 
 ChangeLog format
 
-# Date
+## Date
 
 ### feature
 
@@ -30,7 +30,7 @@ ChangeLog format
 - 빌드, 도구, 세팅 등 기타 작업
 ```
 
-# 06.12.25.
+## 06.12.25.
 
 ### fix(build, ui)
 
@@ -38,20 +38,20 @@ ChangeLog format
 - 업그레이드 비용 텍스트 표기
 - 업그레이드 비용 텍스트 포맷 수정
 
-# 06.16.25.
+## 06.16.25.
 
 ### feature(ui)
 
 - 클릭 플로팅 텍스트 및 애니메이션 추가
 
-# 06.26.25.
+## 06.26.25.
 
 ### feature(fx, ui)
 
 - 클릭 Niagara FX 적용
 - HUD 로직 리팩터 시작.
 
-# 07.02.25.
+## 07.02.25.
 
 ### feature(save)
 
@@ -65,14 +65,14 @@ ChangeLog format
 
 - feature/currency-persistence 브랜치 생성
 
-# 07.04.25.
+## 07.04.25.
 
 ### feature(save)
 
 - 종료시 자동 저장 구현
 - SaveManagerSubsystem 도입
 
-# 07.07.25.
+## 07.07.25.
 
 ### feature(save)
 
@@ -88,7 +88,7 @@ ChangeLog format
 
 - IdleRewardTextWidget 문법 오류 수정
 
-# 07.15.25.
+## 07.15.25.
 
 ### feature(ui)
 
@@ -98,14 +98,14 @@ ChangeLog format
 
 - Widget관련 BP오류 해결
 
-# 07.22.25.
+## 07.22.25.
 
 ### feature(ui)
 
 - Offline Reward Text 추가
 - 애니메이션 개선
 
-# 07.24.25.
+## 07.24.25.
 
 ### refactor(ui)
 
@@ -116,13 +116,13 @@ ChangeLog format
 - 오브젝트 풀링 전용 브랜치 생성
 - 완료된 currency-persistence 브랜치 정리
 
-# 07.25.25.
+## 07.25.25.
 
 ### feature(ui)
 
 - IdleRewardText 풀링 기반 비주얼 이펙트 구현
 
-# 07.29.25.
+## 07.29.25.
 
 ### feature(ui)
 
@@ -130,14 +130,14 @@ ChangeLog format
 - 사운드 시스템 핵심 구현
 - 오디오 패키지 추가
 
-# 08.12.25.
+## 08.12.25.
 
 ### refactor(system)
 
 - UE5 상속/구조 이해 심화
   - 설계 조정 및 새 구조 스케치
 
-# 08.15.25.
+## 08.15.25.
 
 ### refactor(system)
 
@@ -146,14 +146,14 @@ ChangeLog format
 - economySnapshot 구조체 생성
 - ClickerComponent, PlayerController, SaveSubsystem 리팩터 완료.
 
-# 08.20.25.
+## 08.20.25.
 
 ### fix(boot)
 
 - 초기화/크래시 원인 해결 진행
   - UISattings DataAsset 생성 후 에셋 주입 정리
 
-# 08.22.25.
+## 08.22.25.
 
 ### fix(ui, input)
 
@@ -161,7 +161,7 @@ ChangeLog format
   - 핵심 코드 누락 확인
   - 코어 UI/Input 코드 보강
 
-# 08.25.25.
+## 08.25.25.
 
 ### fix(boot, ui, save)
 
@@ -170,7 +170,7 @@ ChangeLog format
 - Idle Reward 텍스트 누락 복구.
 - Save/Load 이슈 식별
 
-# 08.26.25.
+## 08.26.25.
 
 ### fix(boot, save)
 
@@ -179,7 +179,7 @@ ChangeLog format
   - \+ VS솔루션 빌드 진행
 - Save 시스템 오류 추적
 
-# 08.28.25.
+## 08.28.25.
 
 ### refactor(system)
 
@@ -190,7 +190,7 @@ ChangeLog format
 - Save time 초기화 에러 해결
 - UI 업데이트 이슈 발견
 
-# 09.02.25.
+## 09.02.25.
 
 ### fix(boot)
 
@@ -202,7 +202,7 @@ ChangeLog format
 
 - 전체 게임 시스템 정상 동작 확인
 
-# 09.03.25.
+## 09.03.25.
 
 ### fix(ui)
 
@@ -218,25 +218,26 @@ ChangeLog format
     - design
       - system
         - system_economy.md
-        - system_UI.md
-      - GameDesign.md(GDD)
+        - system_ui.md
+      - game_design.md(GDD)
     - diary
-      - Devlog.md(ex. DevelopmentLog.md)
+      - devlog.md(ex. DevelopmentLog.md)
     - logs
-      - ChangeLog.md
-    - plannng
+      - changelog.md
+    - planning
       - Daily
       - Weekly
-      - BACKLOG.md
-      - ROADMAP.md
+      - backlog.md
+      - roadmap.md
     - release
     - tech
-      - TechnicalDesign.md (TDD)
+      - api_reference.md
+      - architecture_overview.md
     - testing
 
 - 이후 필요 시 추가/생성 예정
 
-# 09.05.25.
+## 09.05.25.
 
 ### docs
 
