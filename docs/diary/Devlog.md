@@ -356,4 +356,4 @@
 - how
   - 사전에 정립한 Weekly, Daily 포맷을 바탕으로 작성
 - proof
-  - github link
+  - [commit link](https://github.com/semo21/ClickerGame/commit/f897e3b4004211b12f5d6ea83e6c0c195278f87a)
