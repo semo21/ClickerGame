@@ -345,3 +345,15 @@
 - proof
   - docs/logs/ChangeLog.md 확인
   - 또는 깃헙 커밋 링크 확인.
+
+## 09.10.25.
+
+- what
+  - Daily, Weekly 계획 수립 및 문서 작성
+- why
+  - 문서 포맷 적응 목적
+  - 계획 수립 목적
+- how
+  - 사전에 정립한 Weekly, Daily 포맷을 바탕으로 작성
+- proof
+  - github link
