@@ -13,6 +13,7 @@
 #include "ClickerUISubsystem.h"
 #include "ClickTargetActor.h"
 
+// protected field
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
@@ -40,17 +41,18 @@ void AMyPlayerController::SetupInputComponent() {
 	}
 }
 
+// private field
 void AMyPlayerController::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 
 	if (!HitResult.bBlockingHit || !HitResult.GetActor() || !HitResult.GetActor()->IsA(AClickTargetActor::StaticClass())) return;
-		
+
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->OnClicked();
 		if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
 			UI->ShowClickEffect(HitResult.Location);
-			UI->ShowFloatingText(FString::Printf(TEXT("%f"), Eco->MakeSnapshot().CurrencyPerClick), HitResult.Location);
+			UI->ShowFloatingText(FString::Printf(TEXT("%f"), Eco->GetSnapshot().CurrencyPerClick), HitResult.Location);
 		}
 	}
 }

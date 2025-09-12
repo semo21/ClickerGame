@@ -140,7 +140,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	}
 
 	if (auto* Eco = EconomySubsystemRef.Get()) {
-		OnEconomyChanged(Eco->MakeSnapshot());
+		OnEconomyChanged(Eco->GetSnapshot());
 	}
 }
 

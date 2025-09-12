@@ -43,8 +43,7 @@ public:
 	bool TryUpgrade();
 	void RequestSave();
 	void RequestLoad();
-	FEconomySnapshot MakeSnapshot() const;
-	void ApplySnapshot(const FEconomySnapshot& In);
+	const FEconomySnapshot& GetSnapshot() const;		
 	double GetUpgradeCost() const;
 	UPROPERTY(BlueprintAssignable)	FOnEconomyChanged OnEconomyChanged;
 
@@ -54,6 +53,8 @@ private:
 	void StartTickTimer();
 	void StopAutoSaveTimer();
 	void StopTickTimer();
+	FEconomySnapshot MakeSnapshot() const;
+	void ApplySnapshot(const FEconomySnapshot& In);
 
 private:
 	FEconomySnapshot EconomySnapshot;
