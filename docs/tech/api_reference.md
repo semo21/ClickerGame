@@ -41,15 +41,15 @@
   - 재화/업그레이드/오프라인 보상, 1초 틱 수행(자동 보상), Save/Load 트리거
 - **라이프사이클:**
   - **Start:** 
-    - AMyPlayerController의 BeginPlay() 실행 
-    - -> StartWorld(World) 실행 
-    - -> RequestLoad() 실행 (오프라인 보상 적용) 
-    - -> 1s 틱/오토세이브 타이머 시작
+    1. AMyPlayerController의 BeginPlay() 실행 
+    2. StartWorld(World) 실행 
+    3. RequestLoad() 실행 (오프라인 보상 적용) 
+    4. 1s 틱/오토세이브 타이머 시작
   - **Run:** 
-    - 매 1s 'CPS' 지급 
-    - -> OnEconomyChanged 브로드캐스트
+    1. 매 1s 'CPS' 지급 
+    2. -> OnEconomyChanged 브로드캐스트
   - **End:**
-    -  Deinitialize에서 타이머 해제(필요 시 저장)
+    1.  Deinitialize에서 타이머 해제(필요 시 저장)
 - **소유 주체:**
   - Instance = GameInstance (Subsystem)
   - Timer = World TimerManager (시작/해제는 여기서 수행)
@@ -79,11 +79,11 @@
   - **위젯 풀링 방식:**
     - 초기 1회 Add 후 Visible/Collapsed 토글 사용
 - **라이프사이클:**
-  - Initialize() (의존성 구독 + UISettings 동기 로드) 
-  - -> ShowHUD() (1회) 실행 직후 Economy
-  - ->GetSnapshot으로 수치 초기화 
-  - -> 이후 변화는 OnEconomyChanged 구독으로 갱신 
-  - -> Deinitialize() (구독/타이머 정리)
+  1. Initialize() (의존성 구독 + UISettings 동기 로드) 
+  2. ShowHUD() (1회) 실행 직후 Economy
+  3. GetSnapshot으로 수치 초기화 
+  4. 이후 변화는 OnEconomyChanged 구독으로 갱신 
+  5. Deinitialize() (구독/타이머 정리)
 - **소유 주체:**
   - Widgets = Viewport/WidgetTree 소유 (애니메이션 종료 시 Collapsed -> 재사용 시 Visible)
 - **의존성:**
@@ -96,9 +96,9 @@
 - **사용하는 데이터 모델:**
   - FEconomySnapshot (Read-only; 텍스트 갱신 전용)
   
-  ---
-  
-  ### USaveManagerSubsystem
+---
+
+### USaveManagerSubsystem
  
 - **책임:**
   - SaveGame 슬롯 IO, 스냅샷 직렬화/역직렬화
