@@ -11,7 +11,7 @@
 | **UClickerEconomySubsystem** | 재화/업그레이드/오프라인 보상, 1초 틱, Save/Load | StartWorld,RequestLoad, RequestSave, OnClicked, TryUpgrade, GetUpgradeCost, GetSnapshot | OnEconomyChanged(FEconomySnapshot) | FEconomySnapshot            |
 | **UClickerUISubsystem**      | HUD/텍스트 갱신, 토스트/FX/사운드, 풀링 위젯     | ShowHUD, ShowIdleReward, ShowFloatingText                                               | (구독)OnEconomyChanged             | FEconomySnapshot(Read-Only) |
 | **USaveManagerSubsystem**    | SaveGame 슬롯 IO (직렬화/역직렬화)               | SaveProgress, LoadProgress                                                              | -                                  | UClickerSaveGame            |
-| **AMyPlayerController**      | 입력, 초기 시작(ShowHUD/StartWorld), 버튼 핸들러 | OnClick, OnUpgradeClicked, OnSaveClicked                                                | -                                  | -                           |
+| **AMyPlayerController**      | 입력, 초기 시작(ShowHUD/StartWorld), 버튼 핸들러 | *(Note) 입력 바인딩* 전용                                                               | -                                  | -                           |
 
 
 ## 데이터 모델

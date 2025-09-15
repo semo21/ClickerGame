@@ -85,7 +85,9 @@ PlayerController.OnSaveClicked
 - **이벤트 기반 갱신:** UI는 폴링 금지, OnEconomyChanged 구독으로 갱신
 
 ## 8. 오류 처리 & 가드 (구현 예정)
-- DataAsset 로드 실패 시: 기능 우회 + 경고 로그 (크래시 금지)
+- DataAsset 로드 실패 시:
+  - 핵심 DA -> 우회x, 실패 시 즉시 종료
+  - 보조 DA -> 기능 우회, 코드에 경로 작성
 - 잘못된 위젯 클래스/Null World: return + ensure 로그
 - 세이브/로드 실패: 사용자 알림(토스트)
 
