@@ -25,17 +25,17 @@ Unreal Engine 5 C++로 개발된 Idle/Clicker Game의 프로토타입.
 
 ## 문서
 1. design
-   - [Game Design](docs/design/game_design.md)
-   - [Economy System](docs/design/system/system_economy.md)
-   - [UI System](docs/design/system/system_ui.md)
+   - [Game Design](../docs/design/game_design.md)
+   - [Economy System](..docs/design/system/system_economy.md)
+   - [UI System](..docs//design/system/system_ui.md)
 2. tech
-   - [API Reference](docs/tech/api_reference.md)
-   - [Architecture Overview](docs/tech/architecture_overview.md)
+   - [API Reference](..docs//tech/api_reference.md)
+   - [Architecture Overview](..docs//tech/architecture_overview.md)
 3. logs
-   - [Changelog](docs/logs/changelog.md)
+   - [Changelog](..docs//logs/changelog.md)
 4. diary
-   - [Devlog](docs/diary/devlog.md)
+   - [Devlog](..docs//diary/devlog.md)
 5. testing
-   - [Test Cases](docs/testing/test_cases.md)
+   - [Test Cases](..docs//testing/test_cases.md)
 6. release
    - 빌드/릴리즈 노트
