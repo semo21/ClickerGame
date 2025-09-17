@@ -195,6 +195,8 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 }
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
+	ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
+		TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
 	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
 	
 	if (auto* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {

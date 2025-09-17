@@ -21,9 +21,9 @@ class CLICKERGAME_API UClickerUISettings : public UPrimaryDataAsset
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY(EditDefaultsOnly, Category = "UI") TSoftObjectPtr<UNiagaraSystem> ClickEffectAsset = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "FX") TSoftObjectPtr<UNiagaraSystem> ClickEffectAsset = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
-	UPROPERTY(EditDefaultsOnly, Category = "FX") TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")	TSoftObjectPtr<USoundBase> ClickRewardSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sound")	TSoftObjectPtr<USoundBase> OfflineRewardSound;
 };
