@@ -9,12 +9,12 @@
 void UIdleRewardTextWidget::SetRewardAmount(float Amount, bool bIsOfflineReward) {
 	if (AmountText && !bIsOfflineReward) {
 		AmountText->SetText(FText::FromString(FString::Printf(TEXT("+%.0f Gold"), Amount)));
-		UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget IdleReward"));
+		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget IdleReward"));
 	}
 	else if (AmountText && bIsOfflineReward) {
 		AmountText->SetText(FText::FromString(FString::Printf(TEXT("Offline Reward: +%.0f Gold"), Amount)));
 
-		UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget OfflineReward"));
+		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget OfflineReward"));
 	}
 }
 
@@ -35,6 +35,6 @@ void UIdleRewardTextWidget::PlayFade(float PlaybackSpeed, USoundBase* Sound) {
 				bIsPlaying = false;
 			},
 			Duration, false);
-		UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
+		//UE_LOG(LogTemp, Warning, TEXT("IdleRewardTextWidget PlayFade"));
 	}
 }

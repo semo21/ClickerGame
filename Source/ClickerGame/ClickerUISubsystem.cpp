@@ -128,10 +128,10 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
 			TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
 
-		for (UClass* It = IdleRewardTextWidgetClass; It; It = It->GetSuperClass())
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[UI] IdleRewardTextWidgetClass chain: %s"), *It->GetName());
-		}
+		//for (UClass* It = IdleRewardTextWidgetClass; It; It = It->GetSuperClass())
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("[UI] IdleRewardTextWidgetClass chain: %s"), *It->GetName());
+		//}
 		if (auto* W = CreateWidget<UIdleRewardTextWidget>(World, IdleRewardTextWidgetClass)) {
 			W->AddToViewport(10);
 			W->SetVisibility(ESlateVisibility::Collapsed);
@@ -174,7 +174,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 void UClickerUISubsystem::ShowIdleReward(float Amount) {
 	if (auto* Widget = GetRewardWidgetFromPool()) {
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
+		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
 		const FVector2D Center = CachedViewportSize / 2.0f;
 		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
 
@@ -230,7 +230,7 @@ void UClickerUISubsystem::HideUpgradeSuccessText() {
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));	
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::OnEconomyChanged Called"));	
 	UpdateScore(Snapshot);
 }
 
@@ -277,11 +277,11 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
 	int i = 0;
 	for (auto* Widget : RewardTextPool) {
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool %d"), i);
+		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool %d"), i);
 		i++;
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Looping Pool"));
+		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Looping Pool"));
 		if (Widget && !Widget->IsAnimationPlaying()) {			
-			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Returning Widget"));
+			//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Returning Widget"));
 				return Widget;
 		}
 	}

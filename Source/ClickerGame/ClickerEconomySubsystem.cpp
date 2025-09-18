@@ -65,7 +65,7 @@ bool UClickerEconomySubsystem::TryUpgrade() {
 void UClickerEconomySubsystem::RequestSave() {
 	if (USaveManagerSubsystem* Save = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot Out = MakeSnapshot();
-		Out.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
+		//Out.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
 
 		Save->SaveProgress(Out);
 	}
@@ -76,20 +76,25 @@ void UClickerEconomySubsystem::RequestLoad() {
 
 	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
-		//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request Load Instance Exists."));
 		if (Load->LoadProgress(In)) {
-			//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress Succeeded."));
 			const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
-			//UE_LOG(LogTemp, Warning, TEXT("Now=%lld, LastSaveTime=%lld"), Now, In.LastSaveTime);
 			const int64 DeltaSec = Now - In.LastSaveTime;
-			//UE_LOG(LogTemp, Warning, TEXT("DeltaSec=%lld"), DeltaSec);
-			In.Currency += In.CurrencyPerSecond * DeltaSec / 30;
-			//UE_LOG(LogTemp, Warning, TEXT("Offline Reward Applied: %.2f"), In.CurrencyPerSecond * DeltaSec / 30);
+			In.Currency += In.CurrencyPerSecond * DeltaSec / 2;
+
+			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. Before Save: OfflineReward = %lf"), In.CurrencyPerSecond * DeltaSec / 2);
+			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. Before Save: In.LastSaveTime = %d"), In.LastSaveTime);
 
 			ApplySnapshot(In);
+			RequestSave();
+			
+			const int64 DeltaSecAfter = Now - GetSnapshot().LastSaveTime;
+			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. After Save: OfflineReward = %lf"), In.CurrencyPerSecond *
+				DeltaSecAfter / 2);
+			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. After Save: EconomySnapshot.LastSaveTime = %d"),
+				GetSnapshot().LastSaveTime);
 
 			if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-				UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress ShowOfflineReward."));
+				//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress ShowOfflineReward."));
 				UI->ShowOfflineReward(In.CurrencyPerSecond * DeltaSec / 30);
 			}
 		}
@@ -156,5 +161,6 @@ void UClickerEconomySubsystem::ApplySnapshot(const FEconomySnapshot& In) {
 	EconomySnapshot.CurrencyPerSecond = In.CurrencyPerSecond;
 	EconomySnapshot.UpgradeCostBase = In.UpgradeCostBase;
 	EconomySnapshot.UpgradeGrowth = In.UpgradeGrowth;
+	EconomySnapshot.LastSaveTime = In.LastSaveTime;
 	Broadcast();
 }

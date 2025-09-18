@@ -17,13 +17,11 @@ class CLICKERGAME_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()	
 public:
-
-protected:
-	virtual void BeginPlay() override;
-	virtual void SetupInputComponent() override;
-private:
 	UFUNCTION()	void OnClick();
 	UFUNCTION()	void OnUpgradeClicked();
 	UFUNCTION()	void OnSaveClicked();
 	UFUNCTION()	void OnLoadClicked();
+protected:
+	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 };
