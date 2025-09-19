@@ -33,10 +33,10 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
 
-	if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
+	/*if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
 		EconomySubsystemRef = EconomySubsystem;
 		EconomySubsystem->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-	}
+	}*/
 
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
@@ -91,6 +91,11 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 
 	if (GEngine && GEngine->GameViewport)
 		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
+
+	if (auto* Eco = World->GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+		EconomySubsystemRef = Eco;
+		EconomySubsystemRef->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+	}
 
 	ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
 		TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass));
@@ -195,7 +200,9 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 }
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowOfflineReward Called"));
+
+	ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
 		TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
 	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
 	

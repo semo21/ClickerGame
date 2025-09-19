@@ -17,11 +17,13 @@
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>())
+		UI->ShowHUD(GetWorld());
+
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>())
 		Eco->StartWorld(GetWorld());
 
-	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>())
-		UI->ShowHUD(GetWorld());
+
 }
 
 void AMyPlayerController::SetupInputComponent() {

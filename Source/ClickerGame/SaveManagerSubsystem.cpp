@@ -12,6 +12,7 @@ void USaveManagerSubsystem::SaveProgress(const FEconomySnapshot& S) {
 	SaveGameObj->CurrencyPerSecond = S.CurrencyPerSecond;
 	SaveGameObj->UpgradeLevel = S.UpgradeLevel;
 	SaveGameObj->LastSaveUnixTime = FDateTime::UtcNow().ToUnixTimestamp();
+	UE_LOG(LogTemp, Warning, TEXT("SaveManagerSubsystem::SaveProgress Called LastSaveTime: %d"), SaveGameObj->LastSaveUnixTime);
 	UGameplayStatics::SaveGameToSlot(SaveGameObj, SaveSlotName, UserIndex);
 }
 

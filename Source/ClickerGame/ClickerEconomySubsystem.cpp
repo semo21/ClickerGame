@@ -33,7 +33,7 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 	StartAutoSaveTimer();
 	StartTickTimer();
 
-	UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::StartWorld Called"));
+	UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::StartWorld Called"));
 }
 
 void UClickerEconomySubsystem::OnClicked() {
@@ -72,7 +72,7 @@ void UClickerEconomySubsystem::RequestSave() {
 }
 
 void UClickerEconomySubsystem::RequestLoad() {
-	UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request Called"));
+	UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::Request Called"));
 
 	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
@@ -80,18 +80,12 @@ void UClickerEconomySubsystem::RequestLoad() {
 			const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
 			const int64 DeltaSec = Now - In.LastSaveTime;
 			In.Currency += In.CurrencyPerSecond * DeltaSec / 2;
+			In.LastSaveTime = Now;
 
-			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. Before Save: OfflineReward = %lf"), In.CurrencyPerSecond * DeltaSec / 2);
-			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. Before Save: In.LastSaveTime = %d"), In.LastSaveTime);
-
+			UE_LOG(LogTemp, Warning, TEXT("In.LastSaveTime: %d"), In.LastSaveTime);
 			ApplySnapshot(In);
+			UE_LOG(LogTemp, Warning, TEXT("EconomySnapshot.LastSaveTime: %d"), EconomySnapshot.LastSaveTime);
 			RequestSave();
-			
-			const int64 DeltaSecAfter = Now - GetSnapshot().LastSaveTime;
-			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. After Save: OfflineReward = %lf"), In.CurrencyPerSecond *
-				DeltaSecAfter / 2);
-			UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::RequestLoad() Called. After Save: EconomySnapshot.LastSaveTime = %d"),
-				GetSnapshot().LastSaveTime);
 
 			if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
 				//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress ShowOfflineReward."));
@@ -155,12 +149,14 @@ FEconomySnapshot UClickerEconomySubsystem::MakeSnapshot() const {
 }
 
 void UClickerEconomySubsystem::ApplySnapshot(const FEconomySnapshot& In) {
-	EconomySnapshot.UpgradeLevel = In.UpgradeLevel;
-	EconomySnapshot.Currency = In.Currency;
-	EconomySnapshot.CurrencyPerClick = In.CurrencyPerClick;
-	EconomySnapshot.CurrencyPerSecond = In.CurrencyPerSecond;
-	EconomySnapshot.UpgradeCostBase = In.UpgradeCostBase;
-	EconomySnapshot.UpgradeGrowth = In.UpgradeGrowth;
-	EconomySnapshot.LastSaveTime = In.LastSaveTime;
+	//EconomySnapshot.UpgradeLevel = In.UpgradeLevel;
+	//EconomySnapshot.Currency = In.Currency;
+	//EconomySnapshot.CurrencyPerClick = In.CurrencyPerClick;
+	//EconomySnapshot.CurrencyPerSecond = In.CurrencyPerSecond;
+	//EconomySnapshot.UpgradeCostBase = In.UpgradeCostBase;
+	//EconomySnapshot.UpgradeGrowth = In.UpgradeGrowth;
+	//EconomySnapshot.LastSaveTime = In.LastSaveTime;
+
+	EconomySnapshot = In;
 	Broadcast();
 }
