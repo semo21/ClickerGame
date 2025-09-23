@@ -1,15 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ClickerEconomySubsystem.h"
+#include "Systems/Economy/ClickerEconomySubsystem.h"
 
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
-#include "SaveManagerSubsystem.h"
-#include "IdleRewardTextWidget.h"
-#include "ClickerUISubsystem.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Systems/Save/SaveManagerSubsystem.h"
+#include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
+#include "Systems/UI/ClickerUISubsystem.h"
+
 
 // public field
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
@@ -33,7 +35,7 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 	StartAutoSaveTimer();
 	StartTickTimer();
 
-	UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::StartWorld Called"));
+	//UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::StartWorld Called"));
 }
 
 void UClickerEconomySubsystem::OnClicked() {
@@ -72,7 +74,7 @@ void UClickerEconomySubsystem::RequestSave() {
 }
 
 void UClickerEconomySubsystem::RequestLoad() {
-	UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::Request Called"));
+	//UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::Request Called"));
 
 	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
@@ -81,10 +83,8 @@ void UClickerEconomySubsystem::RequestLoad() {
 			const int64 DeltaSec = Now - In.LastSaveTime;
 			In.Currency += In.CurrencyPerSecond * DeltaSec / 2;
 			In.LastSaveTime = Now;
-
-			UE_LOG(LogTemp, Warning, TEXT("In.LastSaveTime: %d"), In.LastSaveTime);
-			ApplySnapshot(In);
-			UE_LOG(LogTemp, Warning, TEXT("EconomySnapshot.LastSaveTime: %d"), EconomySnapshot.LastSaveTime);
+						
+			ApplySnapshot(In);			
 			RequestSave();
 
 			if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {

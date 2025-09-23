@@ -25,6 +25,7 @@ struct FEconomySnapshot
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
 
+class UClickerUISubsystem;
 class USaveManagerSubsystem;
 /**
  * 
@@ -55,8 +56,11 @@ private:
 	void StopTickTimer();
 	FEconomySnapshot MakeSnapshot() const;
 	void ApplySnapshot(const FEconomySnapshot& In);
+	
 
 private:
+	//TWeakObjectPtr<USaveManagerSubsystem> SaveSubsystemRef;
+	//TWeakObjectPtr<UClickerUISubsystem> UISubsystemRef;
 	FEconomySnapshot EconomySnapshot;
 	FTimerHandle AutoSaveHandle;
 	FTimerHandle TickHandle;

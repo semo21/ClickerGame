@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerController.h"
 
 #include "Blueprint/WidgetTree.h"
 #include "UObject/ConstructorHelpers.h"
@@ -9,9 +9,9 @@
 #include "Engine/World.h"
 #include "Components/CanvasPanelSlot.h"
 
-#include "ClickerEconomySubsystem.h"
-#include "ClickerUISubsystem.h"
-#include "ClickTargetActor.h"
+#include "Systems/Economy/ClickerEconomySubsystem.h"
+#include "Systems/UI/ClickerUISubsystem.h"
+#include "Gameplay/Actors/ClickTargetActor.h"
 
 // protected field
 void AMyPlayerController::BeginPlay() {

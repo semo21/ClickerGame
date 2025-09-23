@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ClickerUISubsystem.h"
+#include "Systems/UI/ClickerUISubsystem.h"
 
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
@@ -14,11 +14,11 @@
 #include "NiagaraFunctionLibrary.h"
 #include "TimerManager.h"
 
-#include "ClickerEconomySubsystem.h"
-#include "MyPlayerController.h"
-#include "ClickFloatingTextWidget.h"
-#include "IdleRewardTextWidget.h"
-#include "ClickerUISettings.h"
+#include "Gameplay/Player/MyPlayerController.h"
+#include "Systems/Economy/ClickerEconomySubsystem.h"
+#include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
+#include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
+#include "Systems/UI/Settings/ClickerUISettings.h"
 
 // public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
@@ -33,10 +33,15 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
 
-	/*if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
-		EconomySubsystemRef = EconomySubsystem;
-		EconomySubsystem->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-	}*/
+	//if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
+	//	EconomySubsystemRef = EconomySubsystem;
+	//	EconomySubsystem->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+	//}
+
+	if (auto* Economy = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+		EconomySubsystemRef = Economy;
+		EconomySubsystemRef->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+	}
 
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
@@ -75,7 +80,7 @@ void UClickerUISubsystem::Deinitialize() {
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
+	//UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
 
 	//if (!World) return;
 	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD World Exists."));
