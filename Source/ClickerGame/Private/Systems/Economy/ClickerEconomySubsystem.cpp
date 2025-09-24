@@ -16,7 +16,6 @@
 // public field
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-
 }
 
 void UClickerEconomySubsystem::Deinitialize() {

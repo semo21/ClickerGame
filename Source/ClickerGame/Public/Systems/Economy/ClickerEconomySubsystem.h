@@ -24,7 +24,8 @@ struct FEconomySnapshot
 // ==========================================================================================
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, CurrencyPerSecond);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOfflineReward, double, OfflineReward);
 class UClickerUISubsystem;
 class USaveManagerSubsystem;
 /**
@@ -47,6 +48,8 @@ public:
 	const FEconomySnapshot& GetSnapshot() const;		
 	double GetUpgradeCost() const;
 	UPROPERTY(BlueprintAssignable)	FOnEconomyChanged OnEconomyChanged;
+	UPROPERTY(BlueprintAssignable) FOnPassiveIncome OnPassiveIncome;
+	UPROPERTY(BlueprintAssignable) FOfflineReward OnOfflineReward;
 
 private:
 	void Broadcast();

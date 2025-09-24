@@ -90,6 +90,8 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 
 	//if (!HUDWidgetClass) return;
 	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidgetClass Exists."));
+	UE_LOG(LogTemp, Warning, TEXT("ShowHUD this=%p, PC=%p, Time=%.3f"), this, PlayerController.Get(), FPlatformTime::Seconds());
+
 	if (!World || HUDWidget || !HUDWidgetClass) return;	
 	if (!PlayerController.IsValid())
 		PlayerController = World->GetFirstPlayerController();
@@ -97,10 +99,10 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (GEngine && GEngine->GameViewport)
 		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
 
-	if (auto* Eco = World->GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
-		EconomySubsystemRef = Eco;
-		EconomySubsystemRef->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-	}
+	//if (auto* Eco = World->GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+	//	EconomySubsystemRef = Eco;
+	//	EconomySubsystemRef->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+	//}
 
 	ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
 		TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass));
@@ -149,8 +151,11 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		}
 	}
 
-	if (auto* Eco = EconomySubsystemRef.Get()) {
-		OnEconomyChanged(Eco->GetSnapshot());
+	//if (auto* Eco = EconomySubsystemRef.Get()) {
+	//	OnEconomyChanged(Eco->GetSnapshot());
+	//}
+	if (EconomySubsystemRef.Get()) {
+		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
 	}
 }
 

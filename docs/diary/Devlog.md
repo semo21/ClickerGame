@@ -356,4 +356,126 @@
 - how
   - 사전에 정립한 Weekly, Daily 포맷을 바탕으로 작성
 - proof
-  - [commit link](https://github.com/semo21/ClickerGame/commit/f897e3b4004211b12f5d6ea83e6c0c195278f87a)
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/f897e3b4004211b12f5d6ea83e6c0c195278f87a)
+
+## 09.12.25.
+- what 
+  1. 문서 작성
+- why
+  - 1-1) 기존의 Developement Log에 모든 내용을 기록하는 구조는 문서로서 합리적인 구조가 아니라고 판단.
+  - 1-2) 프로젝트의 전체 구조를 파악할 수 있는 문서를 마련하는 것이 이후에 더 좋을 것이라고 판단.
+- how 
+  - 1-1) api_reference 템플릿 조사 및 작성
+  - 1-2) architecture_overview 문서 작성
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/eda80711010bdf9afb19b5dee0fe84abd0fd2c3f)
+
+## 09.13.25.
+- what
+  1. 문서 작성
+- why
+  - 1-1) 기존의 Developement Log에 모든 내용을 기록하는 구조는 문서로서 합리적인 구조가 아니라고 판단.
+  - 1-2) 프로젝트의 전체 구조를 파악할 수 있는 문서를 마련하는 것이 이후에 더 좋을 것이라고 판단.
+- how
+  - 1-1) architecture_overview 작성
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/43d7682a09e372591e0d337d83d43b2472eb0429)
+
+## 09.15.25.
+- what
+  1. 문서 작성
+- why
+  - 1-1) 기존의 Developement Log에 모든 내용을 기록하는 구조는 문서로서 합리적인 구조가 아니라고 판단.
+  - 1-2) 프로젝트의 전체 구조를 파악할 수 있는 문서를 마련하는 것이 이후에 더 좋을 것이라고 판단.
+- how
+  - 1-1) system_ui 작성
+  - architecture_overview 작성
+  - api_reference 작성
+  - weekly plan 수립 및 작성
+  - 부족한 문서 추가 조사
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/67aada3547b237a2985231d3f0aa490749afc39c)
+
+## 09.17.25.
+- what
+  1. 문서 작성
+  2. CreateWidget 타입 가드 추가
+- why
+  - 1-1) 기존의 Developement Log에 모든 내용을 기록하는 구조는 문서로서 합리적인 구조가 아니라고 판단.
+  - 1-2) 프로젝트의 전체 구조를 파악할 수 있는 문서를 마련하는 것이 이후에 더 좋을 것이라고 판단.
+  - 2-1) Assertion 크래시 및 다른 에러 예방 목적
+- how
+  - 1-1) README 업데이트
+  - 1-2) test_cases 작성
+  - 1-3) system_ui 작성
+  - 2-1) 모든 CreateWidget 실행 코드 앞에 ensure 및 조건문 가드 추가
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/3de0661d58abcbf0bf11eb1e501263c114acc746)
+
+## 09.18.25.
+- what
+  1. Economy 오프라인 보상수령 직후 Save 구조 설계, 분석
+- why
+  - 1 -> 원치않는 시점에 종료되어 보상을 중복수령하게 될 수 있는 구조 방지
+- how
+  - 1-1) Save/Load플로우 파악
+  - 1-2)Offline 보상 수령 및 저장 구조 파악
+  - 1-3) UI업데이트 구조 파악
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/426ebe00af6e111ad3bbe0faaab78faf8b81749d)
+
+## 09.19.25.
+- what
+  1. Economy 오프라인 보상수령 직후 Save구현
+  2. 시작 직후 UISubsystem::ShowOfflineReward 실행되지 않는 현상 수정
+- why
+  - 1 -> 원치 않는 시점에서 종료 시 보상 중복수령 가능성 제거
+  - 2 -> 설계대로 작동하지 않는 UI기능 수정
+- how
+  - 1-1) 예상치 못한 종료 상황 때 보상 중복 수령 가능한 상황 예방
+  - 2-1) UISubsystem::ShowHUD()의 InitilaizeDependency 해제
+  - 2-2) MyPlayerController::BeginPlay()의 UISubsystem, EconomySubsystem Init 순서 변경 
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/8d86033f54f816ca412df34c07c7eea87f3b5c1a)
+
+## 09.22.25.
+- what
+  1. 소스코드 파일 분류
+- why
+  - 스크립트 별 목적, 공개범위에 따라 정리해두는 것이 이후 추가 작업할 때 합리적일 것이라고 판단함.
+- how
+  - 헤더: 다른 클래스에서 사용되는 헤더들은 Public, 그렇지 않은 헤더들은 Private.
+  - C++: 대부분 Private으로 지정
+  - 추가 분류 기준
+  - Gameplay, System, Data 3개의 대분류 후 Save, Data와 같은 세부 목적별로 추가 분류
+  - 분류 후 콜드빌드를 통해 에디터 재시작
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/46ea1babe6b2b12025c1735fa3c7edc42a38d8f2)
+
+
+## 09.23.25.
+- what
+  - 헤더 선언부 전면 수정
+- why
+  - 소스코드 파일 경로 변경으로 인한 수정 필요
+- how
+  - 스크립트의 모든 헤더 경로 직접 수정
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/792980a4eec0694fa37eb7fb3c34af48450b17dd)
+
+## 09.24.25.
+- what
+  1. 밀린 Devlog 작성
+  2. ensure 에러메시지 해결
+- why
+  - 1-1) 문서화 이후 Devlog 역할을 인지하지 못함.
+  - 1-2) Devlog 역할과 내용 조사 후 역할 인지.
+  - 2-1) 델리게이트로 인한 에러가 발생했기 때문에 해결하려 함.
+- how
+  - 1-1) Devlog 역할과 작성 내용 조사
+  - 1-2) 그동안의 Daily Plan을 기반으로 밀린 Devlog 작성
+  - 2-1) 델리게이트 중복 구독으로 인한 ensure 에러메시지 출력을 인지
+  - 2-2) 델리게이트 중복 구독되는 원인 추적
+  - 2-3) 중복 선언으로 인한 중복 구독으로 발생하는 에러임을 인지하고 수정하여 해결
+- proof
+  - Commit Link
