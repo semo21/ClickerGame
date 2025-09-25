@@ -148,14 +148,8 @@ FEconomySnapshot UClickerEconomySubsystem::MakeSnapshot() const {
 }
 
 void UClickerEconomySubsystem::ApplySnapshot(const FEconomySnapshot& In) {
-	//EconomySnapshot.UpgradeLevel = In.UpgradeLevel;
-	//EconomySnapshot.Currency = In.Currency;
-	//EconomySnapshot.CurrencyPerClick = In.CurrencyPerClick;
-	//EconomySnapshot.CurrencyPerSecond = In.CurrencyPerSecond;
-	//EconomySnapshot.UpgradeCostBase = In.UpgradeCostBase;
-	//EconomySnapshot.UpgradeGrowth = In.UpgradeGrowth;
-	//EconomySnapshot.LastSaveTime = In.LastSaveTime;
 
 	EconomySnapshot = In;
+	EconomySnapshot.Print();
 	Broadcast();
 }

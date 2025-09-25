@@ -3,29 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "Data/Economy/EconomySnapshot.h"
 
 #include "ClickerEconomySubsystem.generated.h"
 
-USTRUCT(BlueprintType)
-struct FEconomySnapshot
-{
-	GENERATED_BODY()
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32  UpgradeLevel = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) double Currency = 0.0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) double CurrencyPerClick = 1.0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) double CurrencyPerSecond = 2.0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) double UpgradeCostBase = 10.0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) double UpgradeGrowth = 1.5;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64  LastSaveTime = 0;
-};
-
-// ==========================================================================================
-// ==========================================================================================
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, CurrencyPerSecond);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOfflineReward, double, OfflineReward);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOfflineReward, double, Amount);
+
 class UClickerUISubsystem;
 class USaveManagerSubsystem;
 /**
@@ -47,7 +34,9 @@ public:
 	void RequestLoad();
 	const FEconomySnapshot& GetSnapshot() const;		
 	double GetUpgradeCost() const;
-	UPROPERTY(BlueprintAssignable)	FOnEconomyChanged OnEconomyChanged;
+
+	// Delegate
+	UPROPERTY(BlueprintAssignable) FOnEconomyChanged OnEconomyChanged;
 	UPROPERTY(BlueprintAssignable) FOnPassiveIncome OnPassiveIncome;
 	UPROPERTY(BlueprintAssignable) FOfflineReward OnOfflineReward;
 
@@ -60,13 +49,9 @@ private:
 	FEconomySnapshot MakeSnapshot() const;
 	void ApplySnapshot(const FEconomySnapshot& In);
 	
-
 private:
-	//TWeakObjectPtr<USaveManagerSubsystem> SaveSubsystemRef;
-	//TWeakObjectPtr<UClickerUISubsystem> UISubsystemRef;
 	FEconomySnapshot EconomySnapshot;
 	FTimerHandle AutoSaveHandle;
 	FTimerHandle TickHandle;
 	bool bWorldStarted = false;
-
 };

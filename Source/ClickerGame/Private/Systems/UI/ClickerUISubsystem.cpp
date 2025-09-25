@@ -40,7 +40,7 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	if (auto* Economy = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		EconomySubsystemRef = Economy;
-		EconomySubsystemRef->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+		Economy->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 	}
 
 	if (!UISettingsAsset.IsNull()) {
@@ -80,32 +80,26 @@ void UClickerUISubsystem::Deinitialize() {
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	//UE_LOG(LogTemp, Warning, TEXT("ShowHUD Called"));
-
-	//if (!World) return;
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD World Exists."));
-
-	//if (HUDWidget)	return;
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidget is null."));
-
-	//if (!HUDWidgetClass) return;
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowHUD HUDWidgetClass Exists."));
-	UE_LOG(LogTemp, Warning, TEXT("ShowHUD this=%p, PC=%p, Time=%.3f"), this, PlayerController.Get(), FPlatformTime::Seconds());
+	//UE_LOG(LogTemp, Warning, TEXT("ShowHUD this=%p, PC=%p, Time=%.3f"), this, PlayerController.Get(), FPlatformTime::Seconds());
 
 	if (!World || HUDWidget || !HUDWidgetClass) return;	
-	if (!PlayerController.IsValid())
-		PlayerController = World->GetFirstPlayerController();
 
-	if (GEngine && GEngine->GameViewport)
+	if (!PlayerController.IsValid()) {
+		if (auto* PC = World->GetFirstPlayerController()) {
+			PlayerController = Cast<AMyPlayerController>(PC);
+		}
+
+		if (!PlayerController.IsValid()) return;
+	}
+
+	if (GEngine && GEngine->GameViewport) {
 		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
+	}		
 
-	//if (auto* Eco = World->GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
-	//	EconomySubsystemRef = Eco;
-	//	EconomySubsystemRef->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-	//}
 
 	ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
 		TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass));
+
 	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
 	if (!HUDWidget) return;
 	HUDWidget->AddToViewport();
