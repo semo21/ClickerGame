@@ -479,6 +479,7 @@
   - 2-3) 중복 선언으로 인한 중복 구독으로 발생하는 에러임을 인지하고 수정하여 해결
 - proof
   - Commit Link
+<<<<<<< HEAD:docs/diary/Devlog.md
 
 ## 09.25.25.
 - what
@@ -506,3 +507,5 @@
 - proof
   - Commit Link
   - 1. Image ![Image](./assets/FloatingText_warning.png)
+=======
+>>>>>>> 5b5ad57542ed117685f27b58a3809918a6cc812a:docs/diary/devlog.md
