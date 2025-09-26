@@ -33,15 +33,8 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
 
-	//if (auto* EconomySubsystem = Collection.InitializeDependency<UClickerEconomySubsystem>()) {
-	//	EconomySubsystemRef = EconomySubsystem;
-	//	EconomySubsystem->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-	//}
-
-	if (auto* Economy = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
-		EconomySubsystemRef = Economy;
-		Economy->OnEconomyChanged.AddDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-	}
+	EconomySubsystemRef = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
+	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
@@ -60,10 +53,9 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 }
 
 void UClickerUISubsystem::Deinitialize() {
-	if (auto* Eco = EconomySubsystemRef.Get()) {
-		Eco->OnEconomyChanged.RemoveDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+	if (EconomySubsystemRef) {
+		EconomySubsystemRef->OnEconomyChanged.RemoveDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 	}
-
 	if (auto* PC = PlayerController.Get()) {
 		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
 	}
@@ -71,10 +63,10 @@ void UClickerUISubsystem::Deinitialize() {
 	HUDWidget = nullptr;
 	CurrencyText = ClickValueText = UpgradeCostText = PassiveIncomeText = UpgradeSuccessText = nullptr;
 	UpgradeButton = SaveButton = LoadButton = nullptr;
+	EconomySubsystemRef = nullptr;
 	FloatingTextPool.Empty();
 	RewardTextPool.Empty();
-	PlayerController.Reset();
-	EconomySubsystemRef.Reset();
+	PlayerController.Reset();	
 
 	Super::Deinitialize();
 }
@@ -145,12 +137,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		}
 	}
 
-	//if (auto* Eco = EconomySubsystemRef.Get()) {
-	//	OnEconomyChanged(Eco->GetSnapshot());
-	//}
-	if (EconomySubsystemRef.Get()) {
-		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-	}
+	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {

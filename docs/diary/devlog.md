@@ -505,7 +505,18 @@
   - 4-3) 수정 후 재 빌드 성공
   - 5-1) GPT와 포인터 관련 블로그 게시글을 활용하여 포인터 플로우 이해, 파악
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/b94b593a086c90c77c4ebb6094d328747b47c2a4)
   - 1. Image ![Image](./assets/FloatingText_warning.png)
-=======
->>>>>>> 5b5ad57542ed117685f27b58a3809918a6cc812a:docs/diary/devlog.md
+
+## 09.26.25.
+- what
+  1. UISubsystem의 EconomySubsystemRef 캐싱 멤버 타입 수정중
+- why
+  - 1-1) GISubsystem은 raw pointer를 사용해도 좋다는 사실을 인지.
+  - 1-2) raw pointer 또는 TObjectPtr<T>를 사용하는 것이 가독성 면에서 유리하다고 판단.
+- how
+  - 1-1) Header에서 TWeakObjectPtr<T>에서 TObjectPtr로 수정
+  - 1-2) 기존 WeakPtr을 사용할 때 필요하던 참조 체크 삭제.
+  - 1-3) 하지만 Assertion Crash 발생.
+- proof
+  - Commit Link

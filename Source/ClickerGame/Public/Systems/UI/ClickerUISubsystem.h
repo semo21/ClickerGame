@@ -60,7 +60,8 @@ private:
 	UPROPERTY() TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	FTimerHandle UpgradeSuccessTimerHandle;
-	TWeakObjectPtr< UClickerEconomySubsystem> EconomySubsystemRef;
+	//TWeakObjectPtr< UClickerEconomySubsystem> EconomySubsystemRef;
 	TWeakObjectPtr<APlayerController> PlayerController;
+	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;
 	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 };
