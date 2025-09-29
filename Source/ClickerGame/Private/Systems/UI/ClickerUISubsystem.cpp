@@ -49,7 +49,7 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
 		}
-	}		
+	}
 }
 
 void UClickerUISubsystem::Deinitialize() {
@@ -66,7 +66,7 @@ void UClickerUISubsystem::Deinitialize() {
 	EconomySubsystemRef = nullptr;
 	FloatingTextPool.Empty();
 	RewardTextPool.Empty();
-	PlayerController.Reset();	
+	PlayerController.Reset();
 
 	Super::Deinitialize();
 }
@@ -74,7 +74,7 @@ void UClickerUISubsystem::Deinitialize() {
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	//UE_LOG(LogTemp, Warning, TEXT("ShowHUD this=%p, PC=%p, Time=%.3f"), this, PlayerController.Get(), FPlatformTime::Seconds());
 
-	if (!World || HUDWidget || !HUDWidgetClass) return;	
+	if (!World || HUDWidget || !HUDWidgetClass) return;
 
 	if (!PlayerController.IsValid()) {
 		if (auto* PC = World->GetFirstPlayerController()) {
@@ -86,12 +86,12 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 
 	if (GEngine && GEngine->GameViewport) {
 		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
-	}		
+	}
 
 
-	ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()),
-		TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass));
-
+	if (!ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()), TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass))) {
+		return;
+	}
 	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
 	if (!HUDWidget) return;
 	HUDWidget->AddToViewport();
@@ -123,8 +123,9 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	const int32 PoolSize = 10;
 	for (int32 i = 0; i < PoolSize; i++) {
 		if (!IdleRewardTextWidgetClass) break;
-		ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
-			TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
+		if (!ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()), TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass))) {
+			return;
+		}
 
 		//for (UClass* It = IdleRewardTextWidgetClass; It; It = It->GetSuperClass())
 		//{
@@ -193,10 +194,12 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
 	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowOfflineReward Called"));
 
-	ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()),
-		TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass));
+	if (!ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()), TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass))) {
+		return;
+	}
+
 	if (!IdleRewardTextWidgetClass || !PlayerController.IsValid())	return;
-	
+
 	if (auto* OfflineWidget = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
 		OfflineWidget->SetPositionInViewport(FVector2D(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f), false);
 		OfflineWidget->SetRewardAmount(OfflineReward, true);
@@ -256,8 +259,9 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 	}
 
 	if (FloatingTextWidgetClass && PlayerController.IsValid()) {
-		ensureMsgf(FloatingTextWidgetClass && FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
-			TEXT("FloatingTextWidgetClass invalid: %s"), *GetNameSafe(FloatingTextWidgetClass));
+		if (!ensureMsgf(FloatingTextWidgetClass && FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()), TEXT("FloatingTextWidgetClass invalid: %s"), *GetNameSafe(FloatingTextWidgetClass))) {
+			return nullptr;
+		}
 
 		for (UClass* It = FloatingTextWidgetClass; It; It = It->GetSuperClass())
 		{
@@ -278,9 +282,9 @@ UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
 		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool %d"), i);
 		i++;
 		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Looping Pool"));
-		if (Widget && !Widget->IsAnimationPlaying()) {			
+		if (Widget && !Widget->IsAnimationPlaying()) {
 			//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Returning Widget"));
-				return Widget;
+			return Widget;
 		}
 	}
 	return nullptr;

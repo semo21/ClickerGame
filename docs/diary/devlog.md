@@ -520,3 +520,13 @@
   - 1-3) 하지만 Assertion Crash 발생.
 - proof
   - Commit Link
+
+## 09.27.25.
+- what
+  1. Assertion Crash 해결
+- why
+  - 1-1) UISubsystem::EconomySubsystemRef의 참조방식을 수정하던 중 WBP 에디터 참조에서 유령 캐시 이슈로 Assertion이 난 것으로 추정
+- how
+  - 1-1) Saved, Binaries, Intermediate 폴더 삭제 후 Generate VS files 를 실행하는 콜드 빌드로 해결
+- proof
+  - Commit Link
