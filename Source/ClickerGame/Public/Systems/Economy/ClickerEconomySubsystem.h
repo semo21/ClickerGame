@@ -10,8 +10,8 @@
 #include "ClickerEconomySubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfflineReward, double, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOfflineReward, double, Amount);
 
 class UClickerUISubsystem;
 class USaveManagerSubsystem;
@@ -32,13 +32,16 @@ public:
 	bool TryUpgrade();
 	void RequestSave();
 	void RequestLoad();
-	const FEconomySnapshot& GetSnapshot() const;		
 	double GetUpgradeCost() const;
 
+	UFUNCTION(BlueprintPure, Category = "Economy") const FEconomySnapshot& GetSnapshot() const { return EconomySnapshot; }
+	UFUNCTION(BlueprintPure) bool HasPendingOfflineReward() const { return LastOfflineReward > 0.0;  }
+	UFUNCTION(BlueprintPure) double GetLastOfflineReward() const { return LastOfflineReward; }
+
 	// Delegate
-	UPROPERTY(BlueprintAssignable) FOnEconomyChanged OnEconomyChanged;
-	UPROPERTY(BlueprintAssignable) FOnPassiveIncome OnPassiveIncome;
-	UPROPERTY(BlueprintAssignable) FOfflineReward OnOfflineReward;
+	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnEconomyChanged OnEconomyChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnOfflineReward OnOfflineReward;
+	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnPassiveIncome OnPassiveIncome;
 
 private:
 	void Broadcast();
@@ -48,10 +51,12 @@ private:
 	void StopTickTimer();
 	FEconomySnapshot MakeSnapshot() const;
 	void ApplySnapshot(const FEconomySnapshot& In);
+	void ApplyOfflineReward(double Amount);
 	
 private:
 	FEconomySnapshot EconomySnapshot;
 	FTimerHandle AutoSaveHandle;
 	FTimerHandle TickHandle;
 	bool bWorldStarted = false;
+	double LastOfflineReward = 0.0;
 };

@@ -23,18 +23,20 @@
 // public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-	UE_LOG(LogTemp, Warning, TEXT("[UI] SoftPath=%s"), *UISettingsAsset.ToString());
-
-	// 1) Soft 로드
-	auto* S1 = UISettingsAsset.LoadSynchronous();
-	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadSynchronous -> %s"), *GetNameSafe(S1));
-
-	// 2) 강제 로드
-	auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
+	Collection.InitializeDependency(UClickerEconomySubsystem::StaticClass());
 
 	EconomySubsystemRef = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
+	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
+
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
+
+	//UE_LOG(LogTemp, Warning, TEXT("[UI] SoftPath=%s"), *UISettingsAsset.ToString());
+
+	//auto* S1 = UISettingsAsset.LoadSynchronous();
+	//UE_LOG(LogTemp, Warning, TEXT("[UI] LoadSynchronous -> %s"), *GetNameSafe(S1));
+
+	//auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
 
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
@@ -137,8 +139,10 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 			RewardTextPool.Add(W);
 		}
 	}
-
-	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	
+	if (EconomySubsystemRef) {
+		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	}	
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
