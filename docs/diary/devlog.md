@@ -519,7 +519,7 @@
   - 1-2) 기존 WeakPtr을 사용할 때 필요하던 참조 체크 삭제.
   - 1-3) 하지만 Assertion Crash 발생.
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/fa060ef0c3f1caeb6a37b5ff2ec19a0e941f4e48)
 
 ## 09.27.25.
 - what
@@ -528,5 +528,27 @@
   - 1-1) UISubsystem::EconomySubsystemRef의 참조방식을 수정하던 중 WBP 에디터 참조에서 유령 캐시 이슈로 Assertion이 난 것으로 추정
 - how
   - 1-1) Saved, Binaries, Intermediate 폴더 삭제 후 Generate VS files 를 실행하는 콜드 빌드로 해결
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/d344ddf8722d59efc42e2f1ef5b94e0d5f129fa5)
+
+## 10.02.25.
+- what
+  - UISubsystem::EconomySubsystemRef 포인터 참조구조 변경.
+- why
+  - GameInstnace Subsystem을 약참조할 필요가 없다고 판단.
+  - 약참조로 발생하는 필요없는 Get() 검증 코드 삭제
+- how
+  - EconomySubsystemRef를 WeakPtr->ObjectPtr 타입으로 변경.
+  - 변경된 포인터 수준에 따라 기존 코드 일부 수정.
+- proof
+  - Commit Link
+
+## 10.03.25.
+- what
+  - devlog, planning 문서 작성
+- why
+  - 손목 부상, 컨디션 난조로 문서작성이 지연됐음
+- how
+  - github과 기존 planning 문서 대조하며 작성
 - proof
   - Commit Link
