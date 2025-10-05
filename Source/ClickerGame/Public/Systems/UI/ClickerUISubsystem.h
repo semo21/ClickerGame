@@ -32,8 +32,9 @@ public:
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 
-	UFUNCTION()
-	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+	UFUNCTION()	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+	UFUNCTION() void OnPassiveIncome(double AmountPerSec);
+	UFUNCTION() void OnOfflineReward(double Amount);
 
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
 	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
@@ -60,7 +61,6 @@ private:
 	UPROPERTY() TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	FTimerHandle UpgradeSuccessTimerHandle;
-	//TWeakObjectPtr< UClickerEconomySubsystem> EconomySubsystemRef;
 	TWeakObjectPtr<APlayerController> PlayerController;
 	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;
 	FVector2D CachedViewportSize = FVector2D::ZeroVector;

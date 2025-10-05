@@ -35,7 +35,7 @@ public:
 	double GetUpgradeCost() const;
 
 	UFUNCTION(BlueprintPure, Category = "Economy") const FEconomySnapshot& GetSnapshot() const { return EconomySnapshot; }
-	UFUNCTION(BlueprintPure) bool HasPendingOfflineReward() const { return LastOfflineReward > 0.0;  }
+	UFUNCTION(BlueprintPure) bool HasPendingOfflineReward() const { return LastOfflineReward > 0.0; }
 	UFUNCTION(BlueprintPure) double GetLastOfflineReward() const { return LastOfflineReward; }
 
 	// Delegate

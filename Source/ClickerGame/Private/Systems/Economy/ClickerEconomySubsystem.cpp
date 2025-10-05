@@ -44,9 +44,10 @@ void UClickerEconomySubsystem::OnClicked() {
 
 void UClickerEconomySubsystem::OnTick1Second() {
 	EconomySnapshot.Currency += EconomySnapshot.CurrencyPerSecond;
-	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-		UI->ShowIdleReward(EconomySnapshot.CurrencyPerSecond);
-	}
+	//if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+	//	UI->ShowIdleReward(EconomySnapshot.CurrencyPerSecond);
+	//}
+	OnPassiveIncome.Broadcast(EconomySnapshot.CurrencyPerSecond);
 	Broadcast();
 }
 
@@ -97,9 +98,6 @@ void UClickerEconomySubsystem::RequestLoad() {
 	}
 }
 
-const FEconomySnapshot& UClickerEconomySubsystem::GetSnapshot() const {
-	return EconomySnapshot;
-}
 double UClickerEconomySubsystem::GetUpgradeCost() const {
 	return FMath::Pow(EconomySnapshot.UpgradeGrowth, EconomySnapshot.UpgradeLevel + 1) * EconomySnapshot.UpgradeCostBase;
 }
@@ -151,5 +149,14 @@ void UClickerEconomySubsystem::ApplySnapshot(const FEconomySnapshot& In) {
 
 	EconomySnapshot = In;
 	EconomySnapshot.Print();
+	Broadcast();
+}
+
+void UClickerEconomySubsystem::ApplyOfflineReward(double Amount) {
+	if (Amount <= 0.0) return;
+
+	LastOfflineReward = Amount;
+
+	OnOfflineReward.Broadcast(Amount);
 	Broadcast();
 }
