@@ -29,8 +29,8 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
-	EconomySUbsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
-	EconomySUbsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
+	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
+	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
 	//UE_LOG(LogTemp, Warning, TEXT("[UI] SoftPath=%s"), *UISettingsAsset.ToString());
 
 	//auto* S1 = UISettingsAsset.LoadSynchronous();
@@ -58,8 +58,8 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 void UClickerUISubsystem::Deinitialize() {
 	if (EconomySubsystemRef) {
 		EconomySubsystemRef->OnEconomyChanged.RemoveDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
-		EconomySUbsystemRef->OnPassiveIncome.RemoveDynamic(this, &UClickerUISubsystem::OnPassiveIncome);
-		EconomySUbsystemRef->OnOfflineReward.RemoveDynamic(this, &UClickerUISubsystem::OnOfflineReward);
+		EconomySubsystemRef->OnPassiveIncome.RemoveDynamic(this, &UClickerUISubsystem::OnPassiveIncome);
+		EconomySubsystemRef->OnOfflineReward.RemoveDynamic(this, &UClickerUISubsystem::OnOfflineReward);
 	}
 	if (auto* PC = PlayerController.Get()) {
 		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
@@ -145,7 +145,9 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-		
+		if (EconomySubsystemRef->HasPendingOfflineReward()) {
+			OnOfflineReward(EconomySubsystemRef->GetLastOfflineReward());
+		}
 	}	
 }
 

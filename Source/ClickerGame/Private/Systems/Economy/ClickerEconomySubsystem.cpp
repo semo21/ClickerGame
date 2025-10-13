@@ -10,10 +10,14 @@
 
 #include "Systems/Save/SaveManagerSubsystem.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
-#include "Systems/UI/ClickerUISubsystem.h"
+//#include "Systems/UI/ClickerUISubsystem.h"
 
 
 // public field
+
+//bool UClickerEconomySubsystem::HasPendingOfflineReward() const {
+//	return 
+//}
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 }
@@ -86,11 +90,12 @@ void UClickerEconomySubsystem::RequestLoad() {
 						
 			ApplySnapshot(In);			
 			RequestSave();
-
-			if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-				//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress ShowOfflineReward."));
-				UI->ShowOfflineReward(In.CurrencyPerSecond * DeltaSec / 30);
-			}
+			const double OfflineReward = In.CurrencyPerSecond * DeltaSec / 30;
+			ApplyOfflineReward(OfflineReward);
+			//if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+			//	//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress ShowOfflineReward."));
+			//	UI->ShowOfflineReward(In.CurrencyPerSecond * DeltaSec / 30);
+			//}
 		}
 		else {
 			Broadcast();
