@@ -17,8 +17,4 @@ struct FEconomySnapshot
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) double UpgradeGrowth = 1.5;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64  LastSaveTime = 0;
 
-	void Print() {
-		UE_LOG(LogTemp, Warning, TEXT("EconomySnapshot: Level=%d, Currency=%.2f, CPC=%.2f, CPS=%.2f, CostBase=%.2f, Growth=%.2f, LastSave=%lld"),
-			UpgradeLevel, Currency, CurrencyPerClick, CurrencyPerSecond, UpgradeCostBase, UpgradeGrowth, LastSaveTime);
-	}
 };

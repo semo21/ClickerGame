@@ -52,6 +52,7 @@ private:
 	FEconomySnapshot MakeSnapshot() const;
 	void ApplySnapshot(const FEconomySnapshot& In);
 	void ApplyOfflineReward(double Amount);
+	void UpdateLastOfflineReward(FEconomySnapshot& In);
 	
 private:
 	FEconomySnapshot EconomySnapshot;
