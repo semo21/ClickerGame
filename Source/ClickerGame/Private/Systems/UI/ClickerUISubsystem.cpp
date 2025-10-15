@@ -143,12 +143,12 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		}
 	}
 	
-	if (EconomySubsystemRef) {
-		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-		if (EconomySubsystemRef->HasPendingOfflineReward()) {
-			OnOfflineReward(EconomySubsystemRef->GetLastOfflineReward());
-		}
-	}	
+	//if (EconomySubsystemRef) {
+	//	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	//	if (EconomySubsystemRef->HasPendingOfflineReward()) {
+	//		OnOfflineReward(EconomySubsystemRef->GetLastOfflineReward());
+	//	}
+	//}	
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {

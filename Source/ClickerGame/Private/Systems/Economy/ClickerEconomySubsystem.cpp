@@ -80,19 +80,16 @@ void UClickerEconomySubsystem::RequestLoad() {
 	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
 		if (Load->LoadProgress(In)) {
-			const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
-			const int64 DeltaSec = Now - In.LastSaveTime;
-			In.Currency += In.CurrencyPerSecond * DeltaSec / 2;
-			In.LastSaveTime = Now;
-			LastOfflineReward = In.CurrencyPerSecond * DeltaSec / 30;
-
-			ApplySnapshot(In);			
+		
+			UpdateLastOfflineReward(In);
+						
+			ApplyOfflineReward(GetLastOfflineReward());
+			In.Currency += GetLastOfflineReward();
+			In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
+			ApplySnapshot(In);
 			RequestSave();
-			ApplyOfflineReward(LastOfflineReward);
-			//if (UClickerUISubsystem* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-			//	//UE_LOG(LogTemp, Warning, TEXT("EconomySubsyste::Request LoadProgress ShowOfflineReward."));
-			//	UI->ShowOfflineReward(In.CurrencyPerSecond * DeltaSec / 30);
-			//}
+
+			In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
 		}
 		else {
 			Broadcast();
@@ -163,6 +160,4 @@ void UClickerEconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot& In) {
 	const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
 	const int64 DeltaSec = Now - In.LastSaveTime;
 	LastOfflineReward = In.CurrencyPerSecond * DeltaSec / 30;
-	In.LastSaveTime = Now;
-
 }
