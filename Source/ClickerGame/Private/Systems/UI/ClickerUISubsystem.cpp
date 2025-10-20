@@ -31,13 +31,6 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
 	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
 	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
-	//UE_LOG(LogTemp, Warning, TEXT("[UI] SoftPath=%s"), *UISettingsAsset.ToString());
-
-	//auto* S1 = UISettingsAsset.LoadSynchronous();
-	//UE_LOG(LogTemp, Warning, TEXT("[UI] LoadSynchronous -> %s"), *GetNameSafe(S1));
-
-	//auto* S2 = LoadObject<UClickerUISettings>(nullptr, *UISettingsAsset.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("[UI] LoadObject -> %s"), *GetNameSafe(S2));
 
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
@@ -180,19 +173,20 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 }
 
 void UClickerUISubsystem::ShowIdleReward(float Amount) {
-	if (auto* Widget = GetRewardWidgetFromPool()) {
-		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
-		const FVector2D Center = CachedViewportSize / 2.0f;
-		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
+	ShowReward(Amount, false);
+	//if (auto* Widget = GetRewardWidgetFromPool()) {
+	//	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowIdleReward Called"));
+	//	const FVector2D Center = CachedViewportSize / 2.0f;
+	//	FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
 
-		Widget->SetPositionInViewport(Center + RandomOffset, false);
-		Widget->SetRewardAmount(Amount, false);
+	//	Widget->SetPositionInViewport(Center + RandomOffset, false);
+	//	Widget->SetRewardAmount(Amount, false);
 
-		Widget->SetVisibility(ESlateVisibility::Visible);
-		Widget->PlayFade(0.3f, OfflineRewardSound);
+	//	Widget->SetVisibility(ESlateVisibility::Visible);
+	//	Widget->PlayFade(0.3f, OfflineRewardSound);
 
-		//Widget->AddToViewport(10);
-	}
+	//	//Widget->AddToViewport(10);
+	//}
 }
 
 void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
@@ -202,7 +196,8 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 }
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowOfflineReward Called"));
+	ShowReward(OfflineReward, true);
+	/*UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowOfflineReward Called"));
 
 	if (!ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()), TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass))) {
 		return;
@@ -217,7 +212,16 @@ void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
 		OfflineWidget->PlayFade(0.5f, OfflineRewardSound);
 
 		OfflineWidget->AddToViewport(10);
-	}
+	}*/
+
+	//if (auto* Widget = GetRewardWidgetFromPool()) {
+	//	const FVector2D CenterTop(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f);
+	//	Widget->SetPositionInViewport(CenterTop, false);
+	//	Widget->SetRewardAmount(OfflineReward, true);
+	//	Widget->SetVisibility(ESlateVisibility::Visible);
+	//	Widget->PlayFade(0.5f, OfflineRewardSound);
+
+	//}
 }
 
 void UClickerUISubsystem::ShowUpgradeSuccessText() {
@@ -246,11 +250,12 @@ void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
 }
 
 void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
-	ShowIdleReward(AmountPerSec);
+	HandlePassiveIncome(AmountPerSec);
 }
 
 void UClickerUISubsystem::OnOfflineReward(double Amount) {
-	ShowOfflineReward(Amount);
+	/*ShowOfflineReward(Amount);*/
+	HandleOfflineReward(Amount);
 }
 
 // private field
@@ -266,6 +271,36 @@ void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
 
 	if (PassiveIncomeText)
 		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), Snapshot.CurrencyPerSecond)));
+
+}
+
+void UClickerUISubsystem::HandlePassiveIncome(double Amount) {
+	ShowReward(Amount, false);
+}
+
+void UClickerUISubsystem::HandleOfflineReward(double Amount) {
+	ShowReward(Amount, true);
+}
+
+void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
+	/*const FString suffix = bIsOffline ? TEXT(" (offline)") : TEXT("");
+	ShowOfflineReward(Amount);*/
+
+	if (auto* Widget = GetRewardWidgetFromPool()) {
+		if (bIsOffline) {
+			const FVector2D CenterTop(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f);
+			Widget->SetPositionInViewport(CenterTop, false);
+		}
+		else {
+			const FVector2D Center = CachedViewportSize / 2.0f;
+			FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
+			Widget->SetPositionInViewport(Center + RandomOffset, false);
+		}
+
+		Widget->SetRewardAmount(Amount, true);
+		Widget->SetVisibility(ESlateVisibility::Visible);
+		Widget->PlayFade(bIsOffline ? 0.5f : 0.3f, bIsOffline ? OfflineRewardSound : ClickRewardSound);
+	}
 
 }
 
@@ -295,14 +330,28 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 }
 
 UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
-	int i = 0;
+	//int i = 0;
+	//for (auto* Widget : RewardTextPool) {
+	//	i++;
+	//	if (Widget && !Widget->IsAnimationPlaying()) {
+	//		return Widget;
+	//	}
+	//}
+	//return nullptr;
+
 	for (auto* Widget : RewardTextPool) {
-		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool %d"), i);
-		i++;
-		//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Looping Pool"));
 		if (Widget && !Widget->IsAnimationPlaying()) {
-			//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::GetRewardWidgetFromPool Returning Widget"));
 			return Widget;
+		}
+	}
+
+	// If there is no available widget in the pool, create a new one
+	if (IdleRewardTextWidgetClass && PlayerController.IsValid()) {
+		if (auto* W = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
+			W->AddToViewport(10);
+			W->SetVisibility(ESlateVisibility::Collapsed);
+			RewardTextPool.Add(W);
+			return W;
 		}
 	}
 	return nullptr;

@@ -533,54 +533,70 @@
 
 ## 10.02.25.
 - what
-  - UISubsystem::EconomySubsystemRef 포인터 참조구조 변경.
+  1. UISubsystem::EconomySubsystemRef 포인터 참조구조 변경.
 - why
-  - GameInstnace Subsystem을 약참조할 필요가 없다고 판단.
-  - 약참조로 발생하는 필요없는 Get() 검증 코드 삭제
+  - 1-1) GameInstnace Subsystem을 약참조할 필요가 없다고 판단.
+  - 1-2) 약참조로 발생하는 필요없는 Get() 검증 코드 삭제
 - how
-  - EconomySubsystemRef를 WeakPtr->ObjectPtr 타입으로 변경.
-  - 변경된 포인터 수준에 따라 기존 코드 일부 수정.
+  - 1-1) EconomySubsystemRef를 WeakPtr->ObjectPtr 타입으로 변경.
+  - 1-2) 변경된 포인터 수준에 따라 기존 코드 일부 수정.
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/a4848df3f3c56d05b98c0b1656dcfa7693237706)
 
 ## 10.03.25.
 - what
-  - devlog, planning 문서 작성
+  1. devlog, planning 문서 작성
 - why
-  - 손목 부상, 컨디션 난조로 문서작성이 지연됐음
+  - 1-1) 손목 부상, 컨디션 난조로 문서작성이 지연됐음
 - how
-  - github과 기존 planning 문서 대조하며 작성
+  - 1-1) github과 기존 planning 문서 대조하며 작성
 - proof
   - Commit Link
 
 ## 10.04.25.
 - what
-  - 1Tick, Offline 재화지급 루틴 델리게이트로 일부 수정
+  1. 1Tick, Offline 재화지급 루틴 델리게이트로 일부 수정
 - why
-  - 클래스별 책임분산을 명확히하기 위함
+  - 1-1) 클래스별 책임분산을 명확히하기 위함
 - how
-  - 재화를 지급하는 내용의 코드를 델리게이트 형식으로 변경중
+  - 1-1) 재화를 지급하는 내용의 코드를 델리게이트 형식으로 변경중
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/21bdf0093ac3e73ae3fc5cd2cc7f020f1c91c549)
   
 ## 10.13.25.
 - what
-  - 1Tick, Offline 재화지급 부분 델리게이트 플로우로 변경
+  1. 1Tick, Offline 재화지급 부분 델리게이트 플로우로 변경
 - why
-  - 클래스 별 책임 분산을 명확히하기 위함.
+  - 1-1) 클래스 별 책임 분산을 명확히하기 위함.
 - how
-  - 델리게이트/콜백 플로우로 치환
+  - 1-1) 델리게이트/콜백 플로우로 치환
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/9b61625190184a8c079b71df65c9b8cf1855c1a7)
 
 ## 10.14.25.
 - what
-  - 재화지급 플로우 델리게이트로 수정 마무리 중
+  1. 재화지급 플로우 델리게이트로 수정 마무리 중
 - why
-  - 변경한 델리게이트 플로우에 최적화하기 위해서.
+  - 1-1) 변경한 델리게이트 플로우에 최적화하기 위해서.
 - how
-  - 필요없는 코드를 삭제
-  - 필요한 코드/함수를 생성
-  - 아직 미완
+  - 1-1) 필요없는 코드를 삭제
+  - 1-2) 필요한 코드/함수를 생성
+  - 1-3) 아직 미완
+- proof
+  - Commit Link
+
+## 10.20.25.
+- what
+  1. 오브젝트 풀링 생성 방식 변경
+  2. 델리게이트 플로우 수정 진행중
+  3. 코드 흐름 파악
+- why
+  - 1-1) 위젯별 풀링 생성/제거 방식이 통일되지 않은 상태였음
+  - 2-1) 구조는 완성됐지만 아직 마무리 과정.
+  - 3-1) 연휴와 개인 일정으로 놓친 작업 흐름 복구
+- how
+  - 1-1) UISubsystem의 오브젝트 풀링 함수 내용들 전면 수정 및 일부 삭제
+  - 2-1) 델리게이트 콜백 메서드 추가
+  - 3-1) 현재 집중중인 UISubsystem을 중심으로 코드 흐름 파악 후 오늘의 작업 진행
 - proof
   - Commit Link

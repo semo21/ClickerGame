@@ -45,9 +45,6 @@ void UClickerEconomySubsystem::OnClicked() {
 
 void UClickerEconomySubsystem::OnTick1Second() {
 	EconomySnapshot.Currency += EconomySnapshot.CurrencyPerSecond;
-	//if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-	//	UI->ShowIdleReward(EconomySnapshot.CurrencyPerSecond);
-	//}
 	OnPassiveIncome.Broadcast(EconomySnapshot.CurrencyPerSecond);
 	Broadcast();
 }

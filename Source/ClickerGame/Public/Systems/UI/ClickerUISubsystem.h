@@ -46,6 +46,9 @@ public:
 
 private:
 	void UpdateScore(const FEconomySnapshot& S);
+	void HandlePassiveIncome(double Amount);
+	void HandleOfflineReward(double Amount);
+	void ShowReward(double Amount, bool bIsOffline);
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 	UIdleRewardTextWidget* GetRewardWidgetFromPool();
 
