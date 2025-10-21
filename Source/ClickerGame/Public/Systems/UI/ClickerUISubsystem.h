@@ -49,6 +49,8 @@ private:
 	void HandlePassiveIncome(double Amount);
 	void HandleOfflineReward(double Amount);
 	void ShowReward(double Amount, bool bIsOffline);
+	void CreateIdleRewardTextWidgetPool(UWorld* World, const int32 PoolSize);
+	void CreateFloatingTextWidgetPool(UWorld* World, const int32 PoolSize);
 	UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
 	UIdleRewardTextWidget* GetRewardWidgetFromPool();
 

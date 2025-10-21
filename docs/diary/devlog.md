@@ -583,7 +583,7 @@
   - 1-2) 필요한 코드/함수를 생성
   - 1-3) 아직 미완
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/3c8101c3047ac362193ffed6877883e555fda487)
 
 ## 10.20.25.
 - what
@@ -598,5 +598,24 @@
   - 1-1) UISubsystem의 오브젝트 풀링 함수 내용들 전면 수정 및 일부 삭제
   - 2-1) 델리게이트 콜백 메서드 추가
   - 3-1) 현재 집중중인 UISubsystem을 중심으로 코드 흐름 파악 후 오늘의 작업 진행
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/a92477488140052df6cd81ce9570a4fe509d7f1f)
+
+## 10.21.25.
+- what
+  1. 오브젝트 풀링 생성 방식 리팩터 완료
+  2. IdleReward 텍스트 표기 오류 수정
+  3. 게임 플로우 정상 작동 확인
+- why
+  - 1-1) Idle/Floating Text의 오브젝트 풀링 방식이 통일되지 않았음
+  - 1-2) 둘의 방식을 통일하는 것이 유지보수와 가독성 측면에서 유리하다고 판단함
+  - 2-1) IdleReward(PassiveIncome)가 "Offline Reward: $$"형식으로 의도되지 않은 형태로 출력되는 것을 확인
+  - 3-1) 사소한 리팩터 후 게임 실행에 영향이 있는지 검사해야했음.
+- how
+  - 1-1) IdleWidget Pooling처럼 ShowHUD()함수에서 미리 10개씩 풀링하는 방식으로 진행
+  - 1-2) 다만 FloatingText는 모자랄 수 있으므로 모자라다면 추가 생성하여 AddToViewport하고 풀에 Add하는 방식으로 추가 구조를 마련했음
+  - 2-1) ShowReward()의 매개변수인 bIsOffline의 값이 의도와 다르게 설정된 것에서 발생했다고 추정
+  - 2-2) bool값 분기를 찾아 수정 후 해결 확인.
+  - 3-1) 라이브 코딩 후 게임실행하여 확인했음.
 - proof
   - Commit Link
