@@ -116,6 +116,11 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 
 	CreateIdleRewardTextWidgetPool(World, 10);
 	CreateFloatingTextWidgetPool(World, 10);
+
+	if (EconomySubsystemRef) {
+		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+
+	}
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
