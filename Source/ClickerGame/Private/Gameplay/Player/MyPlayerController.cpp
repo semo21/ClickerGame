@@ -16,12 +16,11 @@
 // protected field
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();	
+	auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
+	auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>();
 
-	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>())
-		Eco->StartWorld(GetWorld());
-
-	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>())
-		UI->ShowHUD(GetWorld());
+	Eco->StartWorld(GetWorld());
+	UI->ShowHUD(GetWorld());
 }
 
 void AMyPlayerController::SetupInputComponent() {

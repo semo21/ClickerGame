@@ -618,4 +618,36 @@
   - 2-2) bool값 분기를 찾아 수정 후 해결 확인.
   - 3-1) 라이브 코딩 후 게임실행하여 확인했음.
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/4dfdac0f3e15940e0952e1e1b76733dba2efe003)
+
+## 10.23.25.
+- what
+  1. ShowOffline 미표기 문제 해결
+  2. UISubsystem::ShowFloatingText 리팩터 후 발생한 CreateLambda관련 에러 관련 해결
+- why
+  - 1-1) 실행 직후 Load하는데, Load시점에서 OfflineReward 보상이 더해지지만, UI로는 표시가 안되는 문제
+  - 1-2) UISubsystem과 EconomySubsystem의 초기화 순서, 시점 문제였음
+  - 2-1) 지난번 ObjectPooling 방식 통일 이후 해당 플로우에서 사용하는 CreateLambda함수 관련 에러 발생
+  - 2-2) 클래스와 클래스 객체를 동시에 제공하여 안정성을 높이려다 발생한 에러라고 추정
+- how
+  - 1-1) MyPlayerController의 초기화 시점에서 각 객체를 먼저 생성.
+  - 1-2) 두 객체가 모두 생성되었으면 Eco, UI 순으로 초기화 함수 실행.
+  - 1-3) 이게 안정적인 방법이 맞는지는 내일 다시 검증 예정
+  - 2-1) 기존엔 CreateLambda(ClassInstance) 형식으로 사용되던 함수를 리팩터함
+  - 2-2) 리팩터 후 구조는 CreateLambda(Class, ClassInstance)타입의 매개변수로 실행
+  - 2-3) 하지만 CreateLambda의 매개변수는 이런 타입을 사용할 수 없기에 CreateWeakLambda로 수정하여 해결
+- proof
+  - Commit Link
+
+## 10.24.25.
+- what
+  1. UI, Economy 서브시스템 초기화 코드 안정성 검토 완료
+  2. 재화지급 플로우, 풀링 정책, 델리게이트 구현 구조 검토 완료
+- why
+  - 1-1) 작성한 코드가 잘못된 방향이 있거나, 추후에 수정해야만 하는 일회성 코드일 수 있으므로 안정성을 검토
+  - 2-1) 이번 리팩터링 과정에서 구현한 결과물들이 합리적인 구조로 구현이 되었는지 안정성과 합리성을 확인하기 위해서 검토
+- how
+  - 1-1) GPT를 통한 초기화 부분 구현 사례, 합리성 검증 판단과 판단 근거, 출처를 추가 확인하여 검토
+  - 2-1) 프로젝트 리팩터링 코드를 직접 순회하며 의심 파트를 검토
+- proof
   - Commit Link

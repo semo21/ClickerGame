@@ -117,10 +117,10 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	CreateIdleRewardTextWidgetPool(World, 10);
 	CreateFloatingTextWidgetPool(World, 10);
 
-	if (EconomySubsystemRef) {
-		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	//if (EconomySubsystemRef) {
+	//	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
 
-	}
+	//}
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -143,9 +143,9 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 			FTimerHandle Temp;
 			Controller->GetWorldTimerManager().SetTimer(
 				Temp,
-				FTimerDelegate::CreateLambda(FloatingWidget, [FloatingWidget]() {
+				FTimerDelegate::CreateWeakLambda(FloatingWidget, [FloatingWidget]() {
 					if (FloatingWidget)	FloatingWidget->SetVisibility(ESlateVisibility::Collapsed);
-					}),
+				}),
 				1.0f,
 				false
 			);
