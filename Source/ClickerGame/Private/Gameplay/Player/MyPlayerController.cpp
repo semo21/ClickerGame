@@ -16,6 +16,7 @@
 // protected field
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();	
+
 	auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
 	auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>();
 

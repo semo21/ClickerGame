@@ -237,7 +237,7 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 
 		Widget->SetRewardAmount(Amount, bIsOffline);
 		Widget->SetVisibility(ESlateVisibility::Visible);
-		Widget->PlayFade(bIsOffline ? 0.5f : 0.3f, bIsOffline ? OfflineRewardSound : ClickRewardSound);
+		Widget->PlayFade(bIsOffline ? 0.5f : 1, bIsOffline ? OfflineRewardSound : ClickRewardSound);
 	}
 
 }

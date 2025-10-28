@@ -637,7 +637,7 @@
   - 2-2) 리팩터 후 구조는 CreateLambda(Class, ClassInstance)타입의 매개변수로 실행
   - 2-3) 하지만 CreateLambda의 매개변수는 이런 타입을 사용할 수 없기에 CreateWeakLambda로 수정하여 해결
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/6f6658c42666e7650ec211367d314e000cdc0d75)
 
 ## 10.24.25.
 - what
@@ -649,5 +649,19 @@
 - how
   - 1-1) GPT를 통한 초기화 부분 구현 사례, 합리성 검증 판단과 판단 근거, 출처를 추가 확인하여 검토
   - 2-1) 프로젝트 리팩터링 코드를 직접 순회하며 의심 파트를 검토
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/6f6658c42666e7650ec211367d314e000cdc0d75)
+
+## 10.28.25.
+- what
+  1. ShowOfflineText 미표기 현상 인지
+  2. FloatingText 미표기 현상 인지 
+- why
+  - 1-1) 초기화 시점 문제로 추측중
+  - 2-1) 클릭해도 FloatingText가 표기되지 않는 현상 발견
+- how
+  - 1-1) 내일 실행시점 재확인 예정
+  - 1-2) 시점으로 해결 안된다면 추가 코드로 구현 예정
+  - 2-1) Visualize 코드 누락으로 추측중
 - proof
   - Commit Link
