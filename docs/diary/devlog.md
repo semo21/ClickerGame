@@ -664,4 +664,19 @@
   - 1-2) 시점으로 해결 안된다면 추가 코드로 구현 예정
   - 2-1) Visualize 코드 누락으로 추측중
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/349169fabf9457fe7305c68d57d745ccb5114d06)
+  
+## 10.29.25.
+- what
+  1. FloatingText 미표기 현상 해결 
+  2. ShowOfflineText 미표기 현상 해결
+- why
+  - 1-1) 콜백 함수에 Collapsed된 Widget을 Visible로 바꾸는 코드 누락
+  - 2-1) UI, Eco 초기화 시점으로 인한 문제
+- how
+  - 1-1) 받아온 Widget을 Visible로 설정하는 코드를 추가하여 해결
+  - 2-1) 나중에 초기화되는 UI에서 OfflineReward를 Trigger하도록 변경
+  - 2-2) 하지만 RequestLoad로 실행되는 위젯 재생이 아니므로 LoadButton을 클릭해도 ShowOfflineText는 실행되지 않게됨.
+  - 2-3) 따라서 내일 이 부분 해결 예정
+- proof
   - Commit Link

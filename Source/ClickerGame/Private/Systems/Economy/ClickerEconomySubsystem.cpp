@@ -80,13 +80,14 @@ void UClickerEconomySubsystem::RequestLoad() {
 		
 			UpdateLastOfflineReward(In);
 						
-			ApplyOfflineReward(GetLastOfflineReward());
-			In.Currency += GetLastOfflineReward();
-			In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
+			//ApplyOfflineReward(GetLastOfflineReward());
+			
+			//In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
+			TriggerOfflineReward();
 			ApplySnapshot(In);
 			RequestSave();
 
-			In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
+			//In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
 		}
 		else {
 			Broadcast();
@@ -96,6 +97,12 @@ void UClickerEconomySubsystem::RequestLoad() {
 
 double UClickerEconomySubsystem::GetUpgradeCost() const {
 	return FMath::Pow(EconomySnapshot.UpgradeGrowth, EconomySnapshot.UpgradeLevel + 1) * EconomySnapshot.UpgradeCostBase;
+}
+
+void UClickerEconomySubsystem::TriggerOfflineReward() {
+	if (LastOfflineReward > 0.0) {
+		OnOfflineReward.Broadcast(LastOfflineReward);
+	}
 }
 
 //  private field
@@ -157,4 +164,6 @@ void UClickerEconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot& In) {
 	const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
 	const int64 DeltaSec = Now - In.LastSaveTime;
 	LastOfflineReward = In.CurrencyPerSecond * DeltaSec / 30;
+	In.Currency += GetLastOfflineReward();
 }
+

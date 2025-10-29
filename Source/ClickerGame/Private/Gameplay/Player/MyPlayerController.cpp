@@ -77,5 +77,6 @@ void AMyPlayerController::OnSaveClicked() {
 void AMyPlayerController::OnLoadClicked() {
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestLoad();
+		Eco->TriggerOfflineReward();
 	}
 }

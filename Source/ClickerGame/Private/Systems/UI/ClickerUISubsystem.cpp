@@ -117,10 +117,11 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	CreateIdleRewardTextWidgetPool(World, 10);
 	CreateFloatingTextWidgetPool(World, 10);
 
-	//if (EconomySubsystemRef) {
-	//	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	if (EconomySubsystemRef) {
+		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+		//EconomySubsystemRef->TriggerOfflineReward();
 
-	//}
+	}
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -135,6 +136,8 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 		if (auto* Slot = Cast<UCanvasPanelSlot>(FloatingWidget->Slot))
 			Slot->SetPosition(ScreenPosition);
+			
+		FloatingWidget->SetVisibility(ESlateVisibility::Visible);
 
 		if (FloatingWidget->FloatUpFade)
 			FloatingWidget->PlayAnimation(FloatingWidget->FloatUpFade);
@@ -257,6 +260,7 @@ UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 			NewWidget->AddToViewport(11);
 			NewWidget->SetVisibility(ESlateVisibility::Collapsed);
 			FloatingTextPool.Add(NewWidget);
+			UE_LOG(LogTemp, Warning, TEXT("Created new FloatingTextWidget, pool size: %d"), FloatingTextPool.Num());
 			return NewWidget;
 		}
 	}

@@ -33,6 +33,7 @@ public:
 	void RequestSave();
 	void RequestLoad();
 	double GetUpgradeCost() const;
+	void TriggerOfflineReward();
 
 	UFUNCTION(BlueprintPure, Category = "Economy") const FEconomySnapshot& GetSnapshot() const { return EconomySnapshot; }
 	UFUNCTION(BlueprintPure) bool HasPendingOfflineReward() const { return LastOfflineReward > 0.0; }
