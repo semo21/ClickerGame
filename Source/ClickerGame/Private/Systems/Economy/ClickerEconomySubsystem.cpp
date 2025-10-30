@@ -10,18 +10,15 @@
 
 #include "Systems/Save/SaveManagerSubsystem.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
-//#include "Systems/UI/ClickerUISubsystem.h"
-
 
 // public field
-
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
 	RequestSave();
-	StopAutoSaveTimer();
+	StopAutoSaveTimer(); 
 	StopTickTimer();
 
 	Super::Deinitialize();

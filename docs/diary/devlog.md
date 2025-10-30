@@ -679,4 +679,17 @@
   - 2-2) 하지만 RequestLoad로 실행되는 위젯 재생이 아니므로 LoadButton을 클릭해도 ShowOfflineText는 실행되지 않게됨.
   - 2-3) 따라서 내일 이 부분 해결 예정
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/71173cd699aa0460c5bd15eb813519d256f3fd5d)
+
+## 10.30.25.
+- what
+  1. ShowOfflineReward 실행시/Load 버튼 클릭시 모두 출력되게 개선
+  2. FloatingTextWidgetPool 활용방식 개선 진행 
+- why
+  - 1-1) 실행시 1회만 재생되거나, 실행시 재생안되고 Load 클릭시에만 재생되는 현상이었음
+  - 2-1) FloatingText를 불러와 재생하는 과정에서 애니메이션 종료처리가 불분명하여 위젯이 풀에 존재함에도 부족하다고 판단하여 계속해서 새로운 위젯을 생성하는 현상이었음
+- how
+  - 1-1) 초기화 때 Trigger함수로 재생시키고, 이후 Load버튼 클릭시엔 기존과 같이 RequestLoad를 통해 재생하도록 개선
+  - 2-1) FloatingTextWidget에 애니메이션 재생 함수, 사용가능여부 함수 작성중
+- proof
   - Commit Link

@@ -22,4 +22,10 @@ public:
 
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* FloatUpFade;
+
+    void PlayFade();
+    bool IsAvailable() const { return bIsAvailable; }
+
+private:
+    bool bIsAvailable = false;
 };

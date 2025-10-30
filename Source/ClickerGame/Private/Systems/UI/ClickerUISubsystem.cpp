@@ -119,7 +119,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-		//EconomySubsystemRef->TriggerOfflineReward();
+		EconomySubsystemRef->TriggerOfflineReward();
 
 	}
 }
@@ -247,6 +247,7 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 
 UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
 	for (auto* Widget : FloatingTextPool) {
+		UE_LOG(LogTemp, Warning, TEXT("Checking FloatingTextWidget in pool"));
 		if(Widget && !Widget->IsAnimationPlaying(Widget->FloatUpFade)) {
 			return Widget;
 		}
