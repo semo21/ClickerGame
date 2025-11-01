@@ -25,6 +25,7 @@ public:
 
     void PlayFade();
     bool IsAvailable() const { return bIsAvailable; }
+	void OnFloatAnimationFinished();
 
 private:
     bool bIsAvailable = false;

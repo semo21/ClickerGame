@@ -8,8 +8,10 @@ void UClickFloatingTextWidget::PlayFade() {
 	SetVisibility(ESlateVisibility::Visible);
 	PlayAnimation(FloatUpFade);
 
-	BindToAnimationFinished(FloatUpFade, FWidgetAnimationDynamicEvent::CreateWeakLambda(this, [this](UWidgetAnimation*) {
-		SetVisibility(ESlateVisibility::Collapsed);
-		bIsAvailable = true;
-		}));
+	BindToAnimationFinished(FloatUpFade, FWidgetAnimationDynamicEvent::CreateUObject(this, &UClickFloatingTextWidget::OnFloatAnimationFinished);
+}
+
+void UClickFloatingTextWidget::OnFloatAnimationFinished() {
+	bIsAvailable = true;
+	SetVisibility(ESlateVisibility::Collapsed);
 }
