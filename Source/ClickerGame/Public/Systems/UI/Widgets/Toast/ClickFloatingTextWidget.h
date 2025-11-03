@@ -10,6 +10,7 @@
 /**
  *
  */
+class UWidgetAnimation;
 UCLASS()
 class CLICKERGAME_API UClickFloatingTextWidget : public UUserWidget
 {
@@ -23,10 +24,14 @@ public:
     UPROPERTY(meta = (BindWidgetAnim), Transient)
     UWidgetAnimation* FloatUpFade;
 
-    void PlayFade();
-    bool IsAvailable() const { return bIsAvailable; }
-	void OnFloatAnimationFinished();
 
+
+    void PlayFade();
+    bool IsAvailable() const { return !bInUse; }
+	virtual void NativeConstruct() override;
 private:
-    bool bIsAvailable = false;
+    bool bInUse = false;
+
+    UFUNCTION()
+    void OnFloatAnimationFinished(UUMGSequencePlayer* Player);
 };

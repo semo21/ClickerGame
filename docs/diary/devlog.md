@@ -692,4 +692,17 @@
   - 1-1) 초기화 때 Trigger함수로 재생시키고, 이후 Load버튼 클릭시엔 기존과 같이 RequestLoad를 통해 재생하도록 개선
   - 2-1) FloatingTextWidget에 애니메이션 재생 함수, 사용가능여부 함수 작성중
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/ff4b0df972371f07bc6248c8f64b3936712e45ad)
+
+## 11.03.25.
+- what
+  1. FloatingTextWidgetPool 재사용 가능하도록 리팩터 진행중 
+- why
+  - 1-1) FloatingTextWidget이 현재 재사용이 불가능함.
+  - 1-2) FloatingTextWidget의 애니메이션이 끝났다는 것을 제대로 받아오지 못하는 것으로 추측
+- how
+  - 1-1) FloatingTextWidget 자체에서 애니메이션이 끝나면 델리게이트 콜백으로 사용가능 상태 전환
+  - 1-2) UIManager에서 해당 Widget의 사용가능 여부로 판단하여 재활용
+  - 1-3) 현재 델리게이트 바인딩 구현부에서 문법 오류 해결중
+- proof
   - Commit Link
