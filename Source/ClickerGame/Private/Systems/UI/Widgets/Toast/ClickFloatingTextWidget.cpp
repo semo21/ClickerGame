@@ -4,27 +4,26 @@
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Animation/UMGSequencePlayer.h"
 #include "Animation/WidgetAnimation.h"
+#include "Components/TextBlock.h"
 
 void UClickFloatingTextWidget::PlayFade() {
 	bInUse = true;
 	SetVisibility(ESlateVisibility::Visible);
-	if(FloatUpFade)	PlayAnimation(FloatUpFade);
-}
-
-void UClickFloatingTextWidget::NativeConstruct() {
-	Super::NativeConstruct();
-
 	if (FloatUpFade) {
-		UnbindAllFromAnimationFinished(FloatUpFade);
-
-		FWidgetAnimationDynamicEvent Finished;
-		Finished.BindDynamic(this, &UClickFloatingTextWidget::OnFloatAnimationFinished);
-		BindToAnimationFinished(FloatUpFade, Finished);
-	}	
+		if (UUMGSequencePlayer* Player = PlayAnimation(FloatUpFade)) {
+			Player->OnSequenceFinishedPlaying().AddUObject(this, &UClickFloatingTextWidget::OnFloatPlayerFinished);
+		}			
+	}
+	else {
+		OnFloatPlayerFinished(*(UUMGSequencePlayer*)nullptr);
+	}
 }
 
-void UClickFloatingTextWidget::OnFloatAnimationFinished(UWidgetAnimation* Player) {
+void UClickFloatingTextWidget::OnFloatPlayerFinished(UUMGSequencePlayer& Player) {
 	SetVisibility(ESlateVisibility::Collapsed);
 	bInUse = false;
 }
+
+
+
 

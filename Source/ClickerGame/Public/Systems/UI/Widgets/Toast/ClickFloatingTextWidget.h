@@ -10,7 +10,7 @@
 /**
  *
  */
-class UWidgetAnimation;
+class UUMGSequencePlayer;
 UCLASS()
 class CLICKERGAME_API UClickFloatingTextWidget : public UUserWidget
 {
@@ -18,20 +18,14 @@ class CLICKERGAME_API UClickFloatingTextWidget : public UUserWidget
 	
 
 public:
-    UPROPERTY(meta = (BindWidget))
-    class UTextBlock* FloatingText;
-
-    UPROPERTY(meta = (BindWidgetAnim), Transient)
-    UWidgetAnimation* FloatUpFade;
-
-
+    UPROPERTY(meta = (BindWidget))  class UTextBlock* FloatingText = nullptr;
+    UPROPERTY(meta = (BindWidgetAnim), Transient)   UWidgetAnimation* FloatUpFade = nullptr;
 
     void PlayFade();
     bool IsAvailable() const { return !bInUse; }
-	virtual void NativeConstruct() override;
+
 private:
     bool bInUse = false;
 
-    UFUNCTION()
-    void OnFloatAnimationFinished(UUMGSequencePlayer* Player);
+    void OnFloatPlayerFinished(UUMGSequencePlayer& Player);
 };

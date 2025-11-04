@@ -120,17 +120,26 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
 		EconomySubsystemRef->TriggerOfflineReward();
-
 	}
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
 	if (!FloatingTextWidgetClass || !PlayerController.IsValid())	return;
-
+	//UE_LOG(LogTemp, Warning, TEXT("ShowFloatingText"));
 	FVector2D ScreenPosition;
 	UGameplayStatics::ProjectWorldToScreen(PlayerController.Get(), WorldLocation, ScreenPosition);
 
-	if (auto* FloatingWidget = GetFloatingTextWidgetFromPool()) {
+	if (auto* W = GetFloatingTextWidgetFromPool()) {
+		W->PlayFade();
+		if (auto* TB = Cast<UTextBlock>(W->GetWidgetFromName(TEXT("FloatingText")))) {
+			TB->SetText(FText::FromString(Message));
+		}
+		if (auto* Slot = Cast<UCanvasPanelSlot>(W->Slot)) {
+			Slot->SetPosition(ScreenPosition);
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("GetFloatingTextWidgetFromPool"));
+	}
+	/*if (auto* FloatingWidget = GetFloatingTextWidgetFromPool()) {
 		if (auto* TextBlock = Cast<UTextBlock>(FloatingWidget->GetWidgetFromName(TEXT("FloatingText"))))
 			TextBlock->SetText(FText::FromString(Message));
 
@@ -153,7 +162,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 				false
 			);
 		}
-	}
+	}*/
 }
 
 void UClickerUISubsystem::ShowIdleReward(float Amount) {
@@ -246,10 +255,9 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 }
 
 UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
-	for (auto* Widget : FloatingTextPool) {
-		UE_LOG(LogTemp, Warning, TEXT("Checking FloatingTextWidget in pool"));
-		if(Widget && !Widget->IsAnimationPlaying(Widget->FloatUpFade)) {
-			return Widget;
+	for (auto* W : FloatingTextPool) {
+		if (W && W->IsAvailable()) {
+			return W;
 		}
 	}
 

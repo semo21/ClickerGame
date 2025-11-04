@@ -158,9 +158,13 @@ void UClickerEconomySubsystem::ApplyOfflineReward(double Amount) {
 }
 
 void UClickerEconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot& In) {
+	// Offline Reward max 8 hours
 	const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
-	const int64 DeltaSec = Now - In.LastSaveTime;
-	LastOfflineReward = In.CurrencyPerSecond * DeltaSec / 30;
+	const int64 DeltaSec = 
+		(Now - In.LastSaveTime > 28800) ? 
+		28800 : (Now - In.LastSaveTime);
+	
+	LastOfflineReward = In.CurrencyPerSecond * DeltaSec;
 	In.Currency += GetLastOfflineReward();
 }
 
