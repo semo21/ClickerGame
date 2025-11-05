@@ -2,17 +2,16 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Systems/UI/Widgets/ToastWidgetBase.h"
 
 #include "ClickFloatingTextWidget.generated.h"
 
 /**
  *
  */
-class UUMGSequencePlayer;
+class UTextBlock;
 UCLASS()
-class CLICKERGAME_API UClickFloatingTextWidget : public UUserWidget
+class CLICKERGAME_API UClickFloatingTextWidget : public UToastWidgetBase
 {
 	GENERATED_BODY()
 	

@@ -705,4 +705,32 @@
   - 1-2) UIManager에서 해당 Widget의 사용가능 여부로 판단하여 재활용
   - 1-3) 현재 델리게이트 바인딩 구현부에서 문법 오류 해결중
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/8fc1b1d6812e1c101c8bc3927cdcab4e66c21f49)
+
+## 11.04.25.
+- what
+  1. FloatingTextWidget Pool 리팩터 완료
+  2. OfflineReward 누적 8시간 제한 구현 
+  3. 기존 브랜치 머지 후 새로운 작업 브랜치 생성
+- why
+  - 1-1) 사용 가능한 Pool의 위젯을 재활용하지 못하는 현상 해결
+  - 2-1) 문서에 선언했던대로 구현
+  - 3-1) 기존 브랜치에 지나치게 여러 작업을 했기에 앞으로 작업별로 브랜치를 생성해서 사용할 예정
+- how
+  - 1-1) ClickFloatingText 클래스에서 애니메이션을 재생
+  - 1-2) 재생이 끝나면 사용 가능 상태를 표시하는 bool멤버를 전환하는 콜백 함수를 실행
+  - 2-1) EconomySubsystem의 LastOfflineReward를 저장하는 부분에서 수식 수정
+  - 3-1) feature/refactor 브랜치 머지 후 feature/refactor-toastwidget 브랜치 생성
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/fe06b1736ce2fd4e47465cf0a72af88e3812b769)
+
+## 11.05.25.
+- what
+  1. ToastWidgetBase 클래스 생성 후 공용 코드 작성 
+- why
+  - 1-1) 이후 비슷하지만 조금 달느 위젯을 만들거나, 현재 존재하는 위젯 관리의 유연성을 위해 상속구조로 개편하기로 결정
+- how
+  - 1-1) ToastWidgetBase라는 Toast Widget들의 부모클래스를 만들어 공용 코드를 작성했음.
+  - 1-2) 이후 추가로 상속을 구현할 예정
+- proof
   - Commit Link

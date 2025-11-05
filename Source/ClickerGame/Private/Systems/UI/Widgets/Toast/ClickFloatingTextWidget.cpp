@@ -23,7 +23,3 @@ void UClickFloatingTextWidget::OnFloatPlayerFinished(UUMGSequencePlayer& Player)
 	SetVisibility(ESlateVisibility::Collapsed);
 	bInUse = false;
 }
-
-
-
-
