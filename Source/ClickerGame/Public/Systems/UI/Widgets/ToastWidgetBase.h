@@ -7,10 +7,10 @@
 
 #include "ToastWidgetBase.generated.h"
 
+class UUMGSequencePlayer;
 /**
  * 
  */
-class UUMGSequencePlayer;
 UCLASS(Abstract)
 class CLICKERGAME_API UToastWidgetBase : public UUserWidget
 {

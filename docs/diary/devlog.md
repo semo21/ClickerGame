@@ -733,4 +733,15 @@
   - 1-1) ToastWidgetBase라는 Toast Widget들의 부모클래스를 만들어 공용 코드를 작성했음.
   - 1-2) 이후 추가로 상속을 구현할 예정
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/8da8857bd106d74b11fb4a08b7ed9d5685bd6278)
+
+## 11.06.25.
+- what
+  1. Floating, Idle Widget, UIManager 코드 수정 
+- why
+  - 1-1) ToastWidgetBase 상속구조를 활용함에 따라 코드 정리 및 수정
+- how
+  - 1-1) Idle, Floating Widget 상속 부모 변경
+  - 1-2) UIManger의 코드 수정중.
+- proof
   - Commit Link

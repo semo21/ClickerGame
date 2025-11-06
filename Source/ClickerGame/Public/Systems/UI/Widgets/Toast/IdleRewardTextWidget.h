@@ -2,36 +2,36 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Systems/UI/Widgets/ToastWidgetBase.h"
 
 #include "IdleRewardTextWidget.generated.h"
 
-class USoundBase;
+class UTextBlock;
 /**
  *
  */
 UCLASS()
-class CLICKERGAME_API UIdleRewardTextWidget : public UUserWidget
+class CLICKERGAME_API UIdleRewardTextWidget : public UToastWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void SetRewardAmount(float Amount, bool bIsOfflineReward);
+	virtual void SetupToast(const FText& InText, const FVector2D& ScreenPos) override;
 
-	UFUNCTION(BlueprintCallable)
-	void PlayFade(float PlaybackSpeed, USoundBase* Sound);
+	//UFUNCTION(BlueprintCallable)
+	//void SetRewardAmount(float Amount, bool bIsOfflineReward);
 
-	bool IsAnimationPlaying() const { return bIsPlaying; }
+	//UFUNCTION(BlueprintCallable)
+	//void PlayFade(float PlaybackSpeed, USoundBase* Sound);
+
+	//bool IsAnimationPlaying() const { return bIsPlaying; }
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* AmountText;
+	UPROPERTY(meta = (BindWidget))	class UTextBlock* RewardText;
 
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	class UWidgetAnimation* FadeInOut;
+	//UPROPERTY(meta = (BindWidgetAnim), Transient)
+	//class UWidgetAnimation* FadeInOut;
 
-	UPROPERTY()
-	bool bIsPlaying = false;
+	//UPROPERTY()
+	//bool bIsPlaying = false;
 };

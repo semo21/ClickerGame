@@ -6,10 +6,10 @@
 
 #include "ClickFloatingTextWidget.generated.h"
 
+class UTextBlock;
 /**
  *
  */
-class UTextBlock;
 UCLASS()
 class CLICKERGAME_API UClickFloatingTextWidget : public UToastWidgetBase
 {
@@ -17,14 +17,16 @@ class CLICKERGAME_API UClickFloatingTextWidget : public UToastWidgetBase
 	
 
 public:
+    virtual void SetupToast(const FText& InText, const FVector2D& ScreenPos) override;
+    //UPROPERTY(meta = (BindWidgetAnim), Transient)   UWidgetAnimation* FloatUpFade = nullptr;
+
+    //void PlayFade();
+    //bool IsAvailable() const { return !bInUse; }
+
+protected:
     UPROPERTY(meta = (BindWidget))  class UTextBlock* FloatingText = nullptr;
-    UPROPERTY(meta = (BindWidgetAnim), Transient)   UWidgetAnimation* FloatUpFade = nullptr;
-
-    void PlayFade();
-    bool IsAvailable() const { return !bInUse; }
-
 private:
-    bool bInUse = false;
+    //bool bInUse = false;
 
-    void OnFloatPlayerFinished(UUMGSequencePlayer& Player);
+    //void OnFloatPlayerFinished(UUMGSequencePlayer& Player);
 };
