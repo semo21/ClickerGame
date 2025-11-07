@@ -744,4 +744,14 @@
   - 1-1) Idle, Floating Widget 상속 부모 변경
   - 1-2) UIManger의 코드 수정중.
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/3efd7ab1465bf93e4887c7d33f1b9bd6352b762c)
+
+## 11.07.25.
+- what
+  1. UISubsystem 리팩터링 진행중 
+- why
+  - 1-1) ToastWidgetBase 기반 위젯 플로우 개편중
+- how
+  - 1-1) UISubsystem 리팩터 진행중
+- proof
   - Commit Link

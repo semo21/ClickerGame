@@ -26,10 +26,8 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	void ShowHUD(UWorld* World);
-	void ShowFloatingText(const FString& Message, const FVector2D& WorldLocation);
+	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
-	//void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
-	//void ShowIdleReward(float Amount);
 	void ShowClickEffect(const FVector& WorldLocation);
 	void ShowOfflineReward(float OfflineReward);
 	void ShowUpgradeSuccessText();
@@ -42,8 +40,6 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
 	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
 	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
-	//UPROPERTY() TSubclassOf<UIdleRewardTextWidget> IdleRewardTextWidgetClass;
-	//UPROPERTY() TSubclassOf<UClickFloatingTextWidget> FloatingTextWidgetClass;
 	UPROPERTY()	USoundBase* ClickRewardSound = nullptr;
 	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
 
@@ -54,17 +50,13 @@ protected:
 	UPROPERTY() TArray<UToastWidgetBase*> RewardPool;
 	UPROPERTY() TSubclassOf<UToastWidgetBase> FloatingTextWidgetClass;
 	UPROPERTY() TSubclassOf<UToastWidgetBase> RewardToastClass;
+	UPROPERTY() TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
 	TWeakObjectPtr<APlayerController> PlayerController;
 
 private:
 	void UpdateScore(const FEconomySnapshot& S);
 	void HandlePassiveIncome(double Amount);
 	void HandleOfflineReward(double Amount);
-	//void ShowReward(double Amount, bool bIsOffline);
-	//void CreateIdleRewardTextWidgetPool(UWorld* World, const int32 PoolSize);
-	//void CreateFloatingTextWidgetPool(UWorld* World, const int32 PoolSize);
-	//UClickFloatingTextWidget* GetFloatingTextWidgetFromPool();
-	//UIdleRewardTextWidget* GetRewardWidgetFromPool();
 
 	UPROPERTY()	UUserWidget* HUDWidget;
 	UPROPERTY()	UTextBlock* CurrencyText;
@@ -75,7 +67,6 @@ private:
 	UPROPERTY()	UButton* UpgradeButton;
 	UPROPERTY()	UButton* SaveButton;
 	UPROPERTY()	UButton* LoadButton;
-	//UPROPERTY() TArray<UClickFloatingTextWidget*> FloatingTextPool;
 	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	FTimerHandle UpgradeSuccessTimerHandle;
 	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;

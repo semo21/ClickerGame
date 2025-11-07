@@ -114,38 +114,12 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		if (LoadButton)
 			LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
 	}
-
-	//CreateIdleRewardTextWidgetPool(World, 10);
-	//CreateFloatingTextWidgetPool(World, 10);
-
+		
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
 		EconomySubsystemRef->TriggerOfflineReward();
 	}
 }
-
-//void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
-//	if (!FloatingTextWidgetClass || !PlayerController.IsValid())	return;
-//	//UE_LOG(LogTemp, Warning, TEXT("ShowFloatingText"));
-//	FVector2D ScreenPosition;
-//	UGameplayStatics::ProjectWorldToScreen(PlayerController.Get(), WorldLocation, ScreenPosition);
-//
-//	if (auto* W = GetFloatingTextWidgetFromPool()) {
-//		W->PlayFade();
-//		if (auto* TB = Cast<UTextBlock>(W->GetWidgetFromName(TEXT("FloatingText")))) {
-//			TB->SetText(FText::FromString(Message));
-//		}
-//		if (auto* Slot = Cast<UCanvasPanelSlot>(W->Slot)) {
-//			Slot->SetPosition(ScreenPosition);
-//		}
-//		//UE_LOG(LogTemp, Warning, TEXT("GetFloatingTextWidgetFromPool"));
-//	}
-//	
-//}
-//
-//void UClickerUISubsystem::ShowIdleReward(float Amount) {
-//	ShowReward(Amount, false);
-//}
 
 void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
@@ -213,6 +187,18 @@ void UClickerUISubsystem::HandleOfflineReward(double Amount) {
 	ShowReward(Amount, true);
 }
 
+void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector2D& WorldLocation) {
+	if (!FloatingTextWidgetClass || !PlayerController.IsValid())	return;
+
+	FVector2D ScreenPos;
+	if (UGameplayStatics::ProjectWorldToScreen(PlayerController.Get(), WorldLocation, ScreenPos)) {
+		if (UToastWidgetBase* Widget = GetWidgetFromPool(FloatingTextPool, FloatingTextWidgetClass)) {
+			Widget->SetupToast(FText::FromString(Message), ScreenPos);
+			Widget->PlayToast();
+		}
+	}
+}
+
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	if (!RewardToastClass || !PlayerController.IsValid())	return;
 
@@ -226,21 +212,6 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 		Widget->SetupToast(FText::FromString(Text), ScreenPos);
 		Widget->PlayToast();
 	}
-	//if (auto* Widget = GetRewardWidgetFromPool()) {
-	//	if (bIsOffline) {
-	//		const FVector2D CenterTop(CachedViewportSize.X * 0.5f, CachedViewportSize.Y * 0.15f);
-	//		Widget->SetPositionInViewport(CenterTop, false);
-	//	}
-	//	else {
-	//		const FVector2D Center = CachedViewportSize / 2.0f;
-	//		FVector2D RandomOffset(FMath::RandRange(-200.0f, 200.0f), FMath::RandRange(-100.0f, 100.0f));
-	//		Widget->SetPositionInViewport(Center + RandomOffset, false);
-	//	}
-
-	//	//Widget->SetRewardAmount(Amount, bIsOffline);
-	//	//Widget->SetVisibility(ESlateVisibility::Visible);
-	//	//Widget->PlayFade(bIsOffline ? 0.5f : 1, bIsOffline ? OfflineRewardSound : ClickRewardSound);
-	//}
 }
 
 UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastClass) {
@@ -261,73 +232,3 @@ UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase
 	}
 
 }
-
-//UClickFloatingTextWidget* UClickerUISubsystem::GetFloatingTextWidgetFromPool() {
-//	for (auto* W : FloatingTextPool) {
-//		if (W && W->IsAvailable()) {
-//			return W;
-//		}
-//	}
-//
-//	if (FloatingTextWidgetClass && PlayerController.IsValid()) {
-//		ensureMsgf(FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()),
-//			TEXT("FloatingTextWidgetClass invalid: %s"), *GetNameSafe(FloatingTextWidgetClass));
-//
-//		if (auto* NewWidget = CreateWidget<UClickFloatingTextWidget>(PlayerController.Get(), FloatingTextWidgetClass)) {
-//			NewWidget->AddToViewport(11);
-//			NewWidget->SetVisibility(ESlateVisibility::Collapsed);
-//			FloatingTextPool.Add(NewWidget);
-//			UE_LOG(LogTemp, Warning, TEXT("Created new FloatingTextWidget, pool size: %d"), FloatingTextPool.Num());
-//			return NewWidget;
-//		}
-//	}
-//
-//	return nullptr;
-//}
-
-//UIdleRewardTextWidget* UClickerUISubsystem::GetRewardWidgetFromPool() {
-//	for (auto* Widget : RewardTextPool) {
-//		if (Widget && !Widget->IsAnimationPlaying()) {
-//			return Widget;
-//		}
-//	}
-//
-//	// If there is no available widget in the pool, create a new one
-//	if (IdleRewardTextWidgetClass && PlayerController.IsValid()) {
-//		if (auto* W = CreateWidget<UIdleRewardTextWidget>(PlayerController.Get(), IdleRewardTextWidgetClass)) {
-//			W->AddToViewport(10);
-//			W->SetVisibility(ESlateVisibility::Collapsed);
-//			RewardTextPool.Add(W);
-//			return W;
-//		}
-//	}
-//	return nullptr;
-//}
-
-//void UClickerUISubsystem::CreateIdleRewardTextWidgetPool(UWorld* World, const int32 PoolSize) {
-//	for (int32 i = 0; i < PoolSize; i++) {
-//		if (!IdleRewardTextWidgetClass) break;
-//		if (!ensureMsgf(IdleRewardTextWidgetClass && IdleRewardTextWidgetClass->IsChildOf(UIdleRewardTextWidget::StaticClass()), TEXT("IdleRewardTextWidgetClass invalid: %s"), *GetNameSafe(IdleRewardTextWidgetClass))) {
-//			return;
-//		}
-//
-//		if (auto* W = CreateWidget<UIdleRewardTextWidget>(World, IdleRewardTextWidgetClass)) {
-//			W->AddToViewport(10);
-//			W->SetVisibility(ESlateVisibility::Collapsed);
-//			RewardTextPool.Add(W);
-//		}
-//	}
-//
-//}
-
-//void UClickerUISubsystem::CreateFloatingTextWidgetPool(UWorld* World, const int32 PoolSize) {		
-//	for (int32 i = 0; i < PoolSize; i++) {
-//		if (!FloatingTextWidgetClass) break;
-//		ensureMsgf(FloatingTextWidgetClass->IsChildOf(UClickFloatingTextWidget::StaticClass()), TEXT("FloatingTextWidgetClass invalid: %s"), *GetNameSafe(FloatingTextWidgetClass));
-//		if (auto* W = CreateWidget<UClickFloatingTextWidget>(World, FloatingTextWidgetClass)) {
-//			W->AddToViewport(11);
-//			W->SetVisibility(ESlateVisibility::Collapsed);
-//			FloatingTextPool.Add(W);
-//		}
-//	}
-//}
