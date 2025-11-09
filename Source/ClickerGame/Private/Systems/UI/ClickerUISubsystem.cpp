@@ -187,7 +187,7 @@ void UClickerUISubsystem::HandleOfflineReward(double Amount) {
 	ShowReward(Amount, true);
 }
 
-void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector2D& WorldLocation) {
+void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
 	if (!FloatingTextWidgetClass || !PlayerController.IsValid())	return;
 
 	FVector2D ScreenPos;
