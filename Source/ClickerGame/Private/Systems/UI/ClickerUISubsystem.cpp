@@ -214,15 +214,15 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	}
 }
 
-UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastClass) {
+UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass) {
 	for (auto* W : Pool) {
 		if (W && W->IsAvailable()) {
 			return W;
 		}
 	}
 
-	if (ToastClass && PlayerController.IsValid()) {
-		UToastWidgetBase* NewWidget = CreateWidget<UToastWidgetBase>(PlayerController.Get(), ToastClass);
+	if (ToastWidgetClass && PlayerController.IsValid()) {
+		UToastWidgetBase* NewWidget = CreateWidget<UToastWidgetBase>(PlayerController.Get(), ToastWidgetClass);
 		if (NewWidget) {
 			NewWidget->AddToViewport(11);
 			NewWidget->SetVisibility(ESlateVisibility::Collapsed);
@@ -231,4 +231,5 @@ UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase
 		}
 	}
 
+	return nullptr;
 }

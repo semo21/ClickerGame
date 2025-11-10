@@ -20,6 +20,10 @@ void UToastWidgetBase::PlayToast(float PlayRate) {
 	}
 }
 
+void UToastWidgetBase::SetupToast(const FText& InText, const FVector2D& ScreenPos) {
+	// Base implementation does nothing
+}
+
 void UToastWidgetBase::OnToastFinished(UUMGSequencePlayer& Player) {
 	SetVisibility(ESlateVisibility::Collapsed);
 	bInUse = false;	

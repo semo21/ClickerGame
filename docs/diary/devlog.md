@@ -754,4 +754,15 @@
 - how
   - 1-1) UISubsystem 리팩터 진행중
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/5b806294e995585b09c7aa9e751670711a0fb5d6)
+
+## 11.10.25.
+- what
+  1. ToastWidgetBase 기반 상속구조 코드 리팩터 완료 
+- why
+  - 1-1) 추후 범용성 및 유지보수에 적합
+- how
+  - 1-1) 코드구현은 완료했음
+  - 1-2) 하지만 에디터에서 WBP 설정 관련 오류 발생
+- proof
   - Commit Link
