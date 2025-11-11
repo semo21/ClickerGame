@@ -20,5 +20,5 @@ public:
     virtual void SetupToast(const FText& InText, const FVector2D& ScreenPos) override;
 
 protected:
-    UPROPERTY(meta = (BindWidget))  class UTextBlock* FloatingText = nullptr;
+    UPROPERTY(meta = (BindWidget))  class UTextBlock* RewardText = nullptr;
 };

@@ -3,8 +3,8 @@
 
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 
-#include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/TextBlock.h"
 
 void UIdleRewardTextWidget::SetupToast(const FText& InText, const FVector2D& ScreenPos) {
 	if (RewardText) {

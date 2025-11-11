@@ -6,7 +6,7 @@
 
 void UToastWidgetBase::PlayToast(float PlayRate) {
 	bInUse = true;
-	SetVisibility(ESlateVisibility::Visible);
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	if (ToastAnim) {
 		if (UUMGSequencePlayer* Player = PlayAnimation(ToastAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, PlayRate)) {

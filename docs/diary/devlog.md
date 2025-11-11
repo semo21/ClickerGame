@@ -448,7 +448,7 @@
   - C++: 대부분 Private으로 지정
   - 추가 분류 기준
   - Gameplay, System, Data 3개의 대분류 후 Save, Data와 같은 세부 목적별로 추가 분류
-  - 분류 후 콜드빌드를 통해 에디터 재시작
+  - 분류 후 Full rebuild를 통해 에디터 재시작
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/46ea1babe6b2b12025c1735fa3c7edc42a38d8f2)
 
@@ -497,7 +497,7 @@
   - 5-1) 프로젝트 전반을 파악하며 포인터 플로우 이해의 부족을 체감하여 더 파악하기로 결정.
 - how
   - 1-1) 문제점 인지한 상태로 마감.
-  - 2-1) EconomySnapshot.h를 Public/Data/Economy/ 경로에 생성, 콜드빌드로 솔루션에 캐싱 후 내용 작성
+  - 2-1) EconomySnapshot.h를 Public/Data/Economy/ 경로에 생성, Full rebuild로 솔루션에 캐싱 후 내용 작성
   - 2-2) 에디터 실행 후 데이터 정상작동 확인.
   - 3-1) Github에서 파일명 직접 수정하여 커밋
   - 4-1) 빌드 실패 로그로 델리게이트 관련 오류 내용 파악
@@ -527,7 +527,7 @@
 - why
   - 1-1) UISubsystem::EconomySubsystemRef의 참조방식을 수정하던 중 WBP 에디터 참조에서 유령 캐시 이슈로 Assertion이 난 것으로 추정
 - how
-  - 1-1) Saved, Binaries, Intermediate 폴더 삭제 후 Generate VS files 를 실행하는 콜드 빌드로 해결
+  - 1-1) Saved, Binaries, Intermediate 폴더 삭제 후 Generate VS files 를 실행하는 Full rebuild로 해결
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/d344ddf8722d59efc42e2f1ef5b94e0d5f129fa5)
 
@@ -764,5 +764,21 @@
 - how
   - 1-1) 코드구현은 완료했음
   - 1-2) 하지만 에디터에서 WBP 설정 관련 오류 발생
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/9df1063c6860bc7414e333c26163a10d839b73af)
+
+## 11.11.25.
+- what
+  1. WBP 에러 해결 
+  2. Assertion Crash 해결
+  3. ToastWidget과 UI관련 버그 해결
+- why
+  - 1-1) C++클래스에서 설정한 변수, 에디터 WBP에서의 Animation, TextBlock의 이름이 서로 달라서 발생한 에러 
+  - 2-1) ToastWidget 상속구조 리팩터 과정에서 발생한 유령캐시로 추정
+  - 3-1) Toast Widget과 HUD의 Z Order, ToastWidget의 Hit 설정을 잘못함.
+- how
+  - 1-1) 대응되는 요소들의 이름을 일치시켜주며 해결했음
+  - 2-1) Clean build를 통해 캐시 정리 후 해결
+  - 3-1) ToastWidget의 상태를 Visible -> SelfHitTestInvisible로 변경 후 해결
 - proof
   - Commit Link
