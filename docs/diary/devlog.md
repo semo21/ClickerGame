@@ -781,4 +781,15 @@
   - 2-1) Clean build를 통해 캐시 정리 후 해결
   - 3-1) ToastWidget의 상태를 Visible -> SelfHitTestInvisible로 변경 후 해결
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/fe41bb76db829d72e534aad0cb60232ca34ceb3c)
+
+## 11.12.25.
+- what
+  1. 문서 갱신 시작
+     - system_ui.md 문서 진행
+- why
+  - 1-1) 현재 게임이 안정적으로 실행되는 것을 확인했으며 지난 PR에 비해 바뀐 구조가 많으므로 문서 갱신이 필요함
+- how
+  - 1-1) system_ui 문서 갱신 진행
+- proof
   - Commit Link
