@@ -2,30 +2,23 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Systems/UI/Widgets/ToastWidgetBase.h"
 
 #include "ClickFloatingTextWidget.generated.h"
 
+class UTextBlock;
 /**
  *
  */
-class UUMGSequencePlayer;
 UCLASS()
-class CLICKERGAME_API UClickFloatingTextWidget : public UUserWidget
+class CLICKERGAME_API UClickFloatingTextWidget : public UToastWidgetBase
 {
 	GENERATED_BODY()
 	
 
 public:
-    UPROPERTY(meta = (BindWidget))  class UTextBlock* FloatingText = nullptr;
-    UPROPERTY(meta = (BindWidgetAnim), Transient)   UWidgetAnimation* FloatUpFade = nullptr;
+    virtual void SetupToast(const FText& InText, const FVector2D& ScreenPos) override;
 
-    void PlayFade();
-    bool IsAvailable() const { return !bInUse; }
-
-private:
-    bool bInUse = false;
-
-    void OnFloatPlayerFinished(UUMGSequencePlayer& Player);
+protected:
+    UPROPERTY(meta = (BindWidget))  class UTextBlock* RewardText = nullptr;
 };

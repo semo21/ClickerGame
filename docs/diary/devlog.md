@@ -448,7 +448,7 @@
   - C++: 대부분 Private으로 지정
   - 추가 분류 기준
   - Gameplay, System, Data 3개의 대분류 후 Save, Data와 같은 세부 목적별로 추가 분류
-  - 분류 후 콜드빌드를 통해 에디터 재시작
+  - 분류 후 Full rebuild를 통해 에디터 재시작
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/46ea1babe6b2b12025c1735fa3c7edc42a38d8f2)
 
@@ -497,7 +497,7 @@
   - 5-1) 프로젝트 전반을 파악하며 포인터 플로우 이해의 부족을 체감하여 더 파악하기로 결정.
 - how
   - 1-1) 문제점 인지한 상태로 마감.
-  - 2-1) EconomySnapshot.h를 Public/Data/Economy/ 경로에 생성, 콜드빌드로 솔루션에 캐싱 후 내용 작성
+  - 2-1) EconomySnapshot.h를 Public/Data/Economy/ 경로에 생성, Full rebuild로 솔루션에 캐싱 후 내용 작성
   - 2-2) 에디터 실행 후 데이터 정상작동 확인.
   - 3-1) Github에서 파일명 직접 수정하여 커밋
   - 4-1) 빌드 실패 로그로 델리게이트 관련 오류 내용 파악
@@ -527,7 +527,7 @@
 - why
   - 1-1) UISubsystem::EconomySubsystemRef의 참조방식을 수정하던 중 WBP 에디터 참조에서 유령 캐시 이슈로 Assertion이 난 것으로 추정
 - how
-  - 1-1) Saved, Binaries, Intermediate 폴더 삭제 후 Generate VS files 를 실행하는 콜드 빌드로 해결
+  - 1-1) Saved, Binaries, Intermediate 폴더 삭제 후 Generate VS files 를 실행하는 Full rebuild로 해결
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/d344ddf8722d59efc42e2f1ef5b94e0d5f129fa5)
 
@@ -704,5 +704,102 @@
   - 1-1) FloatingTextWidget 자체에서 애니메이션이 끝나면 델리게이트 콜백으로 사용가능 상태 전환
   - 1-2) UIManager에서 해당 Widget의 사용가능 여부로 판단하여 재활용
   - 1-3) 현재 델리게이트 바인딩 구현부에서 문법 오류 해결중
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/8fc1b1d6812e1c101c8bc3927cdcab4e66c21f49)
+
+## 11.04.25.
+- what
+  1. FloatingTextWidget Pool 리팩터 완료
+  2. OfflineReward 누적 8시간 제한 구현 
+  3. 기존 브랜치 머지 후 새로운 작업 브랜치 생성
+- why
+  - 1-1) 사용 가능한 Pool의 위젯을 재활용하지 못하는 현상 해결
+  - 2-1) 문서에 선언했던대로 구현
+  - 3-1) 기존 브랜치에 지나치게 여러 작업을 했기에 앞으로 작업별로 브랜치를 생성해서 사용할 예정
+- how
+  - 1-1) ClickFloatingText 클래스에서 애니메이션을 재생
+  - 1-2) 재생이 끝나면 사용 가능 상태를 표시하는 bool멤버를 전환하는 콜백 함수를 실행
+  - 2-1) EconomySubsystem의 LastOfflineReward를 저장하는 부분에서 수식 수정
+  - 3-1) feature/refactor 브랜치 머지 후 feature/refactor-toastwidget 브랜치 생성
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/fe06b1736ce2fd4e47465cf0a72af88e3812b769)
+
+## 11.05.25.
+- what
+  1. ToastWidgetBase 클래스 생성 후 공용 코드 작성 
+- why
+  - 1-1) 이후 비슷하지만 조금 달느 위젯을 만들거나, 현재 존재하는 위젯 관리의 유연성을 위해 상속구조로 개편하기로 결정
+- how
+  - 1-1) ToastWidgetBase라는 Toast Widget들의 부모클래스를 만들어 공용 코드를 작성했음.
+  - 1-2) 이후 추가로 상속을 구현할 예정
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/8da8857bd106d74b11fb4a08b7ed9d5685bd6278)
+
+## 11.06.25.
+- what
+  1. Floating, Idle Widget, UIManager 코드 수정 
+- why
+  - 1-1) ToastWidgetBase 상속구조를 활용함에 따라 코드 정리 및 수정
+- how
+  - 1-1) Idle, Floating Widget 상속 부모 변경
+  - 1-2) UIManger의 코드 수정중.
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/3efd7ab1465bf93e4887c7d33f1b9bd6352b762c)
+
+## 11.07.25.
+- what
+  1. UISubsystem 리팩터링 진행중 
+- why
+  - 1-1) ToastWidgetBase 기반 위젯 플로우 개편중
+- how
+  - 1-1) UISubsystem 리팩터 진행중
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/5b806294e995585b09c7aa9e751670711a0fb5d6)
+
+## 11.10.25.
+- what
+  1. ToastWidgetBase 기반 상속구조 코드 리팩터 완료 
+- why
+  - 1-1) 추후 범용성 및 유지보수에 적합
+- how
+  - 1-1) 코드구현은 완료했음
+  - 1-2) 하지만 에디터에서 WBP 설정 관련 오류 발생
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/9df1063c6860bc7414e333c26163a10d839b73af)
+
+## 11.11.25.
+- what
+  1. WBP 에러 해결 
+  2. Assertion Crash 해결
+  3. ToastWidget과 UI관련 버그 해결
+- why
+  - 1-1) C++클래스에서 설정한 변수, 에디터 WBP에서의 Animation, TextBlock의 이름이 서로 달라서 발생한 에러 
+  - 2-1) ToastWidget 상속구조 리팩터 과정에서 발생한 유령캐시로 추정
+  - 3-1) Toast Widget과 HUD의 Z Order, ToastWidget의 Hit 설정을 잘못함.
+- how
+  - 1-1) 대응되는 요소들의 이름을 일치시켜주며 해결했음
+  - 2-1) Clean build를 통해 캐시 정리 후 해결
+  - 3-1) ToastWidget의 상태를 Visible -> SelfHitTestInvisible로 변경 후 해결
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/fe41bb76db829d72e534aad0cb60232ca34ceb3c)
+
+## 11.12.25.
+- what
+  1. 문서 갱신 시작
+     - system_ui.md 문서 진행
+- why
+  - 1-1) 현재 게임이 안정적으로 실행되는 것을 확인했으며 지난 PR에 비해 바뀐 구조가 많으므로 문서 갱신이 필요함
+- how
+  - 1-1) system_ui 문서 갱신 진행
+- proof
+  - Commit Link
+
+## 11.13.25.
+- what
+  1. 
+- why
+  - 
+- how
+  - 
 - proof
   - Commit Link

@@ -2,28 +2,15 @@
 
 
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
-#include "Animation/UMGSequencePlayer.h"
-#include "Animation/WidgetAnimation.h"
+
+#include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
 
-void UClickFloatingTextWidget::PlayFade() {
-	bInUse = true;
-	SetVisibility(ESlateVisibility::Visible);
-	if (FloatUpFade) {
-		if (UUMGSequencePlayer* Player = PlayAnimation(FloatUpFade)) {
-			Player->OnSequenceFinishedPlaying().AddUObject(this, &UClickFloatingTextWidget::OnFloatPlayerFinished);
-		}			
+void UClickFloatingTextWidget::SetupToast(const FText& InText, const FVector2D& ScreenPos) {
+	if (RewardText) {
+		RewardText->SetText(InText);
 	}
-	else {
-		OnFloatPlayerFinished(*(UUMGSequencePlayer*)nullptr);
+	if (auto* CanvasSlot = Cast<UCanvasPanelSlot>(Slot)) {
+		CanvasSlot->SetPosition(ScreenPos);
 	}
 }
-
-void UClickFloatingTextWidget::OnFloatPlayerFinished(UUMGSequencePlayer& Player) {
-	SetVisibility(ESlateVisibility::Collapsed);
-	bInUse = false;
-}
-
-
-
-
