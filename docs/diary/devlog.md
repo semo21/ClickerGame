@@ -793,3 +793,13 @@
   - 1-1) system_ui 문서 갱신 진행
 - proof
   - Commit Link
+
+## 11.13.25.
+- what
+  1. 
+- why
+  - 
+- how
+  - 
+- proof
+  - Commit Link
