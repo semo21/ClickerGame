@@ -796,7 +796,23 @@
 
 ## 11.13.25.
 - what
-  1. 
+  1. feature/refactor-toastwidget브랜치 정리 후 dev 브랜치 생성
+- why
+  - 1-1) 브랜치 구조를 개편하기 위해서
+  - 1-2) 수행하는 작업별(문서 정리, 기능구현, 리팩터 등)로 분리하는 편이 앞으로 개발에 더욱 좋을 것이라 판단
+  - 1-3) 협업 구조를 더욱 잘 이해하기 위해서
+- how
+  - 1-1) feature/refactor-toastwidget브랜치를 커밋
+  - 1-2) 커밋된 내용을 main에서 머지시킴
+  - 1-3) feature/refactor-toastwidget브랜치 삭제
+  - 1-4) 갱신된 main의 내용을 바탕으로 dev브랜치 생성
+  - 1-5) dev브랜치를 github레포에 연결
+- proof
+  - Commit Link
+
+## 11.14.25.
+- what
+  1.  
 - why
   - 
 - how
