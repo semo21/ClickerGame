@@ -13,6 +13,8 @@ Saved/
 *.userosscache
 *.unsuccessfulbuild
 *.VC.db
+*.bat
+*.vbs
 
 # Exclude packaged builds
 Build/
