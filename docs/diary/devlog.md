@@ -792,7 +792,7 @@
 - how
   - 1-1) system_ui 문서 갱신 진행
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/eed91c247c5f38ca1946f08ba826ca1eeea230e4)
 
 ## 11.13.25.
 - what
@@ -808,14 +808,34 @@
   - 1-4) 갱신된 main의 내용을 바탕으로 dev브랜치 생성
   - 1-5) dev브랜치를 github레포에 연결
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/2f9a9140e5998af101da097f4593d279d4b725f3)
 
 ## 11.14.25.
 - what
-  1.  
+  1. 일일계획 자동화 프로그램 생성
 - why
-  - 
+  - 1-1) 장기적 작업 능률 향상 목표
 - how
-  - 
+  - 1-1) .bat프로그램으로 vscode가 부팅 시 열리도록 구현
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/cceb0339708c3f4d9d5f3010ee8b1a91c6de1510)
+
+## 11.15.25.
+- what
+  1. 일지 기본양식 형태로 자동 생성 및 시작 프로그램 구현 
+- why
+  - 1-1) 장기적 작업 능률 향상 목표
+- how
+  - 1-1) powershell을 이용하여 Daily Log의 양식을 자동 입력 및 당일 일지 파일 생성하도록 구현
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/e9087794bbf9862ae2eed2d94aec9681633eb0e0)
+
+## 11.16.25.
+- what
+  1. 자동화 프로그램의 오류 수정 
+- why
+  - 1-1) 텍스트 깨짐, 날짜 미수정 현상
+- how
+  - 1-1) UTF-8형식으로 설정, 날짜 갱신 로직 수정
 - proof
   - Commit Link

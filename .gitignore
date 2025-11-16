@@ -15,6 +15,7 @@ Saved/
 *.VC.db
 *.bat
 *.vbs
+*.ps1
 
 # Exclude packaged builds
 Build/

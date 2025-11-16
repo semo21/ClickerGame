@@ -44,15 +44,25 @@ foreach ($file in $allFiles){
 $lastLog = $previousLogs | Sort-Object Date -Descending | Select-Object -First 1
 
 if ($lastLog) {
-	# Copy the content from the most recent previous log
-	$content = Get-Content $lastLog.Path -Raw
+	# Read the previous log as UTF-8
+	$content = Get-Content $lastLog.Path -Raw -Encoding UTF8
 
-	# Replace the first date in the file with today's date (yyyy-MM-dd)
+	# Today's Date
 	$todayString = $today.ToString("yyyy-MM-dd")
-	$content = $content -replace "\d{4}-\d{2}-\d{2}", $todayString, 1
 
-	# Create today's file with the updated content
-	Set-Content -Path $todayFilePath -Value $content
+	# Build the replacement string: captured group 1 (${1}) + today's date
+	$replacement = '${1}' + $todayString
+
+	# Replace the first header date with today's date
+	$content = [regex]::Replace(
+		$content,
+		'^(#\s*)\d{4}-\d{2}-\d{2}',
+		$replacement,
+		[System.Text.RegularExpressions.RegexOptions]::Multiline
+	)
+
+	# Write today's log as UTF-8
+	Set-Content -Path $todayFilePath -Value $content -Encoding UTF8
 }
 else {
 	# Use a default template when there is no previous log at all 
@@ -89,5 +99,5 @@ else {
 - Carry to Tomorrow:
 	- 
 "@
-	Set-Content -Path $todayFilePath -Value $template
+	Set-Content -Path $todayFilePath -Value $template -Encoding UTF8
 }
