@@ -838,4 +838,5 @@
 - how
   - 1-1) UTF-8형식으로 설정, 날짜 갱신 로직 수정
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/0c3ed53feae17728c77fb5fb2dad5b19dcfb41a3)
+

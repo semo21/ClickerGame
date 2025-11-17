@@ -13,6 +13,8 @@ Saved/
 *.userosscache
 *.unsuccessfulbuild
 *.VC.db
+
+# Log Automation files
 *.bat
 *.vbs
 *.ps1
