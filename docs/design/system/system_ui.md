@@ -72,9 +72,6 @@
   - -> EconomySubsystem::OnClicked()
   - -> EconomymSnapshot.Currency ++
   - -> EconomySubsystem::Broadcast()
-  <!-- - -> OnEconomyChanged::Broadcast()
-  - -> UISubsystem::OnEconomyChanged()
-  - -> UISubsystem::UpdateScore() -->
   1. UISubsystem::ShowClickEffect()
   2. UISubsystem::ShowFlotingText()
 - Upgrade:
@@ -100,6 +97,7 @@
   - -> EconomySubsystem::ApplySnapshot(FEconomySnapshot)
   - -> EconomySubsystem::RequestSave()
 - 1Tick Idle Reward
+  - 
 - Offline Reward
 - UISettings DataAsset Connection/Disconnection
   - Connection:
