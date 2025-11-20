@@ -840,3 +840,12 @@
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/0c3ed53feae17728c77fb5fb2dad5b19dcfb41a3)
 
+## 11.20.25.
+- what
+  1. design\system\system_ui.md 문서 갱신
+- why
+  - 1-1) 완료된 리팩터 부분 문서에 갱신
+- how
+  - 1-1) system_ui문서 갱신
+- proof
+  - Commit Link

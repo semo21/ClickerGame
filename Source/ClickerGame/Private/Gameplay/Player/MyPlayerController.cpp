@@ -28,8 +28,6 @@ void AMyPlayerController::SetupInputComponent() {
 	Super::SetupInputComponent();
 
 	if (IsLocalController()) {
-		UE_LOG(LogTemp, Warning, TEXT("SetupInputComponent Called"));
-
 		bEnableClickEvents = true;
 		bShowMouseCursor = true;
 

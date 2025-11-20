@@ -3,8 +3,10 @@
 - UI 시스템의 구조, 위젯 풀링 정책, 이벤트 흐름을 문서화
 - 새로운 위젯 추가 시 일관성을 유지하기 위한 가이드라인 제공.
 
-## 2. HUD Layout
+## 2. UI Layouts
+### 1. HUD Layout
 - 위젯 위치: Content/Widgets/WBP_ClickerUI
+- 역할: Main HUD
 - 주요 위젯: 
   - CurrencyText
   - ClickValueText
@@ -22,8 +24,9 @@
 - 사진:
 ![HUD 레이아웃](../assets/ui/HUD_Layout.png)
 
-## 3. Floating Text 
+### 2. Floating Text 
 - 위젯 위치: Content/Widgets/WBP_ClickFloatingText
+- 역할: Object Click 시 출력되는 토스트 위젯
 - 위젯 요소:
   - RewardText
 - 배치:
@@ -33,8 +36,9 @@
 - 애니메이션:
   1. ToastAnim
 
-## 4. Idle Reward Text
+### 3. Idle Reward Text
 - 위젯 위치: Content/Widgets/WBP_IdleRewardText
+- 역할: Offline / 1 Tick Idle Reward 표시 토스트 위젯
 - 위젯 요소:
   - RewardText
 - Location:
@@ -43,7 +47,8 @@
   - Green
 - Animation:
   - ToastAnim
-## 5. Widget Pool Policy
+
+## 3. Widget Pool Policy
 - HUD / Idle / FloatingText Widgets:
   - 초기 1회만 AddToViewport
   - 이후 Visible/Collapsed 토글로 사용
@@ -59,45 +64,59 @@
     - 생성: UISubsystem::GetWidgetFromPool()
     - 반납: UToastWidgetBase::PlayToast()->UToastWidgetBase::OnToastFinished()->Collapsed
 
-## 6. Event Flow
+## 4. Event Flow
 - Currency Acquisition:
   1. EconomySubsystem::OnEconomyChanged 
-  - -> UISubsystem::AddUniqueDynamic(OnEconomyChanged) 
-  - -> EconomySubsystem::Broadcast()
-  - -> OnEconomyChanged::Broadcast()
-  - -> UISubsystem::OnEconomyChanged()
-  - -> UISubsystem::UpdateScore()
+     - -> UISubsystem::AddUniqueDynamic(OnEconomyChanged) 
+     - -> EconomySubsystem::Broadcast()
+     - -> OnEconomyChanged::Broadcast()
+     - -> UISubsystem::OnEconomyChanged()
+     - -> UISubsystem::UpdateScore()
 - Click:
   1. PlayerController::BindKey(LeftClick, PlayerController.OnClick)
-  - -> EconomySubsystem::OnClicked()
-  - -> EconomymSnapshot.Currency ++
-  - -> EconomySubsystem::Broadcast()
-  1. UISubsystem::ShowClickEffect()
-  2. UISubsystem::ShowFlotingText()
+     - -> EconomySubsystem::OnClicked()
+     - -> EconomymSnapshot.Currency ++
+     - -> EconomySubsystem::Broadcast()
+  2. UISubsystem::ShowClickEffect()
+  3. UISubsystem::ShowFlotingText()
 - Upgrade:
-  - UISubsystem::UpgradeButton->AddDynamic(PlayerController.OnUpgradeClicked)
-  - PlayerController::OnUpgradeClicked()
-  - -> EconomySubsystem::TryUpgrade()
-  - -> EconomySubsystem::Broadcast()
+  1. UISubsystem::UpgradeButton->AddDynamic(PlayerController.OnUpgradeClicked)
+  2. PlayerController::OnUpgradeClicked()
+     - -> EconomySubsystem::TryUpgrade()
+     - -> EconomySubsystem::Broadcast()
 - Save:
   1. UISubsystem::SaveButtton->AddDynamic(PlayerController::OnSaveClicked)
-  - -> PlayerController::OnSaveClicked()
-  - -> EconomySubsystem::RequestSave()
-  - -> SaveManagerSubsystem::SaveProgress(FEconomySnapshot)
-  - -> UGameplayStatics::SaveGameToSlot(SaveDataContainer, SlotName, Index)
+     - -> PlayerController::OnSaveClicked()
+     - -> EconomySubsystem::RequestSave()
+     - -> SaveManagerSubsystem::SaveProgress(FEconomySnapshot)
+     - -> UGameplayStatics::SaveGameToSlot(SaveDataContainer, SlotName, Index)
 - Load:
   1. UISubsystem::LoadButtton->AddDynamic(PlayerController::OnLoadClicked)
-  - -> PlayerController::OnLoadClicked() 
-  - -> EconomySubsystem::RequestLoad()
-  - -> SaveManagerSubsystem::LoadProgress(FEconomySnapshot)
-  - -> UGameplayStatics::LoadGameFromSlot(SlotName, Index)
-  - -> Cast<SaveDataContainer>(LoadData) => FEconomySnapshot
-  - -> EconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot)
-  - -> EconomySubsystem::TriggerOfflineReward()
-  - -> EconomySubsystem::ApplySnapshot(FEconomySnapshot)
-  - -> EconomySubsystem::RequestSave()
-- 1Tick Idle Reward
-  - 
+     - -> PlayerController::OnLoadClicked() 
+     - -> EconomySubsystem::RequestLoad()
+     - -> SaveManagerSubsystem::LoadProgress(FEconomySnapshot)
+     - -> UGameplayStatics::LoadGameFromSlot(SlotName, Index)
+     - -> Cast<SaveDataContainer>(LoadData) => FEconomySnapshot
+     - -> EconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot)
+     - -> EconomySubsystem::TriggerOfflineReward()
+     - -> EconomySubsystem::ApplySnapshot(FEconomySnapshot)
+     - -> EconomySubsystem::RequestSave()
+- 1 Tick Idle Reward:
+  1. EconomySubsystem::StartWorld()
+     - -> EconomySubsystem::StartTickTimer()
+     - -> WorldTimerManager.SetTimer(1.0s, EconomySubsystem::OnTick1Second, Loop)
+  2. EconomySubsystem::OnTick1Second()
+     - -> EconomySubsystem.Currency += CurrencyPerSecond
+     - -> EconomySubsystem::OnPassiveIncome.Broadcase(CurrencyPerSecond)
+     - -> EconomySubsystem::Broadcase() 
+  3. UISubsystem::Initialize()
+     - -> EconomySubsystem::OnPassiveIncome.AddUniqueDynamic(UISubsystem::OnPassiveIncome)
+     - EconomySubsystem::OnEconomyChanged.AddUniqueDynamic(UISubsystem::OnEconomyChanged)
+  4. UISubsystem::OnPassiveIncome(double AmountPerSec)
+     - -> UISubsystem::HandlePassiveIncome(AmountPerSec)
+     - -> UISubsystem::ShowReward(AmountPerSec, false // bIsOffline)
+  5. UISubsystem::OnEconomyChanged(const FEconomySnapshot&)
+     - -> UISubsystem::UpdateScore()  
 - Offline Reward
 - UISettings DataAsset Connection/Disconnection
   - Connection:
@@ -105,7 +124,7 @@
   - Disconnection:
     -  UISubsystem.Deinitialize()
 
-## 7. Data Asset
+## 5. Data Asset
 - UISettings(Primary Data Asset)
   - 멤버:
     1. UI
