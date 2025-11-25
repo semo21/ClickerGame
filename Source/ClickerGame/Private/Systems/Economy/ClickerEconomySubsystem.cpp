@@ -11,7 +11,6 @@
 #include "Systems/Save/SaveManagerSubsystem.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 
-// public field
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 }
@@ -32,7 +31,6 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 	StartAutoSaveTimer();
 	StartTickTimer();
 
-	//UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::StartWorld Called"));
 }
 
 void UClickerEconomySubsystem::OnClicked() {
@@ -62,29 +60,20 @@ bool UClickerEconomySubsystem::TryUpgrade() {
 void UClickerEconomySubsystem::RequestSave() {
 	if (USaveManagerSubsystem* Save = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot Out = MakeSnapshot();
-		//Out.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
 
 		Save->SaveProgress(Out);
 	}
 }
 
 void UClickerEconomySubsystem::RequestLoad() {
-	//UE_LOG(LogTemp, Warning, TEXT("EconomySubsystem::Request Called"));
 
 	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
-		if (Load->LoadProgress(In)) {
-		
+		if (Load->LoadProgress(In)) {		
 			UpdateLastOfflineReward(In);
-						
-			//ApplyOfflineReward(GetLastOfflineReward());
-			
-			//In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
 			TriggerOfflineReward();
 			ApplySnapshot(In);
 			RequestSave();
-
-			//In.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
 		}
 		else {
 			Broadcast();
@@ -102,7 +91,6 @@ void UClickerEconomySubsystem::TriggerOfflineReward() {
 	}
 }
 
-//  private field
 void UClickerEconomySubsystem::Broadcast() {
 	OnEconomyChanged.Broadcast(EconomySnapshot);
 }
@@ -167,4 +155,3 @@ void UClickerEconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot& In) {
 	LastOfflineReward = In.CurrencyPerSecond * DeltaSec;
 	In.Currency += GetLastOfflineReward();
 }
-

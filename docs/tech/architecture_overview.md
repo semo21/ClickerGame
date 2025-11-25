@@ -16,7 +16,7 @@
 ## 3. 주요 시퀀스
 ### 3-1. Game Start
 ```
-PlayerController.BeginPlay()
+PlayerController::BeginPlay()
 1. EconomySubsystem::StartWorld(UWorld*) 
   -> EconomySubsystem::RequestLoad() 
   -> 이후 Load항목과 동일하게 진행
@@ -24,90 +24,169 @@ PlayerController.BeginPlay()
 2. UISubsystem::ShowHUD(UWorld*)
   -> UISubsystem::CreateWidget<UUserWidget>(UWorld*, HUDWidgetClass)
   -> UISubsystem::HUDWidget->AddToViewport()
-  -> UISubsystem::WidgetMember = Cast<UUserWidgetClass>(HUDWidget->GetWidgetFromName(TEXT("WidgetName")))
-  -> UISubsystem::UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed)
+  -> UISubsystem::WidgetMember = Cast<UUserWidgetClass>(HUDWidget->GetWidgetFromName("WidgetName"))
+  -> UISubsystem::UpgradeSuccessText->SetVisibility(Collapsed)
   -> UISubsystem::Upgrade/Save/LoadButton->OnClicked.AddDynamic(MyPlayerController*, MyPlayerController::CallbackFunctions)
   -> UISubsystem::OnEconomyChanged(FEconomySnapshot&)
   -> EconomySubsystem::TriggerOfflineReward()
 ```
 ### 3-2. Click
 ```
-1. PlayerController::BindKey(LeftClick, PlayerController.OnClick)
+PlayerController::SetupInputComponent()
+1. UInputComponent::BindKey(LeftClick, PlayerController.OnClick)
   -> EconomySubsystem::OnClicked()
   -> EconomymSnapshot.Currency++
   -> EconomySubsystem::Broadcast()
 
-2. UISubsystem::ShowClickEffect()
+2. UISubsystem::ShowClickEffect(FHitResult.Location)
+  -> UNiagaraFunctionLibrary::SpawnSystemAtLocation(UWorld*, ClickEffect, ...)
 
-3. UISubsystem::ShowFlotingText()
+3. UISubsystem::ShowFlotingText(FString::Printf(TEXT), CPC, FHitResult.Location)
+  -> Widget = UISubsystem::GetWidgetFromPool(FloatingTextPool, FloatingTextWidgetClass)
+  -> Widget->SetupToast(FText::FromString(Message), ScreenPos)
+  -> Widget->PlayToast()
 ```
 ### 3-3. Upgrade
 ```
-1. UISubsystem::UpgradeButton->AddDynamic(PlayerController.OnUpgradeClicked)
-
-2. PlayerController::OnUpgradeClicked()
+UISubsystem::UpgradeButton->AddDynamic(PlayerController.OnUpgradeClicked)
+1. PlayerController::OnUpgradeClicked()
   -> EconomySubsystem::TryUpgrade()
+  -> Currency/UpgradeLevel/CPC/CPS ++
   -> EconomySubsystem::Broadcast()
+
+2. if(Success): UISubsystem::ShowUpgradeSuccessText()
+  -> UISubSystem.UpgradeSuccessText->SetVisibility(Visible)
+  -> PlayerController->GetWorldTimerManager().SetTimer(UpgradeSuccessTimerHandle, ...)
 ```
 ### 3-4. Save / Load
 ```
 // Save
-1. UISubsystem::SaveButtton->AddDynamic(PlayerController::OnSaveClicked)
-  -> PlayerController::OnSaveClicked()
+UISubsystem::SaveButtton->AddDynamic(PlayerController::OnSaveClicked)
+1. PlayerController::OnSaveClicked()
   -> EconomySubsystem::RequestSave()
-  -> SaveManagerSubsystem::SaveProgress(FEconomySnapshot)
+  -> SaveSubsystem::SaveProgress(FEconomySnapshot)
+  -> SaveDataContainer = Cast<UClickerSaveGame>(UGameplayStatics::CreateSaveGameObject(UClickerSaveGameClass))
+  -> FEconomySnapshot => SaveDataContainer
   -> UGameplayStatics::SaveGameToSlot(SaveDataContainer, SlotName, Index)
 
 // Load
-1. UISubsystem::LoadButtton->AddDynamic(PlayerController::OnLoadClicked)
-  -> PlayerController::OnLoadClicked() 
+UISubsystem::LoadButtton->AddDynamic(PlayerController::OnLoadClicked)
+1. PlayerController::OnLoadClicked() 
   -> EconomySubsystem::RequestLoad()
-  -> SaveManagerSubsystem::LoadProgress(FEconomySnapshot)
+  -> SaveSubsystem::LoadProgress(FEconomySnapshot)
   -> UGameplayStatics::LoadGameFromSlot(SlotName, Index)
   -> Cast<SaveDataContainer>(LoadData) => FEconomySnapshot
-  -> EconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot)
-  -> EconomySubsystem::TriggerOfflineReward()
-  -> EconomySubsystem::ApplySnapshot(FEconomySnapshot)
   -> EconomySubsystem::RequestSave()
 ```
-### 3-5. Passive Income(1 Tick Idle Reward)
+### 3-5. Economy Changed
 ```
-1. EconomySubsystem::StartWorld()
--> EconomySubsystem::StartTickTimer()
--> WorldTimerManager.SetTimer(1.0s, EconomySubsystem::OnTick1Second, Loop)
+UISubsystem::Initialize()
+1. EconomySubsystem::OnEconomyChanged.AddUniqueDynamic(UISubsystem, UISubsystem::OnEconomyChanged)
+  -> UISubsystem::UpdateScore(FEconomySnapshot)
 
-2. EconomySubsystem::OnTick1Second()
--> EconomySubsystem.Currency += CurrencyPerSecond
--> EconomySubsystem::OnPassiveIncome.Broadcase(CurrencyPerSecond)
--> EconomySubsystem::Broadcast() 
+EconomySubsystem::Broadcast()
+1. FOnEconomyChanged::Broadcast(FEconomySnapshot)
 
-3. UISubsystem::Initialize()
--> EconomySubsystem::OnPassiveIncome.AddUniqueDynamic(UISubsystem::OnPassiveIncome)
--> EconomySubsystem::OnEconomyChanged.AddUniqueDynamic(UISubsystem::OnEconomyChanged)
+EconomySubsystem::ApplySnapshot()
+1. EconomySubsystem::Broadcast()
+
+EconomySubsystem::ApplyOfflineReward(Amount)
+1. FOnOfflineReward::Broadcast(Amount);
+2. EconomySubsystem::Broadcast();
+
+EconomySubsystem::OnClicked()
+1. EconomySubsystem::Broadcast()
+
+EconomySubsystem::OnTick1Second
+1. OnPassiveIncome.Broadcast(CPC)
+  -> EconomySubsystem::Broadcast()
+
+EconomySubsystem::TryUpgrade()
+1. Currency, UpgradeLevel, CPC, CPS ++
+  -> EconomySubsystem::Broadcast()
+```
+### 3-6. Passive Income(1 Tick Idle Reward)
+```
+EconomySubsystem::StartWorld()
+1. EconomySubsystem::StartTickTimer()
+  -> WorldTimerManager.SetTimer(1.0s, EconomySubsystem::OnTick1Second, Loop)
+  -> EconomySubsystem::OnTick1Second()
+  -> EconomySubsystem.Currency += CurrencyPerSecond
+  -> EconomySubsystem::OnPassiveIncome.Broadcast(CurrencyPerSecond)
+  -> EconomySubsystem::Broadcast() 
+
+2. UISubsystem::Initialize()
+  -> EconomySubsystem::OnEconomyChanged.AddUniqueDynamic(UISubsystem::OnEconomyChanged)
+  -> EconomySubsystem::OnPassiveIncome.AddUniqueDynamic(UISubsystem::OnPassiveIncome)
+
+3. UISubsystem::OnEconomyChanged(FEconomySnapshot&)
+  -> UISubsystem::UpdateScore()  
 
 4. UISubsystem::OnPassiveIncome(double AmountPerSec)
--> UISubsystem::HandlePassiveIncome(AmountPerSec)
--> UISubsystem::ShowReward(AmountPerSec, false // bIsOffline)
-
-5. UISubsystem::OnEconomyChanged(const FEconomySnapshot&)
--> UISubsystem::UpdateScore()  
+  -> UISubsystem::HandlePassiveIncome(AmountPerSec)
+  -> UISubsystem::ShowReward(AmountPerSec, false/*bIsOffline*/)
 ```
-### 3-6. Offline Reward
+### 3-7. Offline Reward
 ```
+EconomySubsystem::RequestLoad()
+1. SaveSubsystem::LoadProgress(FEconomySnapshot)
+2. EconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot)
+3. EconomySubsystem::TriggerOfflineReward()
+  -> EconomySubsystem::OnfflineReward.Broadcast(LastOfflineReward)
+  -> UISubsystem::OnOfflineReward(Amount)
+  -> HandleOfflineReward(Amount)
+  -> ShowReward(Amount, true/*bIsOFfline*/)
+  -> Widget = UISubsystem::GetWidgetFromPool(RewardPool, RewardToastClass/*=WBP_IdleRewardTextWidgetClass*/)
+  -> Widget->SetupToast(Text, ScreenPos)
+  -> Widget->PlayToast()
+4. EconomySubsystem::ApplySnapshot(FEconomySnapshot)
+  -> EconomySubsystem::Broadcast()
+5. RequestSave()
+  -> Save 시퀀스 실행
+```
+### 3-8. Delegate subscription
+```
+// Click
+PlayerController::SetupInputComponent()
+1. InputComponent::BindKey(LeftClick, Pressed, PlayerController,PlayerController::OnClick)
+  -> PlayerController::OnClick()
+  -> Click 시퀀스 실행
 
+// Upgrade, Save, Load Delegates
+UISubsystem::ShowHUD()
+1. UButton::UpgradeButton->OnClicked.AddDynamic(PlayerController, PlayerController::OnUpgradeClicked)
+  -> Upgrade 시퀀스 실행
+
+2. UButton::SaveButton->OnClicked.AddDynamic(PlayerController, PlayerController::OnSaveClicked)
+  -> Save 시퀀스 실행
+
+3. UButton::LoadButton->OnClicked.AddDynamic(PlayerController, PlayerController::OnLoadClicked)
+  -> Load 시퀀스 실행
+
+// Currency Delegates
+// OnEconomyChanged, OnPassiveIncome, OnOfflineReward
+UISubsystem::Initialize()
+1. EconomySubsystem::OnEconomyChanged.AddUniqueDynamic(UISubsystem, UISubsystem::OnEconomyChanged)
+  -> Economy Changed 시퀀스 실행
+
+2. EconomySubsystem::OnPassiveIncome.AddUniqueDynamic(UISubsystem, UISubsystem::OnPassiveIncome)
+  -> Passive Income 시퀀스 실행
+
+3. EconomySubsystem::OnOfflineReward.AddUniqueDynamic(UISubsystem, UISubsystem::OnOfflineReward)
+  -> Offline Reward 시퀀스 실행
 ```
 
 ## 4. 라이프사이클(모듈별)
-- **Economy:**
+- **Economy Subsystem:**
   1. Initialize(의존성 확보) 
   2. StartWorld에서 로드/타이머 시작 
   3. 1s 틱에서 CPS 지급/브로드캐스트 -> Deinitialize에서 타이머 해제
-- **UI:** 
+- **UI Subsystem:** 
   1. Initialize() (의존성 구독 + UISettings 동기 로드)
   2. ShowHUD() (1회 AddToViewport)
   3. 이벤트 기반 갱신 (첫 1회만 GetSnapshot 호출하여 갱신)
   4. Deinitialize에서 구독/타이머 정리
-- **Save:**
+- **Save Subsystem:**
   1. 표준 Subsystem Init/Deinit, 슬롯 IO 제공
 
 ## 5. 데이터 흐름 & 소유권
@@ -119,19 +198,19 @@ PlayerController.BeginPlay()
   - SaveManager가 생성/직렬화/로드, 디스크 슬롯 소유
 
 ## 6. 책임(Responsibility) & 의존성
-- **Economy** 
+- **Economy Subsystem** 
   - **수행:** 상태/틱/보상/세이브 트리거
   - **수행하지 않음:** 생성/버튼 바인딩
-- **UI**
+- **UI Subsystem**
   - **수행:** HUD/텍스트/토스트/FX/사운드/풀
   - **수행하지 않음:** 세이브/IO/경제 계산
-- **Save**
+- **Save Subsystem**
   - **수행:** 직/역직렬화
   - **수행하지 않음:** 게임 상태 계산
 
 ## 7. 운영 규칙
 - **Widget Pool:** HUD/토스트는 초기 1회 AddToViewport 후 Visible/Collapsed 토글 사용
-- **오프라인 보상:** 로드 시 1회 보상 후 **즉시 저장**하여 재적용 방지
+- **오프라인 보상:** 로드 시 1회 보상 후 즉시 저장하여 재적용 방지
 - **이벤트 기반 갱신:** UI는 폴링 금지, OnEconomyChanged 구독으로 갱신
 
 ## 8. 오류 처리 & 가드 (구현 예정)

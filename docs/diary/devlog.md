@@ -848,4 +848,27 @@
 - how
   - 1-1) system_ui문서 갱신
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/3a6d25e46dcf94646da1f8c354ef9d0a82ddd7d0)
+
+## 11.24.25.
+- what
+  1. WIP - architecture_overview 문서 수정
+- why
+  - 1-1) system_ui.md 의 일부 내용이 architecture_overview에 보다 적합하여 내용 이전 및 갱신
+- how
+  - 1-1) 주요 시퀀스 내용 갱신
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/c016190c10b058da24caad859a4c7c271c6885e0)
+
+## 11.25.25.
+- what
+  1. WIP - architecture_overview 문서 수정
+  2. 일지 자동화 프로그램 내용 일부 수정
+- why
+  - 1-1) system_ui.md 의 일부 내용이 architecture_overview에 보다 적합하여 내용 이전 및 갱신
+  - 2-1) 갱신될 때마다 개행문자가 추가되고 있는 현상을 발견
+- how
+  - 1-1) 주요 시퀀스 내용 갱신
+  - 2-1) 전 날 문서 내용을 복사하는 과정에서 Trim함수를 사용하여 끝 부분의 필요없는 개행문자를 제거
+- proof
+  - Commt Link
