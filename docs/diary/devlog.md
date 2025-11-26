@@ -872,3 +872,13 @@
   - 2-1) 전 날 문서 내용을 복사하는 과정에서 Trim함수를 사용하여 끝 부분의 필요없는 개행문자를 제거
 - proof
   - Commt Link
+
+## 11.26.25.
+- what
+  1.  
+- why
+  - 
+- how
+  - 
+- proof
+  - Commit Link
