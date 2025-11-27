@@ -871,14 +871,18 @@
   - 1-1) 주요 시퀀스 내용 갱신
   - 2-1) 전 날 문서 내용을 복사하는 과정에서 Trim함수를 사용하여 끝 부분의 필요없는 개행문자를 제거
 - proof
-  - Commt Link
+  - [Commt Link](https://github.com/semo21/ClickerGame/commit/360961ca5dbac120c44f363c047758531bd35cd8)
 
 ## 11.26.25.
 - what
-  1.  
+  1. 문서 갱신 
+     1. WIP - architecture_overview 갱신
+     2. WIP - system_ui 갱신
 - why
-  - 
+  - 1-1) 리팩터 완료 이후 문서 갱신
+  - 1-2) 추후 유지/보수에 용이한 흐름 추적을 위하여 작성
 - how
-  - 
+  - 1-1) architecture_overview의 Major Sequences 갱신 완료
+  - 1-2) system_ui의 EventFlow 갱신 시작
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/faad0f3365a4614eda567842097dd3a0f4c709bc)
