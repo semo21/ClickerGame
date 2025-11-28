@@ -65,7 +65,37 @@
     - 반납: UToastWidgetBase::PlayToast()->UToastWidgetBase::OnToastFinished()->Collapsed
 
 ## 4. Event Flow
+### 4-1. Economy Changed (HUD Update)
+- EconomySubsystem이 'OnEconomyChanged' 델리게이트를 브로드캐스트
+- UISubsystem이 이를 구독('OnEconomyChanged')하고, 콜백에서:
+  - CurrencyText / ClickValueText / UpgradeCostText / PassiveIncomeText 등 HUD 텍스트를 갱신
 
+### 4-2. Click (FX + Floating Text)
+- PlayerController의 클릭 처리에서:
+  - UISubsysteem::ShowClickEffect()를 호출하여 클릭 위치에 FX 재생
+  - UISubsystem::ShowFloatingText()를 호출하여 클릭 보상 텍스트 토스트 재생
+- Economy 수치는 EconomySubsystem 내부에서 갱신
+- HUD 갱신은 4-1의 'EconomyChanged'를 통해 진행
+
+### 4-3. Upgrade / Save / Load Buttons
+- HUD 위젯 초기화에서:
+  - Upgrade / Save / Load 버튼은 PlayerController의 각 핸들러에 바인딩
+- UISubsystem의 책임:
+  - 버튼의 배치 및 표시 상태 관리
+  - 클릭 시 적절한 핸들러가 호출되도록 바인딩 유지
+- 실제 Upgrade / Save / Load 로직은 EconomySubsystem / SaveSubsystem이 담당
+- UI 갱신은 4-1의 'EconomyChanged'를 통해 진행
+
+### 4-4. Passive Income (1 Tick Idle Reward)
+- EconomySubsystem이 1초마다 'OnPassiveIncome' 델리게이트를 브로드캐스트
+- UISubsystem은 이를 구독하고:
+  - HUD상의 PassiveeIncome 텍스트를 갱신
+  - 1 Tick Idle Reward 토스트(IdleRewardText)를 재생하여 패시브 수익 표시
+
+### 4-5. Offline Reward
+- 게임 시작 시 로드 이후, EconomySubsystem이 'OnOfflineReward'를 브로드캐스트
+- UISubsystem은 이를 구독('OnOFflineReward')하고:
+  - IdleRewardText 토스트를 재생하여 오프라인 누적 보상을 표시
 
 ## 5. Data Asset
 - UISettings(Primary Data Asset)
