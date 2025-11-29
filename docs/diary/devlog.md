@@ -886,3 +886,33 @@
   - 1-2) system_ui의 EventFlow 갱신 시작
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/faad0f3365a4614eda567842097dd3a0f4c709bc)
+
+## 11.27.25.
+- what
+  1. 일지 자동화 스크립트 오류 수정 
+- why
+  - 1-1) powershell 스크립트 문법 오류
+- how
+  - 1-1) 문법 오류부분을 수정하여 해결
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/e42012bfe4635f3e6aab25f8575364d99d8ded84)
+
+## 11.28.25.
+- what
+  1. system_ui.md의 Event Flow부분 갱신 
+- why
+  - 1-1) 기존의 내용이 design문서로선 필요 이상으로 상세하게 기술되었음.
+- how
+  - 1-1) 기존의 흐름은 기록하되, 흐름의 디테일(함수나 클래스 명, 매개변수 타입 등)을 생략하여 흐름위주로 작성
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/a9556e868c620ac55de39c689fc2aeb7281ae13f)
+
+## 11.29.25
+- what
+  1. system_ui.md의 2. UI Layouts와 3. Widget Pool Policy 부분 수정
+- why
+  - 1-1) 리팩터하며 흐름이 살짝 변경되었고, 기존 내용은 중복되는 부분이 있었음
+- how
+  - 1-1) 바뀐 흐름 갱신과 중복되는 내용들 간소화
+- proof
+  - Commit Link
