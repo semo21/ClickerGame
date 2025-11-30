@@ -14,7 +14,7 @@
   - `CurrencyText`
   - `ClickValueText`
   - `UpgradeCostText`
-  - `PassiveInconeText`
+  - `PassiveIncomeText`
   - `UpgradeSuccessText`
   - `UpgradeButton`
   - `SaveButton`
@@ -35,7 +35,7 @@
 - 배치:
   - 화면 정 중앙(월드 좌표 -> 스크린 좌표 변환 후 배치)
 - 색:
-  - Yellow
+  - yellow(Hex sRGB: `FFEE4AFF`)
 - 애니메이션:
   1. `ToastAnim` (위로 떠오르며 사라지는 연출)
 
@@ -47,7 +47,7 @@
 - Location:
   - 소스코드에서 랜덤 스크린 좌표로 제어(구현 예정)
 - Color:
-  - Green
+  - green(Hex sRGB: `4AFF00FF`)
 - Animation:
   - `ToastAnim`
 
@@ -68,7 +68,7 @@
 - **HUDWidget**
   - 생성: `UISubsystem::ShowHUD()`
   - 반납: 없음 (게임 세션 동안 상시 유지)
-- **IdleRewardWidget**
+- **IdleRewardText**
   - 생성: `UISubsystem::GetWidgetFromPool()` 호출 시 풀에서 꺼냄
   - 사용: 패시브 수익 / 오프라인 보상 수치를 토스트로 표시
   - 반납: 
@@ -93,7 +93,7 @@
 
 ### 4-2. Click (FX + Floating Text)
 - PlayerController의 클릭 처리에서:
-  - UISubsysteem::ShowClickEffect()를 호출하여 클릭 위치에 FX 재생
+  - UISubsystem::ShowClickEffect()를 호출하여 클릭 위치에 FX 재생
   - UISubsystem::ShowFloatingText()를 호출하여 클릭 보상 텍스트 토스트 재생
 - Economy 수치는 EconomySubsystem 내부에서 갱신
 - HUD 갱신은 4-1의 'EconomyChanged'를 통해 진행
@@ -110,23 +110,35 @@
 ### 4-4. Passive Income (1 Tick Idle Reward)
 - EconomySubsystem이 1초마다 'OnPassiveIncome' 델리게이트를 브로드캐스트
 - UISubsystem은 이를 구독하고:
-  - HUD상의 PassiveeIncome 텍스트를 갱신
+  - HUD상의 PassiveIncome 텍스트를 갱신
   - 1 Tick Idle Reward 토스트(IdleRewardText)를 재생하여 패시브 수익 표시
 
 ### 4-5. Offline Reward
 - 게임 시작 시 로드 이후, EconomySubsystem이 'OnOfflineReward'를 브로드캐스트
-- UISubsystem은 이를 구독('OnOFflineReward')하고:
+- UISubsystem은 이를 구독('OnOfflineReward')하고:
   - IdleRewardText 토스트를 재생하여 오프라인 누적 보상을 표시
 
+--- 
+
 ## 5. Data Asset
-- UISettings(Primary Data Asset)
-  - 멤버:
-    1. UI
-       - HUD Widget Class: 메인 HUD 위젯(WBP_ClickerUI)
-       - Floating Text Widget Class: Floating Text 위젯 클래스(WBP_ClickFloatingText)
-       - Idle Reward Text Widget Class: Idle Reward 위젯 클래스(WBP_IdleRewardText)
-    2. FX
-       - Click Effect Asset: 클릭 FX(NS_ClickEffect)
-    3. Sound 
-       - Click Reward Sound: 클릭 보상 사운드
-       - Offline Reward Sound: 오프라인 보상 사운드
+
+### 5-1. UISettings (Primary Data Asset)
+- 경로: 프로젝트 내 `UISettings` Primary Data Asset
+- 역할: UI / FX / 사운드 리소스를 한 곳에서 관리하는 설정 객체
+
+- 멤버:
+  1. **UI**
+    - `HUD Widget Class`
+      - 메인 HUD 위젯 (`WBP_ClickerUI`)
+    - `Floating Text Widget Class`
+      - 클릭 보상용 Floating Text 위젯 (`WBP_ClickFloatingText`) 
+    - `Idle Reward Text Widget Class`
+     - 패시브 / 오프라인 보상 용 Idle Reward Text 위젯 (`WBP_IdleRewardText`)
+  2. **FX**
+    - `Click Effect Asset`  
+      - 클릭 시 재생되는 FX (`NS_ClickEffect` 등)
+  3. **Sound**
+    - `Click Reward Sound`
+      - 클릭 보상 UI와 함께 재생되는 사운드
+    - `Offline Reward Sound`
+      - 오프라인 보상 토스트와 함께 재생되는 사운드

@@ -915,4 +915,16 @@
 - how
   - 1-1) 바뀐 흐름 갱신과 중복되는 내용들 간소화
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/b13a28698eba28fc61f776cd8ebbd8e02102e82b)
+
+## 11.30.25.
+- what
+  1. system_ui.md 갱신 완료 
+- why
+  - 1-1) 리팩터하며 변경된 흐름 반영
+  - 1-2) 문서 내용 최적화
+- how
+  - 1-1) 전체 오탈자 검수
+  - 1-2) 5. Data Asset 갱신
+- proof
   - Commit Link
