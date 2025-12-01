@@ -5,6 +5,8 @@
 - 스코프: 싱글 플레이, GameInstance Subsystem 기반, 세이브/로드/오프라인 보상/위젯 풀링
 - 비스코프: 멀티플레이, 인 앱 결제시스템
 
+---
+
 ## 2. 런타임 구조
 - GameInstance
   - UClickerEconomySubsystem: 경제 상태/틱/오프라인 보상/세이브 트리거
@@ -13,17 +15,19 @@
 -  PlayerController: 입력 진입점(클릭/업그레이드/세이브/로드 등 버튼 핸들러)
 -  Widgets: HUD, Idle/FloatingText
   
+---
+
 ## 3. Major Sequences
 ### 3-1. Game Start
 ```
 PlayerController::BeginPlay()
 1. EconomySubsystem::StartWorld(UWorld*) 
   -> EconomySubsystem::RequestLoad() 
-  -> 이후 [3-1. Load]항목과 동일하게 진행
+  -> 이후 [3-4. Load]항목과 동일하게 진행
 
 2. UISubsystem::ShowHUD(UWorld*)
-  -> HUD 위젯 생성 및 AddToViewport()
-  -> HUD 내부 위젯 바인딩 (CurrencyText, Buttons...)
+  -> HUD 위젯 생성 후 AddToViewport()
+  -> HUD 내부 위젯 바인딩 (CurrencyText, Buttons 등)
   -> UpgradeSuccessText를 기본적으로 Collapsed 설정
   -> Upgrade/Save/Load버튼 PlayerController 핸들러에 바인딩
 
@@ -146,42 +150,56 @@ UISubsystem::Initialize()
 3. EconomySubsystem::OnOfflineReward  -> UISubsystem::OnOfflineReward
 ```
 
-## 4. 라이프사이클(모듈별)
+---
+
+## 4. Lifecycle (In Short)
 - **Economy Subsystem:**
-  1. Initialize(의존성 확보) 
-  2. StartWorld에서 로드/타이머 시작 
-  3. 1s 틱에서 CPS 지급/브로드캐스트 -> Deinitialize에서 타이머 해제
+  - GameInstance Subsystem으로, 게임 시작 시 `StartWorld()`에서 로드, 오프라인 보상, 틱 타이머를 설정
+  - 1초 틱과 업그레이드, 클릭 등의 이벤트에서 Economy 상태를 변경한 후 항상 `OnEconomyChanged`를 브로드캐스트
+
 - **UI Subsystem:** 
-  1. Initialize() (의존성 구독 + UISettings 동기 로드)
-  2. ShowHUD() (1회 AddToViewport)
-  3. 이벤트 기반 갱신 (첫 1회만 GetSnapshot 호출하여 갱신)
-  4. Deinitialize에서 구독/타이머 정리
+  - Initialize 시 Economy 이벤트를 구독 후 `ShowHUD()`에서 HUD를 1회 생성 후 AddToViewport()
+  - 이후 Economy 이벤트 (`OnEconomyChanged`, `OnPassiveIncome`, `OnOfflineReward`)를 기반으로 HUD와 토스트를 갱신
+
 - **Save Subsystem:**
-  1. 표준 Subsystem Init/Deinit, 슬롯 IO 제공
+  Economy의 요청에 따라 `SaveProgress` / `LoadProgress`를 수행하며 SaveGame 슬롯 IO를 담당
 
-## 5. 데이터 흐름 & 소유권
-- FEconomySnapshot
-  - **원본:** EconomySnapshot (EconomySubsystem 멤버)
-  - **읽기:** GetSnapshot()으로 const ref 제공 (복사 없음)
-  - **저장용 복사본:** RequestSave() 내부에서 생성 -> LastSaveTime=UtcNow 세팅 후 SaveProgress() 호출
-- UClickerSaveGame
-  - SaveManager가 생성/직렬화/로드, 디스크 슬롯 소유
+> 각 Subsystem의 상세 Lifecycle과 API는 `tech/api_reference.md` 참조
 
-## 6. 책임(Responsibility) & 의존성
-- **Economy Subsystem** 
-  - **수행:** 상태/틱/보상/세이브 트리거
-  - **수행하지 않음:** 생성/버튼 바인딩
-- **UI Subsystem**
-  - **수행:** HUD/텍스트/토스트/FX/사운드/풀
-  - **수행하지 않음:** 세이브/IO/경제 계산
-- **Save Subsystem**
-  - **수행:** 직/역직렬화
-  - **수행하지 않음:** 게임 상태 계산
+---
+
+## 5. Data Flow & Ownership
+- **EconomySnapshot**
+  - 원본은 `UClickerEconomySubsystem`이 소유
+  - UI/Save는 `GetSnapshot()` 또는 `LoadProgress()`를 통해 읽기 전용으로 사용
+  - 저장 시에는 Snapshot을 복사해 SaveGame 데이터(`UClickerSaveGame`)로 직렬화
+
+- **UClickerSaveGame**
+  - 디스크에 저장되는 직렬화 객체로, SaveManagerSubsystem이 생성/저장/로드를 담당
+
+---
+
+## 6. Responsibility & Dependency
+- **EconomySubsystem**
+  - 경제 상태 계산, 1초 틱, 오프라인 보상, Save/Load 트리거 담당
+  - UI 생성/위젯 바인딩, SaveGame IO는 담당 x
+
+- **UISubsystem**
+  - HUD / 텍스트 / 토스트 / FX / 사운드 / 위젯 풀링 담당
+  - 경제 계산 및 SaveGame IO는 담당 x
+
+- **SaveManagerSubsystem**
+  - SaveGame IO 당당
+  - 게임 상태 계산 및 UI는 담당 x
+
+---
 
 ## 7. 운영 규칙
 - **Widget Pool:** HUD/토스트는 초기 1회 AddToViewport 후 Visible/Collapsed 토글 사용
 - **오프라인 보상:** 로드 시 1회 보상 후 즉시 저장하여 재적용 방지
 - **이벤트 기반 갱신:** UI는 폴링 금지, OnEconomyChanged 구독으로 갱신
+
+---
 
 ## 8. 오류 처리 & 가드 (구현 예정)
 - DataAsset 로드 실패 시:
@@ -190,10 +208,14 @@ UISubsystem::Initialize()
 - 잘못된 위젯 클래스/Null World: return + ensure 로그
 - 세이브/로드 실패: 사용자 알림(토스트)
 
+---
+
 ## 9. 성능/스레딩
 - 1s Tick에서만 CPS 지급(고정), 클릭/업그레이드는 이벤트성
 - UI는 이벤트 구독 기반 (불필요한 매 프레임 조회(Polling) 금지)
 - 저장은 배치 (자동저장 타이머) 또는 명령형(RequestSave())로 수행
+
+---
 
 ## 10. 확장 포인트 (구현 예정)
 - 업그레이트 티어/코스트 곡선 커스터마이즈(데이터 드리븐)
@@ -201,14 +223,20 @@ UISubsystem::Initialize()
 - 경제 데이터 드리븐: EconomyBalanceSettings DataAsset으로 구현
 - 세이브 버전업: SaveGame에 Version 필드 추가, 로드시 버전 스위치로 구버전 마이그레이션.
 
+---
+
 ## 11. 테스트 후크 (DoD 연결)
 - A: Save/Load & 오프라인 보상 -- A1~A6 체크리스트
 - B: UI 풀/토스트 -- Add 1회, 재사용, 애니 종료 후 Collapsed
 - C: 안정성 -- Null 가드, 중복 타이머 미발생
 > 상세 케이스는 '/docs/testing/test_cases.md' 참조
 
+---
+
 ## 12. 용어
 - CPC: Currency Per Click
 - CPS: Currency Per Second
 - Snapshot: 런타임 상태 구조체(FEconomySnapshot)
 - SaveGame: 디스크 직렬화 오브젝트
+
+---

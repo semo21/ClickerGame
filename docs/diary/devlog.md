@@ -927,4 +927,15 @@
   - 1-1) 전체 오탈자 검수
   - 1-2) 5. Data Asset 갱신
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/457bc7b775c832768c759068f06b10576371e11f)
+
+## 12.01.25.
+- what
+  1. architecture_overview 갱신중 
+- why
+  - 1-1) 리팩터하며 변경된 흐름 반영
+  - 1-2) 문서 내용 최적화
+- how
+  - 1-1) 3~6 챕터 수정
+- proof
   - Commit Link
