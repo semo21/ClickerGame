@@ -938,4 +938,14 @@
 - how
   - 1-1) 3~6 챕터 수정
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/5a2d1bc881410509aac0dc98c6b371f8b7c91349)
+
+## 12.02.25.
+- what
+  1.  
+- why
+  - 
+- how
+  - 
+- proof
   - Commit Link

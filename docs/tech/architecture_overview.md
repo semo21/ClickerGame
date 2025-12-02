@@ -9,9 +9,9 @@
 
 ## 2. 런타임 구조
 - GameInstance
-  - UClickerEconomySubsystem: 경제 상태/틱/오프라인 보상/세이브 트리거
-  - UClickerUISubsystem: HUD/텍스트 갱신/토스트/FX/사운드
-  - USaveManagerSubsystem: SaveGame 슬롯 IO
+  - EconomySubsystem: 경제 상태/틱/오프라인 보상/세이브 트리거
+  - UISubsystem: HUD/텍스트 갱신/토스트/FX/사운드
+  - SaveSubsystem: SaveGame 슬롯 IO
 -  PlayerController: 입력 진입점(클릭/업그레이드/세이브/로드 등 버튼 핸들러)
 -  Widgets: HUD, Idle/FloatingText
   
@@ -23,17 +23,14 @@
 PlayerController::BeginPlay()
 1. EconomySubsystem::StartWorld(UWorld*) 
   -> EconomySubsystem::RequestLoad() 
-  -> 이후 [3-4. Load]항목과 동일하게 진행
+  -> 로드 후 오프라인 보상을 계산, 필요 시 TriggerOfflineReward()를 통해 1회 적용
+  -> 1초 틱 타이머 시작
 
 2. UISubsystem::ShowHUD(UWorld*)
   -> HUD 위젯 생성 후 AddToViewport()
   -> HUD 내부 위젯 바인딩 (CurrencyText, Buttons 등)
   -> UpgradeSuccessText를 기본적으로 Collapsed 설정
   -> Upgrade/Save/Load버튼 PlayerController 핸들러에 바인딩
-
-3. EconomySubsystem::RequestLoad()
-  -> 로드 이후 EconomySubsystem::TriggerOfflineReward() 호출
-  -> Offline Reward 시퀀스 실행 (3-7 참조)
 ```
 ### 3-2. Click
 ```
@@ -46,7 +43,7 @@ PlayerController::SetupInputComponent()
 2. UISubsystem::ShowClickEffect(FHitResult.Location)
   -> 클릭 위치에 Niagara 이펙트 스폰
 
-3. UISubsystem::ShowFlotingText(...)
+3. UISubsystem::ShowFloatingText(...)
   -> Widget = UISubsystem::GetWidgetFromPool(...)
   -> Widget->SetupToast(...)
   -> Widget->PlayToast()
@@ -72,7 +69,7 @@ UISubsystem::SaveButtton->AddDynamic(PlayerController::OnSaveClicked)
   -> Snapshot을 SaveGame 객체에 직렬화 후 슬롯에 저장
 
 // Load
-UISubsystem::LoadButtton->AddDynamic(PlayerController::OnLoadClicked)
+UISubsystem::LoadButton->AddDynamic(PlayerController::OnLoadClicked)
 1. PlayerController::OnLoadClicked() 
   -> EconomySubsystem::RequestLoad()
   -> SaveSubsystem::LoadProgress(FEconomySnapshot)
@@ -82,7 +79,7 @@ UISubsystem::LoadButtton->AddDynamic(PlayerController::OnLoadClicked)
 ### 3-5. Economy Changed
 ```
 1. UISubsystem::Initialize()
-  -> EconomySystem::OnEconomyChanged를 구독
+  -> EconomySubsystem::OnEconomyChanged를 구독
   -> 콜백에서 HUD(Currency, CPS, CPC 등)을 갱신
 
 2. EconomySubsystem::Broadcast()
@@ -141,12 +138,12 @@ PlayerController::SetupInputComponent()
 UISubsystem::ShowHUD()
 1. UpgradeButton.OnClicked  -> PlayerController::OnUpgradeClicked
 2. SaveButton.OnClicked     -> PlayerController::OnSaveClicked
-3. LoadButton.OnClicked     -> PlyaerController::OnLoadClicked
+3. LoadButton.OnClicked     -> PlayerController::OnLoadClicked
 
 // Currency Delegates
 UISubsystem::Initialize()
 1. EconomySubsystem::OnEconomyChanged -> UISubsystem::OnEconomyChanged
-2. EconomySubsystem::OnPassiveIncome  -> UISubysystem::OnPassiveIncome
+2. EconomySubsystem::OnPassiveIncome  -> UISubsystem::OnPassiveIncome
 3. EconomySubsystem::OnOfflineReward  -> UISubsystem::OnOfflineReward
 ```
 
@@ -170,12 +167,12 @@ UISubsystem::Initialize()
 
 ## 5. Data Flow & Ownership
 - **EconomySnapshot**
-  - 원본은 `UClickerEconomySubsystem`이 소유
+  - 원본은 `EconomySubsystem`이 소유
   - UI/Save는 `GetSnapshot()` 또는 `LoadProgress()`를 통해 읽기 전용으로 사용
-  - 저장 시에는 Snapshot을 복사해 SaveGame 데이터(`UClickerSaveGame`)로 직렬화
+  - 저장 시에는 Snapshot을 복사해 SaveGame 데이터(`SaveGame`)로 직렬화
 
-- **UClickerSaveGame**
-  - 디스크에 저장되는 직렬화 객체로, SaveManagerSubsystem이 생성/저장/로드를 담당
+- **SaveGame**
+  - 디스크에 저장되는 직렬화 객체로, SaveSubsystem 생성/저장/로드를 담당
 
 ---
 
@@ -188,10 +185,11 @@ UISubsystem::Initialize()
   - HUD / 텍스트 / 토스트 / FX / 사운드 / 위젯 풀링 담당
   - 경제 계산 및 SaveGame IO는 담당 x
 
-- **SaveManagerSubsystem**
-  - SaveGame IO 당당
+- **SaveSubsystem**
+  - SaveGame IO 담당
   - 게임 상태 계산 및 UI는 담당 x
 
+> 각 모듈의 Public API와 의존성 목록은 `api_reference.md` 참조
 ---
 
 ## 7. 운영 규칙
@@ -218,10 +216,10 @@ UISubsystem::Initialize()
 ---
 
 ## 10. 확장 포인트 (구현 예정)
-- 업그레이트 티어/코스트 곡선 커스터마이즈(데이터 드리븐)
+- 업그레이트 티어/코스트 곡선 커스터마이즈(구현 예정)
 - 사운드/FX 교체: UISettings DataAsset으로 플러그형 (*구현 완료*)
-- 경제 데이터 드리븐: EconomyBalanceSettings DataAsset으로 구현
-- 세이브 버전업: SaveGame에 Version 필드 추가, 로드시 버전 스위치로 구버전 마이그레이션.
+- 경제 데이터 드리븐: EconomyBalanceSettings DataAsset으로 구현하여 업그레이드/밸런스 파라미터를 이것을 기반으로 외부화(구현 예정)
+- 세이브 버전업: SaveGame에 Version 필드 추가, 로드시 버전 스위치로 구버전 마이그레이션.(구현 예정)
 
 ---
 
@@ -237,6 +235,6 @@ UISubsystem::Initialize()
 - CPC: Currency Per Click
 - CPS: Currency Per Second
 - Snapshot: 런타임 상태 구조체(FEconomySnapshot)
-- SaveGame: 디스크 직렬화 오브젝트
-
+- SaveGame: 디스크 직렬화 오브젝트(UClickerSaveGame)
+- 
 ---
