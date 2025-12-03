@@ -942,10 +942,10 @@
 
 ## 12.02.25.
 - what
-  1.  
+  1. architecture_overview 업데이트
 - why
-  - 
+  - 1-1) 리팩터하며 변경된 흐름 반영
 - how
-  - 
+  - 1-1) 문서 구조 정리 및 표현 개선
 - proof
   - Commit Link
