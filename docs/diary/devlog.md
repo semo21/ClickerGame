@@ -948,4 +948,4 @@
 - how
   - 1-1) 문서 구조 정리 및 표현 개선
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/d9f75a12ce0858d0b12a7b56f2295fbeb8bdbee8)
