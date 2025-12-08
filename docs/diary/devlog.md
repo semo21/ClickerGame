@@ -949,3 +949,17 @@
   - 1-1) 문서 구조 정리 및 표현 개선
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/d9f75a12ce0858d0b12a7b56f2295fbeb8bdbee8)
+
+## 12.08.25.
+- what
+  1. WIP - api_reference  
+  2. 지난 일지 내용 수정 및 보완
+  3. 주간 일지 작성
+- why
+  - 1-1) 리팩터 후 전체 문서 갱신중
+  - 2-1) 일지 내용이 부정확했던 점을 발견
+- how
+  - 1-1) 시작 ~ 챕터 2 업데이트
+  - 1-2) 추후 1, 2챕터 내용 추가 보완 필요
+- proof
+  - Commit Link
