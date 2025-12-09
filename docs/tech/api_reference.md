@@ -8,12 +8,13 @@
 
 ## 1. API 개요
 
-| 클래스                       | 책임                                                    | 핵심 API                                                                                | 이벤트                             | 사용하는 데이터 모델               |
-| ---------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
-| **UClickerEconomySubsystem** | 재화/업그레이드/오프라인 보상, 1초 틱, Save/Load 트리거 | StartWorld,RequestLoad, RequestSave, OnClicked, TryUpgrade, GetUpgradeCost, GetSnapshot | OnEconomyChanged(FEconomySnapshot) | FEconomySnapshot                   |
-| **UClickerUISubsystem**      | HUD/텍스트 갱신, 토스트/FX/사운드, 위젯 풀링            | ShowHUD, ShowIdleReward, ShowFloatingText                                               | (구독)OnEconomyChanged             | FEconomySnapshot(Read-Only)        |
-| **USaveManagerSubsystem**    | SaveGame 슬롯 IO (직렬화/역직렬화)                      | SaveProgress, LoadProgress                                                              | -                                  | UClickerSaveGame, FEconomySnapshot |
-| **AMyPlayerController**      | 입력, 초기 시작(ShowHUD/StartWorld), 버튼 핸들러        | BeginPlay, SetupInputComponent, OnClick, OnUpgradeClicked, OnSaveClicked, OnLoadClicked | -                                  | (간접적으로) FEconomySnapshot      |
+| 클래스                       | 책임                                                    | 핵심 API                                                                                         | 이벤트                             | 사용하는 데이터 모델               |
+| ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- | ---------------------------------- |
+| **UClickerEconomySubsystem** | 재화/업그레이드/오프라인 보상, 1초 틱, Save/Load 트리거 | StartWorld,RequestLoad, RequestSave, OnClicked, TryUpgrade, GetSnapshot, HasPendingOfflineReward | OnEconomyChanged(FEconomySnapshot) | FEconomySnapshot                   |
+| **UClickerUISubsystem**      | HUD/텍스트 갱신, 토스트/FX/사운드, 위젯 풀링            | ShowHUD, ShowIdleReward, ShowFloatingText                                                        | (구독)OnEconomyChanged             | FEconomySnapshot(Read-Only)        |
+| **USaveManagerSubsystem**    | SaveGame 슬롯 IO (직렬화/역직렬화)                      | SaveProgress, LoadProgress                                                                       | -                                  | UClickerSaveGame, FEconomySnapshot |
+| **AMyPlayerController**      | 입력, 초기 시작(ShowHUD/StartWorld), 버튼 핸들러        | BeginPlay, SetupInputComponent, OnClick, OnUpgradeClicked, OnSaveClicked, OnLoadClicked          | -                                  | (간접적으로) FEconomySnapshot      |
+| **ToastWidgetBase**          |
 
 ---
 
@@ -27,8 +28,11 @@ EconomySubsystem이 유일한 쓰기 주체이며, UI/Save는 읽기 전용으�
 | Currency          | double      | 0         | 현재 보유 재화             | R/W: Economy / R: UI      |
 | CurrencyPerClick  | double      | 1         | 클릭당 재화 획득량(CPC)    | R/W: Economy / R: UI      |
 | CurrencyPerSecond | double      | Base\*L/2 | 초당 재화 자동 획득량(CPS) | R/W: Economy / R: UI      |
-| UpgradeLevel      | int         | 0         | 업그레이드 진척도          | R/W:Economy / R: UI       |
+| UpgradeLevel      | int32       | 0         | 업그레이드 진척도          | R/W : Economy / R: UI     |
+| UpgradeCostBase   | double      | 10        | 업그레이드 비용 기본값     | R: Economy, UI            |
+| UpgradeGrowth     | double      | 1.5       | 업그레이드 비용 상승 계수  | R: Economy, UI            |
 | LastSaveTime      | int64 (UTC) | 0         | 오프라인 보상 Δt 계산 기준 | R/W: Economy, SaveManager |
+
 
 > **Note:** 'LastSaveTime'은 오프라인 보상 계산 직후 즉시 저장을 설계에 포함하여 동일한 보상이 중복 적용되지 않도록 설계한다.
 

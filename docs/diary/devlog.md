@@ -952,7 +952,7 @@
 
 ## 12.08.25.
 - what
-  1. WIP - api_reference  
+  1. WIP - update api_reference  
   2. 지난 일지 내용 수정 및 보완
   3. 주간 일지 작성
 - why
@@ -961,5 +961,15 @@
 - how
   - 1-1) 시작 ~ 챕터 2 업데이트
   - 1-2) 추후 1, 2챕터 내용 추가 보완 필요
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/2af0ddc06180b0d1955bd031fa41f3ccbbb174a5)
+
+## 12.09.25.
+- what
+  1. WIP - update api_reference 
+- why
+  - 1-1) 리팩터 후 전체 문서 갱신중
+- how
+  - 1-1) 개요 내용 일부 수정
 - proof
   - Commit Link
