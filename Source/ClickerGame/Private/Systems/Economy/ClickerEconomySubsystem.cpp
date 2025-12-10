@@ -30,7 +30,6 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 	RequestLoad();
 	StartAutoSaveTimer();
 	StartTickTimer();
-
 }
 
 void UClickerEconomySubsystem::OnClicked() {

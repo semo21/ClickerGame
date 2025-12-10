@@ -28,7 +28,6 @@ public:
 	virtual void Deinitialize() override;
 	void StartWorld(UWorld* World);
 	void OnClicked();
-	void OnTick1Second();
 	bool TryUpgrade();
 	void RequestSave();
 	void RequestLoad();
@@ -47,6 +46,7 @@ private:
 	void Broadcast();
 	void StartAutoSaveTimer();
 	void StartTickTimer();
+	void OnTick1Second();
 	void StopAutoSaveTimer();
 	void StopTickTimer();
 	double GetUpgradeCost() const;
