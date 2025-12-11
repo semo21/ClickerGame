@@ -1,4 +1,4 @@
-# API 참고 문서
+# API Reference
 
 이 문서는 ClickerGame의 핵심 시스템, Public API, 이벤트, 데이터 모델을 정리한 HUB 문서이다. 상세한 런타임 플로우는 `tech/architecture_overview.md`, UI 관점 플로우는 `design/system/system_ui.md`를 참고한다.
 
@@ -6,7 +6,7 @@
 
 ---
 
-## 1. API 개요
+## 1. API Outlines
 
 | 클래스                       | 책임                                    | 핵심 API                                                                                              | 이벤트                                                   | 사용하는 데이터 모델               |
 | ---------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------- |
@@ -17,7 +17,7 @@
 
 ---
 
-## 2. 데이터 모델
+## 2. Data Models
 
 ### 2.1 FEconomySnapshot
 
@@ -53,7 +53,7 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
 
 ---
 
-## 3. 클래스별 API 상세
+## 3. Class API Details
 
 ### 3.1 UClickerEconomySubsystem
 
@@ -168,7 +168,7 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
   
 ---
 
-### USaveManagerSubsystem
+### 3.3 USaveManagerSubsystem
  
 - **책임:**
   - SaveGame 슬롯 IO, 스냅샷 직렬화/역직렬화
@@ -178,3 +178,43 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
 - **사용하는 데이터 모델:**
   - UClickerSaveGame (저장)
   - FEconomySnapshot (실행)
+
+  ---
+
+## 4. Delegate References
+
+### 4.1 FOnEconomyChanged
+
+```c++
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOneEconomyChanged, const FEconomySnapshot&, Snapshot);
+```
+- Broadcaster: `UClickerEconomySubsystem`
+- Subscriber: `UClickerUISubsystem`
+- 호출 시점:
+  - Snapshot이 변경되는 모든 시점
+    - 클릭
+    - 업그레이드
+    - 패시브 수익 지급
+    - 오프라인 보상 적용
+    - 수동/자동 세이브 직전 등
+
+### 4.2 FOnPassiveIncome
+
+```c++
+DELCARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
+```
+- Broadcaster: `UClickerEconomySubsystem`
+- Subscriber: `UClickerUISubsystem`
+- 용도
+  - IdleRewardText 토스트 내용 결정
+  - HUD의 초당 수익 표시 갱신
+
+### 4.3 FOnOfflineReward
+
+```c++
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfflineReward, double, Amount);
+```
+- Broadcaster: `UClickerEconomySubsystem`
+- Subscriber: `UClickerUISubsystem`
+- 용도
+  - 오프라인 기간 동안 누적된 보상을 한 번에 플레이어에게 보여주는 토스트/사운드 연출

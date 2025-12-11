@@ -972,4 +972,27 @@
 - how
   - 1-1) 개요 내용 일부 수정
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/207a5c63a87bbcc7f3f4f94a429d2ef6b85c693e)
+
+## 12.10.25.
+- what
+  1. WIP - update api_reference 
+- why
+  - 1-1) 리팩터 후 전체 문서 갱신중
+- how
+  - 1-1) 개요 내용 일부 수정
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/2ec0d11b46f68399e7b37952ea59c9b66ccd2f7a)
+
+## 12.11.25.
+- what
+  1. WIP - update api_reference 
+  2. WIP - OnOfflineReward 호출구조 리팩터
+- why
+  - 1-1) 리팩터 후 전체 문서 갱신중
+  - 2-1) 현재 구조는 함수의 중복실행으로 임시적인 해결 상태
+- how
+  - 1-1) 개요 내용 일부 수정
+  - 2-1) 델리게이트 콜백, 트리거 호출시점 변경 방안 모색중
+- proof
   - Commit Link
