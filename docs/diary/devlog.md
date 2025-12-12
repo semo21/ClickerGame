@@ -995,4 +995,14 @@
   - 1-1) 개요 내용 일부 수정
   - 2-1) 델리게이트 콜백, 트리거 호출시점 변경 방안 모색중
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/2c2d19767eaa6d753af439ba7c38c99692700da0)
+
+## 12.12.25.
+- what
+  1. WIP - OnOfflineReward 구조 리팩터
+- why
+  - 1-1) EconomySubsystem, UISubsystem의 책임을 명확히 분리하는 것이 구조적으로 완성도가 높다고 판단
+- how
+  - 1-1) UISubsystem내부적으로 시점문제 해결할 수 있도록 재구성 예정
+- proof
   - Commit Link
