@@ -117,7 +117,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-		EconomySubsystemRef->TriggerOfflineReward();
+		//EconomySubsystemRef->TriggerOfflineReward();
 	}
 }
 
@@ -128,7 +128,7 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 }
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	ShowReward(OfflineReward, true);
+	//ShowReward(OfflineReward, true);
 }
 
 void UClickerUISubsystem::ShowUpgradeSuccessText() {
@@ -160,6 +160,7 @@ void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
 }
 
 void UClickerUISubsystem::OnOfflineReward(double Amount) {
+	PendingOfflineReward += Amount;
 	HandleOfflineReward(Amount);
 }
 
@@ -200,7 +201,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 }
 
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
-	if (!RewardToastClass || !PlayerController.IsValid())	return;
+	if (!RewardToastClass)	return;
 
 	const FVector2D ScreenPos(640.0f, 120.0f);
 

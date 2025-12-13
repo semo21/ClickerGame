@@ -1005,4 +1005,19 @@
 - how
   - 1-1) UISubsystem내부적으로 시점문제 해결할 수 있도록 재구성 예정
 - proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/542168bc08364eda4d88d94e4f3aab613bff95a9)
+
+## 12.13.25.
+- what
+  1. WIP - OnOfflineReward 
+  2. VS 솔루션 빌드 에러 해결
+- why
+  - 1-1) PC 유효 가드에서 return되던 것을 확인
+  - 1-2) EconomySubsystem, UISubsystem의 책임 구조 명확히 분리
+  - 2-1) VS 업데이트로 인한 빌드 세팅 이슈로 예상
+- how
+  - 1-1) ShowReward의 PC가드 조건 삭제
+  - 1-2) 책임 분리는 추후 구현 예정
+  - 2-1) .vs 파일 초기화 후 Generate VS files 실행
+- proof
   - Commit Link
