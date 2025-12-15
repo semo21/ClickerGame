@@ -117,7 +117,6 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-		//EconomySubsystemRef->TriggerOfflineReward();
 	}
 }
 
