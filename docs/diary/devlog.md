@@ -1020,4 +1020,4 @@
   - 1-2) 책임 분리는 추후 구현 예정
   - 2-1) .vs 파일 초기화 후 Generate VS files 실행
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/45af3e69a7a9210b5e99527ac5ab82d2a6771a53)
