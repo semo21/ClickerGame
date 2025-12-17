@@ -118,6 +118,8 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (EconomySubsystemRef) {
 		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
 	}
+	bHUDReady = true;
+	TryFlushOfflineReward();
 }
 
 void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
@@ -127,7 +129,7 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 }
 
 void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	//ShowReward(OfflineReward, true);
+	ShowReward(OfflineReward, true);
 }
 
 void UClickerUISubsystem::ShowUpgradeSuccessText() {
@@ -159,8 +161,11 @@ void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
 }
 
 void UClickerUISubsystem::OnOfflineReward(double Amount) {
+	if (Amount <= 0.0) return;
+
 	PendingOfflineReward += Amount;
-	HandleOfflineReward(Amount);
+	TryFlushOfflineReward();
+	//HandleOfflineReward(Amount);
 }
 
 // private field
@@ -201,7 +206,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	if (!RewardToastClass)	return;
-
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
 	const FVector2D ScreenPos(640.0f, 120.0f);
 
 	if (UToastWidgetBase* Widget = GetWidgetFromPool(RewardPool, RewardToastClass)) {
@@ -232,4 +237,13 @@ UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase
 	}
 
 	return nullptr;
+}
+
+void UClickerUISubsystem::TryFlushOfflineReward() {
+	if (!bHUDReady || PendingOfflineReward <= 0.0)	return;
+
+	const double amount = PendingOfflineReward;
+	PendingOfflineReward = 0.0;
+
+	ShowReward(amount, true);
 }

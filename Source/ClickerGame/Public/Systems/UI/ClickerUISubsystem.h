@@ -57,6 +57,7 @@ private:
 	void UpdateScore(const FEconomySnapshot& S);
 	void HandlePassiveIncome(double Amount);
 	void HandleOfflineReward(double Amount);
+	void TryFlushOfflineReward();
 	
 	UPROPERTY()	UUserWidget* HUDWidget;
 	UPROPERTY()	UTextBlock* CurrencyText;
@@ -69,6 +70,7 @@ private:
 	UPROPERTY()	UButton* LoadButton;
 	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	double PendingOfflineReward = 0.0;
+	bool bHUDReady = false;
 	FTimerHandle UpgradeSuccessTimerHandle;
 	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;
 	FVector2D CachedViewportSize = FVector2D::ZeroVector;

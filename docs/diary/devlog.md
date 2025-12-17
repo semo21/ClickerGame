@@ -1021,3 +1021,18 @@
   - 2-1) .vs 파일 초기화 후 Generate VS files 실행
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/45af3e69a7a9210b5e99527ac5ab82d2a6771a53)
+
+## 12.17.25.
+- what 
+  1. WIP - OnOfflineReward
+  2. 크래시 해결 
+- why
+  - 1-1) OnOfflineReward 리팩터 중
+  - 1-2) 리팩터 중 실행시 OfflineReward 미표기 현상 재발생
+  - 2-1) UISettings DA 캐시 오류로 예상
+- how 
+  - 1-1) 코드 리팩트 일부 진행
+  - 1-2) 캐시 초기화를 위한 리빌드 진행
+  - 2-1) 리빌드로 캐시 초기화하여 해결
+- proof
+  - Commit Link
