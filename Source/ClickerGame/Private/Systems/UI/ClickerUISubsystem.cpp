@@ -165,7 +165,6 @@ void UClickerUISubsystem::OnOfflineReward(double Amount) {
 
 	PendingOfflineReward += Amount;
 	TryFlushOfflineReward();
-	//HandleOfflineReward(Amount);
 }
 
 // private field

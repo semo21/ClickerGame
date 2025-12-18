@@ -1036,3 +1036,13 @@
   - 2-1) 리빌드로 캐시 초기화하여 해결
 - proof
   - Commit Link
+
+## 12.18.25.
+- what
+  1. OnOfflineReward 리팩터 완료 
+- why
+  - 
+- how
+  - 
+- proof
+  - Commit Link
