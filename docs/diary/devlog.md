@@ -1041,8 +1041,24 @@
 - what
   1. OnOfflineReward 리팩터 완료 
 - why
-  - 
+  1. OnOfflineReward 리팩터 완료
+     1. UISubsystem과 EconomySubsystem의 더욱 명확한 책임 분리
+     2. 필요없는 함수를 중복호출 하는 구조 수정
 - how
-  - 
+  1. OnOfflineReward 리팩터 완료
+     1. UISubsystem에서 Economy의 OfflineReward Trigger하는 구조 삭제
+     2. UI 자체에서 Pending 후 Offline Reward 출력 가능하도록 수정
+     3. IdleRewardWidget 호출 함수의 필요없는 PlayerController 존재여부 확인 가드 삭제
+- proof
+  - Commit Link
+
+## 12.24.25.
+- what
+  1. 주간 및 일일 일지 수정 및 작성  
+- why
+  1. 주간 및 일일 일지 수정 및 작성
+     1. 감기로 인한 프로젝트 전체적인 개발 지연
+- how
+  1. 
 - proof
   - Commit Link

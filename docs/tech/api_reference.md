@@ -8,21 +8,21 @@
 
 ## 1. API Outlines
 
-| 클래스                       | 책임                                    | 핵심 API                                                                                              | 이벤트                                                   | 사용하는 데이터 모델               |
-| ---------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------- |
-| **UClickerEconomySubsystem** | 경제 상태/업그레이드/오프라인 보상 관리 | StartWorld,RequestLoad, RequestSave, OnClicked, TryUpgrade, GetSnapshot, HasPendingOfflineReward      | OnEconomyChanged, OnPassiveIncome, OnOfflineReward       | FEconomySnapshot                   |
-| **UClickerUISubsystem**      | HUD & 토스트 UI, FX                     | ShowHUD, ShowReward, ShowFloatingText, ShowClickEffect, ShowUpgradeSuccessText/HideUpgradeSuccessText | (구독)OnEconomyChanged, OnPassiveIncome, OnOfflineReward | FEconomySnapshot(Read-Only)        |
-| **USaveManagerSubsystem**    | SaveGame IO (직렬화/역직렬화)           | SaveProgress, LoadProgress                                                                            | -                                                        | UClickerSaveGame, FEconomySnapshot |
-| **AMyPlayerController**      | 입력/초기화 엔트리포인트                | BeginPlay, SetupInputComponent, OnClick, OnUpgradeClicked, OnSaveClicked, OnLoadClicked               | -                                                        | (간접적으로) FEconomySnapshot      |
+| 클래스                       | 책임                                    | 핵심 API                                                                | 이벤트                                                         | 사용하는 데이터 모델               |
+| ---------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------- |
+| **UClickerEconomySubsystem** | 경제 상태/업그레이드/오프라인 보상 관리 | StartWorld,RequestLoad, RequestSave, OnClicked, TryUpgrade, GetSnapshot | OnEconomyChanged, OnPassiveIncome, OnOfflineReward             | FEconomySnapshot(R/W)              |
+| **UClickerUISubsystem**      | HUD & 토스트 UI, FX 표시                | ShowHUD, ShowReward, ShowFloatingText,                                  | (구독)OnEconomyChanged(구독), OnPassiveIncome, OnOfflineReward | FEconomySnapshot(Read-Only)        |
+| **USaveManagerSubsystem**    | SaveGame IO (직렬화/역직렬화)           | SaveProgress, LoadProgress                                              | -                                                              | UClickerSaveGame, FEconomySnapshot |
+| **AMyPlayerController**      | 입력/초기화 진입점                      | BeginPlay, OnClick, OnUpgradeClicked, OnSaveClicked, OnLoadClicked      | -                                                              | (간접적으로) FEconomySnapshot      |
 
 ---
 
-## 2. Data Models
+## 2. Core Data Models
 
 ### 2.1 FEconomySnapshot
 
 게임 내 경제 상태를 나타내는 런타임 스냅샷 구조체.
-EconomySubsystem이 유일한 쓰기 주체이며, UI/Save는 읽기 전용으로 사용한다.
+**EconomySubsystem이 유일한 쓰기 주체**이며, UI/Save는 읽기 전용으로 사용한다.
 
 | 멤버              | 타입        | 기본값    | 역할                       | 접근 권한                 |
 | ----------------- | ----------- | --------- | -------------------------- | ------------------------- |
@@ -43,13 +43,13 @@ EconomySubsystem이 유일한 쓰기 주체이며, UI/Save는 읽기 전용으�
 
 디스크에 저장되는 SaveGame 오브젝트.
 FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 생성/저장/로드를 담당한다.
-| 멤버              | 타입   | UPROPERTY(SaveGame) | 역할                  |
-| ----------------- | ------ | ------------------- | --------------------- |
-| Currency          | double | True                | 보유 재화             |
-| CurrencyPerClick  | double | True                | 클릭당 재화 획득량    |
-| CurrencyPerSecond | double | True                | 초당 재화 자동 획득량 |
-| UpgradeLevel      | int32  | True                | 업그레이드 진척도     |
-| LastSaveUnixTime  | int64  | True                | 저장 시점(UTC)        |
+| 멤버              | 타입   | UPROPERTY(SaveGame) | 설명                       |
+| ----------------- | ------ | ------------------- | -------------------------- |
+| Currency          | double | True                | 보유 재화                  |
+| CurrencyPerClick  | double | True                | 클릭당 재화 획득량(CPC)    |
+| CurrencyPerSecond | double | True                | 초당 재화 자동 획득량(CPS) |
+| UpgradeLevel      | int32  | True                | 업그레이드 단계            |
+| LastSaveUnixTime  | int64  | True                | 저장 시각(UTC)             |
 
 ---
 
@@ -57,114 +57,74 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
 
 ### 3.1 UClickerEconomySubsystem
 
-**책임:**
+**책임**
 
-- 게임 경제 상태 관리 (Currency, CPC, CPS, UpgradeLevel)
-- 클릭/업그레이드/틱/오프라인 보상 로직
-- Save/Load 트리거 및 Snapshot 관리
-- 경제 상태 변경 시 관련 이벤트 브로드캐스트
+- 게임 경제 상태(Snapshot) 관리
+- 클릭/업그레이드/패시브 수익/오프라인 보상 로직
+- Save/Load 트리거
+- 경제 상태 변경 시 이벤트 브로드캐스트
 
-**라이프사이클:**
+**Lifecycle**
 
 1. **Start:** 
-   - `AMyPlayerController::BeginPlay()`에서 `StartWorld(UWorld*)` 호출
-   - 내부에서 `RequestLoad()`를 호출해 이전 진행 상태를 로드
-   - 로드된 Snapshot을 기반으로 오프라인 보상을 계산 후, 필요 시 1회 적용 (`TriggerOfflineReward()`)
+   - `AMyPlayerController::BeginPlay()` -> `StartWorld(UWorld*)`
+   - 내부에서 `RequestLoad()`를 호출
+   - Load 직후 오프라인 보상 계산 및 1회 적용 
+   - 보상 적용 후 `RequestSave()` 즉시 호출   - 
    - 1초 틱 타이머 및 필요 시 오토 세이브 타이머 시작
 
 2. **Run:** 
    - 매 1초마다 `OnTick1Second`를 통해:
      - `CurrencyPerSecond`만큼 Currency 증가
      - `OnPassiveIncome` 브로드캐스트
-     - Snapshot 변경 후 `OnEconomyChanged` 브로드캐스트
+   - Snapshot 변경 시 `OnEconomyChanged` 브로드캐스트
 
 3. **End:**
    - Subsystem `Deinitialize()` 단계에서 타이머 해제
    - 마지막 상태를 저장
 
-**공개 API (Public Functions)**
+**Public API**
 
-| 함수                             | 설명                                                                                                        |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `void StartWorld(UWorld* World)` | 월드 시작 시 경제 시스템 초기화, 로드/오프라인 보상/틱 타이머 설정.                                         |
-| `void RequestLoad()`             | SaveManagerSubsystem을 통해 진행 상태를 로드하고 Snapshot에 적용.                                           |
-| `void RequestSave()`             | 현재 Snapshot을 SaveManagerSubsystem에 전달하여 저장.                                                       |
-| `void OnClicked()`               | 클릭 입력 처리. CPC만큼 Currency를 증가시키고 `Broadcast` 호출.                                             |
-| `void OnUpgradeClicked()`        | Upgrade 버튼 클릭 시 업그레이드 시도.                                                                       |
-| `void OnSaveClicked()`           | Save 버튼 클릭 ㅅ시 RequestSave() 시도.                                                                     |
-| `void OnLoadClicked()`           | Load 버튼 클릭 시 RequestLoad() 시도.                                                                       |
-| `void TriggerOfflineeReward()`   | OfflineReward 지급과 브로드 캐스트를 통한 UI 표시. UISubsystem에서 초기 1회 외부 실행, 이 후 모두 내부 실행 |
+| 함수                                          | 설명                              |
+| --------------------------------------------- | --------------------------------- |
+| `void StartWorld(UWorld* World)`              | 경제 시스템 초기화 및 런타임 시작 |
+| `void RequestLoad()`                          | 저장된 진행 상태를 로드           |
+| `void RequestSave()`                          | 현재 Snapshot 저장                |
+| `void OnClicked()`                            | 클릭 처리 (CPC 적용)              |
+| `void TryUpgrade()`                           | 업그레이드 시도                   |
+| `const FEconomySnapshot& GetSnapshot() const` | 현재 Snapshot 조회                |
 
-<!-- ---
-
-- **의존성:**
-  - **필수:** SaveManager (세이브/로드)
-  - **권장:** UISubsystem (보상 토스트 표시)
-- **공개 API:**
-  - void StartWorld(UWorld* World)
-  - void RequestLoad()
-  - void RequestSave()
-  - void OnClicked()
-  - bool TryUpgrade()
-  - double GetUpgradeCost()
-  - const FEconomySnapshot& GetSnapshot() const
-- **이벤트:**
-  - OnEconomyChanged(const FEconomySnapshot&)
-- **사용하는 데이터 모델:**
-  - FEconomySnapshot (Read & Write)
-- **Notes:**
-  - 로드 직후 즉시 저장 설계로 중복 보상 방지 -->
+> **Note** UI 버튼 이벤트는 **Controller 책임**이며, Economy는 "행위 API"만 제공한다.
 
 ---
 
 ### 3.2 UClickerUISubsystem
 
-**책임:**
-- HUD 생성
-- 토스트 위젯 생성
-- 텍스트 갱신
-- FX/사운드 재생
+**책임**
+- HUD 생성 및 토스트 UI 생성/표시
+- Economy 이벤트 구독 및 시각화
+- FX/사운드 트리거
 
-**위젯 풀링 방식:**
-- 초기 1회 `AddToViewport()` 후 Visible/Collapsed 토글 사용
+**Lifecycle**
 
-**라이프사이클:**
+1. **Initialize()**
+   - EconomySubsystem 델리게이트 구독
+2. **ShowHUD()**
+   - HUD 생성 및 초기 수치 표시
+3. **Runtime**  
+   - Delegate 콜백을 통해 UI 갱신
+4. **Deinitialize()**
+   - 델리게이트 구독 해제   
 
-1. **Start**
-   - `Initialize()`에서 EconomySubsystem의 `OnEconomyChanged`, `OnPassiveIncome`, `OnOfflineReward` 델리게이트 구독
-   - `UISettings`의 바인딩 에셋들과 대응하는 멤버 연결
-   - `AMyPlayerController::BeginPlay()`에서 `ShowHUD()` 호출
-   - HUD 위젯 생성 및 텍스트/버튼 대응하는 UI 멤버 연결
-   - `AMyPlayerController`에 Upgrade/Save/Load 버튼 델리게이트 구독 중개
-   - OnEconomyChanged(FEconomySnapshot)으로 UI 내용 갱신
-   - `EconomySubsystem::TriggerOfflineReward()` 호출하여 오프라인 리워드 출력
+**Public API**
 
-2. **Run**
-   - 구독한 델리게이트들에 의한 콜백을 지속적으로 실행
-     - UI갱신
-     - 토스트 위젯 생성
-     - 사운드/FX 재생
+| 함수                                      | 설명                             |
+| ----------------------------------------- | -------------------------------- |
+| `void ShowHUD()`                          | HUD 생성 및 표시                 |
+| `void ShowReward(double, bool)`           | 패시브/오프라인 수익 토스트 표시 |
+| `void ShowFloatingText(FText, FVector2D)` | 플로팅 텍스트 표시               |
 
-3. **End**
-   - `Deinitialize()`에서 EconomySubsystem 델리게이트 구독 해지
-
-4. Initialize() (의존성 구독 + UISettings 동기 로드) 
-5. ShowHUD() (1회) 실행 직후 Economy
-6. GetSnapshot으로 수치 초기화 
-7. 이후 변화는 OnEconomyChanged 구독으로 갱신 
-8. Deinitialize() (구독/타이머 정리)
-
-- **소유 주체:**
-  - Widgets = Viewport/WidgetTree 소유 (애니메이션 종료 시 Collapsed -> 재사용 시 Visible)
-- **의존성:**
-  - **필수:** Economy (이벤트 구독 필수)
-  - **권장:** UISettings (DataAsset, 로드 실패 시 우회)
-- **공개 API:**
-  - void ShowHUD()
-  - void ShowIdleReward(double)
-  - void ShowFloatingText(FText, FVector2D)
-- **사용하는 데이터 모델:**
-  - FEconomySnapshot (Read-only; 텍스트 갱신 전용)
+> **Note** UI는 Snapshot을 직접 수정하지 않으며, 이벤트 결과만 표현한다.
   
 ---
 
@@ -181,12 +141,14 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
 
   ---
 
+### 3.4 AMyPlayerController (Entry Points only)
+
 ## 4. Delegate References
 
 ### 4.1 FOnEconomyChanged
 
 ```c++
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOneEconomyChanged, const FEconomySnapshot&, Snapshot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
 ```
 - Broadcaster: `UClickerEconomySubsystem`
 - Subscriber: `UClickerUISubsystem`
@@ -201,7 +163,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOneEconomyChanged, const FEconomySn
 ### 4.2 FOnPassiveIncome
 
 ```c++
-DELCARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
 ```
 - Broadcaster: `UClickerEconomySubsystem`
 - Subscriber: `UClickerUISubsystem`

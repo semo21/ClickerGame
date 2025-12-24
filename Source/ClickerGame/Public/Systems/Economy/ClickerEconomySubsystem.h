@@ -31,7 +31,6 @@ public:
 	bool TryUpgrade();
 	void RequestSave();
 	void RequestLoad();
-	void TriggerOfflineReward();
 
 	UFUNCTION(BlueprintPure, Category = "Economy") const FEconomySnapshot& GetSnapshot() const { return EconomySnapshot; }
 	UFUNCTION(BlueprintPure) double GetLastOfflineReward() const { return LastOfflineReward; }
@@ -50,6 +49,7 @@ private:
 	void StopTickTimer();
 	double GetUpgradeCost() const;
 	FEconomySnapshot MakeSnapshot() const;
+	void TriggerOfflineReward();
 	void ApplySnapshot(const FEconomySnapshot& In);
 	void ApplyOfflineReward(double Amount);
 	void UpdateLastOfflineReward(FEconomySnapshot& In);
