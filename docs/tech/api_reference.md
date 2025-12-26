@@ -35,7 +35,7 @@
 | LastSaveTime      | int64 (UTC) | 0         | 오프라인 보상 Δt 계산 기준 | R/W: Economy, SaveManager |
 
 
-> **Note:** 'LastSaveTime'은 오프라인 보상 계산 직후 즉시 저장을 설계에 포함하여 동일한 보상이 중복 적용되지 않도록 설계한다.
+> **Note** 'LastSaveTime'은 오프라인 보상 계산 직후 즉시 저장을 설계에 포함하여 동일한 보상이 중복 적용되지 않도록 설계한다.
 
 ---
 
@@ -66,20 +66,20 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
 
 **Lifecycle**
 
-1. **Start:** 
+1. **Start** 
    - `AMyPlayerController::BeginPlay()` -> `StartWorld(UWorld*)`
    - 내부에서 `RequestLoad()`를 호출
    - Load 직후 오프라인 보상 계산 및 1회 적용 
    - 보상 적용 후 `RequestSave()` 즉시 호출   - 
    - 1초 틱 타이머 및 필요 시 오토 세이브 타이머 시작
 
-2. **Run:** 
+2. **Run** 
    - 매 1초마다 `OnTick1Second`를 통해:
      - `CurrencyPerSecond`만큼 Currency 증가
      - `OnPassiveIncome` 브로드캐스트
    - Snapshot 변경 시 `OnEconomyChanged` 브로드캐스트
 
-3. **End:**
+3. **End**
    - Subsystem `Deinitialize()` 단계에서 타이머 해제
    - 마지막 상태를 저장
 
@@ -130,25 +130,45 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
 
 ### 3.3 USaveManagerSubsystem
  
-- **책임:**
-  - SaveGame 슬롯 IO, 스냅샷 직렬화/역직렬화
-- **공개 API:**
-  - void SaveProgress(const FEconomySnapshot&)
-  - bool LoadProgress(FEconomySnapshot&)
-- **사용하는 데이터 모델:**
-  - UClickerSaveGame (저장)
-  - FEconomySnapshot (실행)
+**책임**
+   - SaveGame 슬롯 IO
+   - Snapshot <-> SaveGame 직렬화/역직렬화
 
-  ---
+**공개 API**
+| 함수                                         | 설명          |
+| -------------------------------------------- | ------------- |
+| `void SaveProgress(const FEconomySnapshot&)` | Snapshot 저장 |
+| `bool LoadProgress(FEconomySnapshot&)`       | Snapshot 로드 |
+
+---
 
 ### 3.4 AMyPlayerController (Entry Points only)
+**책임**
+- 입력(클릭/버튼) 이벤트를 받아 적절한 시스템으로 전달
+- BeginPlay에서 Subsystem 초기화 흐름 시작
+
+**Public/Callable Entry Points**
+| 함수                         | 설명                                         |
+| ---------------------------- | -------------------------------------------- |
+| `void BeginPlay()`           | Economy `StartWorld` 호출, UI `ShowHUD` 호출 |
+| `void SetupInputComponent()` | 클릭 입력 바인딩                             |
+| `void OnClick()`             | Economy `OnClicked` 호출 + UI 효과 요청      |
+| `void OnUpgradeClicked()`    | Economy `TryUpgrade` 호출                    |
+| `void OnSaveClicked()`       | Economy `RequestSave` 호출                   |
+| `void OnLoadClicked()`       | Economy `RequestLoad` 호출                   |
+
+---
 
 ## 4. Delegate References
 
 ### 4.1 FOnEconomyChanged
 
 ```c++
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+   FOnEconomyChanged, 
+   const FEconomySnapshot&, 
+   Snapshot
+);
 ```
 - Broadcaster: `UClickerEconomySubsystem`
 - Subscriber: `UClickerUISubsystem`
@@ -163,20 +183,40 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySna
 ### 4.2 FOnPassiveIncome
 
 ```c++
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+   FOnPassiveIncome, 
+   double, 
+   AmountPerSec
+);
 ```
 - Broadcaster: `UClickerEconomySubsystem`
 - Subscriber: `UClickerUISubsystem`
 - 용도
-  - IdleRewardText 토스트 내용 결정
-  - HUD의 초당 수익 표시 갱신
+  - 초당 수익 UI/토스트 표시
 
 ### 4.3 FOnOfflineReward
 
 ```c++
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfflineReward, double, Amount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+   FOnOfflineReward, 
+   double, 
+   Amount
+);
 ```
 - Broadcaster: `UClickerEconomySubsystem`
 - Subscriber: `UClickerUISubsystem`
 - 용도
-  - 오프라인 기간 동안 누적된 보상을 한 번에 플레이어에게 보여주는 토스트/사운드 연출
+  - 오프라인 누적 보상 연출
+
+
+## 5. Lifecycle Summary
+BeginPlay
+  - Economy.StartWorld
+    - Load
+    - Save
+    - Start Tick
+Runtime
+  - Tick / Click / Upgrade
+    - Snapshot Change -> Events -> UI
+End
+  - Save

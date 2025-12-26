@@ -1035,7 +1035,7 @@
   - 1-2) 캐시 초기화를 위한 리빌드 진행
   - 2-1) 리빌드로 캐시 초기화하여 해결
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/cf4f21e57a5eb71ec314ac6016eaae62e2282612)
 
 ## 12.18.25.
 - what
@@ -1050,7 +1050,7 @@
      2. UI 자체에서 Pending 후 Offline Reward 출력 가능하도록 수정
      3. IdleRewardWidget 호출 함수의 필요없는 PlayerController 존재여부 확인 가드 삭제
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/3fb111779cab74dfb962e4f9006ce0c3aa187736)
 
 ## 12.24.25.
 - what
@@ -1061,4 +1061,4 @@
 - how
   1. 
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/a2654d075eeacb1877b05e6b94280ddb631092bf)
