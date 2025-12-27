@@ -1062,3 +1062,30 @@
   1. 
 - proof
   - [Commit Link](https://github.com/semo21/ClickerGame/commit/a2654d075eeacb1877b05e6b94280ddb631092bf)
+
+## 12.26.25.
+- what
+  1. WIP - api_reference 갱신
+- why
+  1. api_reference 갱신중
+     1. 리팩터 후 전체 문서 갱신
+- how 
+  1. api_reference 갱신중
+     1. 문서 전체 수정 완료
+- proof
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/cd2e05798902a6debe1d4a3d2d969dfdfb2b39a9)
+
+## 12.27.25.
+- what
+  1. system_economy 갱신 완료
+  2. api_reference 갱신 완료
+- why
+  1. system_economy 갱신 완료 / 2. api_reference 갱신완료
+     1. 리팩터 후 전체 문서 갱신
+- how
+  1. system_economy 갱신 완료
+     1. 문서 전체 수정 후 검토 완료
+  2. api_reference 갱신 완료
+     1. 문서 검토 완료
+- proof
+  - Commit Link

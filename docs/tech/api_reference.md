@@ -11,7 +11,7 @@
 | 클래스                       | 책임                                    | 핵심 API                                                                | 이벤트                                                         | 사용하는 데이터 모델               |
 | ---------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------- |
 | **UClickerEconomySubsystem** | 경제 상태/업그레이드/오프라인 보상 관리 | StartWorld,RequestLoad, RequestSave, OnClicked, TryUpgrade, GetSnapshot | OnEconomyChanged, OnPassiveIncome, OnOfflineReward             | FEconomySnapshot(R/W)              |
-| **UClickerUISubsystem**      | HUD & 토스트 UI, FX 표시                | ShowHUD, ShowReward, ShowFloatingText,                                  | (구독)OnEconomyChanged(구독), OnPassiveIncome, OnOfflineReward | FEconomySnapshot(Read-Only)        |
+| **UClickerUISubsystem**      | HUD & 토스트 UI, FX 표시                | ShowHUD, ShowReward, ShowFloatingText                                   | (구독)OnEconomyChanged(구독), OnPassiveIncome, OnOfflineReward | FEconomySnapshot(Read-Only)        |
 | **USaveManagerSubsystem**    | SaveGame IO (직렬화/역직렬화)           | SaveProgress, LoadProgress                                              | -                                                              | UClickerSaveGame, FEconomySnapshot |
 | **AMyPlayerController**      | 입력/초기화 진입점                      | BeginPlay, OnClick, OnUpgradeClicked, OnSaveClicked, OnLoadClicked      | -                                                              | (간접적으로) FEconomySnapshot      |
 
@@ -70,7 +70,8 @@ FEconomySnapshot의 내용을 직렬화한 형태로, SaveManagerSubsystem이 �
    - `AMyPlayerController::BeginPlay()` -> `StartWorld(UWorld*)`
    - 내부에서 `RequestLoad()`를 호출
    - Load 직후 오프라인 보상 계산 및 1회 적용 
-   - 보상 적용 후 `RequestSave()` 즉시 호출   - 
+   - Offline reward Δt는 최대 8시간(28800초)로 제한
+   - 보상 적용 후 `RequestSave()` 즉시 호출
    - 1초 틱 타이머 및 필요 시 오토 세이브 타이머 시작
 
 2. **Run** 
@@ -178,7 +179,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
     - 업그레이드
     - 패시브 수익 지급
     - 오프라인 보상 적용
-    - 수동/자동 세이브 직전 등
 
 ### 4.2 FOnPassiveIncome
 
@@ -213,6 +213,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
 BeginPlay
   - Economy.StartWorld
     - Load
+    - OfflineReward(1회)
     - Save
     - Start Tick
 Runtime
