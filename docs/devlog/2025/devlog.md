@@ -479,7 +479,6 @@
   - 2-3) 중복 선언으로 인한 중복 구독으로 발생하는 에러임을 인지하고 수정하여 해결
 - proof
   - Commit Link
-<<<<<<< HEAD:docs/diary/Devlog.md
 
 ## 09.25.25.
 - what
@@ -1088,4 +1087,4 @@
   2. api_reference 갱신 완료
      1. 문서 검토 완료
 - proof
-  - Commit Link
+  - [Commit Link](https://github.com/semo21/ClickerGame/commit/e52d137714db2db28eb635905d392363a8acda41)
