@@ -39,3 +39,6 @@ Unreal Engine 5 C++로 개발된 Idle/Clicker Game의 프로토타입.
    - [Test Cases](./testing/test_cases.md)
 6. release
    - 빌드/릴리즈 노트
+
+## Versioning
+- v0.1-core-stable: Core systems & UI architecture stabilized (pre-art assets)
