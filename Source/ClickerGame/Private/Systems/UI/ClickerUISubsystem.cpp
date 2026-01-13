@@ -16,7 +16,7 @@
 
 #include "Gameplay/Player/MyPlayerController.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "Systems/UI/Widgets/ToastWidgetBase.h"
+#include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 #include "Systems/UI/Settings/ClickerUISettings.h"

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Systems/UI/Widgets/ToastWidgetBase.h"
+#include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Animation/UMGSequencePlayer.h"
 
 void UToastWidgetBase::PlayToast(float PlayRate) {
