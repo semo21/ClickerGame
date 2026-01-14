@@ -19,7 +19,23 @@ class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void SetLabelText(const FText& InText);
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void SetIcon(UTexture2D* InTexture);
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void SetEnabledState(bool bInEnabled);
+
+	UPROPERTY(BlueprintAssignable, Category = "ActionButton")
+	FOnActionButtonClicked OnClicked;
+
 protected:
+	virtual void NativeOnInitialized() override;
+	virtual void NativePreConstruct() override;
+
 	UPROPERTY(meta=(BindWidget))
 	UButton* Btn_Root = nullptr;
 
@@ -36,24 +52,13 @@ protected:
 	UTextBlock* Txt_Label = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UImage* Img_DisabledOverlay = nullptr;
-	
-public:
-	UFUNCTION(BlueprintCallable, Category="ActionButton")
-	void SetLabelText(const FText& InText);
+	UImage* Img_DisabledOverlay = nullptr;	
 
-	UFUNCTION(BlueprintCallable, Category = "ActionButton")
-	void SetIcon(UTexture2D* InTexture);
+	UPROPERTY(EditDefaultsOnly, Category="ActionButton|Priview")
+	FText PreviewLabelText = FText::FromString(TEXT("Preview"));
 
-	UFUNCTION(BlueprintCallable, Category = "ActionButton")
-	void SetEnabledState(bool bInEnabled);
-
-	UPROPERTY(BlueprintAssignable, Category = "ActionButton")
-	FOnActionButtonClicked OnClicked;
-
-protected:
-	virtual void NativeOnInitialized() override;
-	virtual void NativePreConstruct() override;
+	UPROPERTY(EditDefaultsOnly, Category = "ActionButton|Preview")
+	bool bPreviewIcon = false;
 
 private:
 	void HandleClicked();

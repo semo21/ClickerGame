@@ -16,6 +16,9 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
+
+	SetLabelText(PreviewLabelText);
+	SetEnabledState(false);
 }
 
 void UActionButtonWidgetBase::SetLabelText(const FText& InText) {
