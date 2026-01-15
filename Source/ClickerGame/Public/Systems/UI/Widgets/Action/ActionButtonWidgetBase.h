@@ -9,6 +9,7 @@
 class UButton;
 class UTextBlock;
 class UImage;
+class UTexture2D;
 class UOverlay;
 class UHorizontalBox;
 

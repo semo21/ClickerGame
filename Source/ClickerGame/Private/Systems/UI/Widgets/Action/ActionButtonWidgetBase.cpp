@@ -17,8 +17,10 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
 
-	SetLabelText(PreviewLabelText);
-	SetEnabledState(false);
+	if (IsDesignTime()) {
+		SetLabelText(PreviewLabelText);
+		SetEnabledState(false);
+	}	
 }
 
 void UActionButtonWidgetBase::SetLabelText(const FText& InText) {
@@ -32,11 +34,11 @@ void UActionButtonWidgetBase::SetIcon(UTexture2D* InTexture) {
 	Img_Icon->SetBrushFromTexture(InTexture, true);
 }
 
-void UActionButtonWidgetBase::SetEnabledState(bool bEnabled) {
-	if (Btn_Root) Btn_Root->SetIsEnabled(bEnabled);
+void UActionButtonWidgetBase::SetEnabledState(bool bInEnabled) {
+	if (Btn_Root) Btn_Root->SetIsEnabled(bInEnabled);
 
 	if (Img_DisabledOverlay) {
-		Img_DisabledOverlay->SetVisibility(bEnabled ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+		Img_DisabledOverlay->SetVisibility(bInEnabled ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 	}
 }
 
