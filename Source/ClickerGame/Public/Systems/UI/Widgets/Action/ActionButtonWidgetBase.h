@@ -62,5 +62,6 @@ protected:
 	bool bPreviewIcon = false;
 
 private:
+	UFUNCTION()
 	void HandleClicked();
 };
