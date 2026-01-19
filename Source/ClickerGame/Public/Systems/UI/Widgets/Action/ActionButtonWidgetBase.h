@@ -8,12 +8,17 @@
 
 class UButton;
 class UTextBlock;
-class UImage;
 class UTexture2D;
-class UOverlay;
-class UHorizontalBox;
+class UWidgetSwitcher;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
+
+UENUM(BlueprintType)
+enum class EActionButtonMode : uint8 {
+	IconOnly,
+	TextOnly,
+	IconText
+};
 
 UCLASS()
 class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
@@ -41,20 +46,27 @@ protected:
 	UButton* Btn_Root = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UOverlay* Overlay_Content = nullptr;
+	UWidgetSwitcher* Switcher_Mode = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UHorizontalBox* HBox_Content = nullptr;
+	UImage* Img_DisabledOverlay = nullptr;
 
+	// Icon Only
 	UPROPERTY(meta = (BindWidgetOptional))
-	UImage* Img_Icon = nullptr;
+	UTexture2D* Img_Icon_Only = nullptr;
+
+	// Text Only
+	UPROPERTY(meta = (BindWidgetOptional))
+	UTextBlock* Txt_Label_Only = nullptr;
+
+	// Icon + Text	
+	UPROPERTY(meta = (BindWidgetOptional))
+	UTexture2D* Img_Icon = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	UTextBlock* Txt_Label = nullptr;
 
-	UPROPERTY(meta = (BindWidgetOptional))
-	UImage* Img_DisabledOverlay = nullptr;	
-
+	// Preview
 	UPROPERTY(EditDefaultsOnly, Category="ActionButton|Priview")
 	FText PreviewLabelText = FText::FromString(TEXT("Preview"));
 
