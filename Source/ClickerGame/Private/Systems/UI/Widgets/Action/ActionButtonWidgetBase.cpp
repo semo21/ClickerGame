@@ -30,15 +30,14 @@ void UActionButtonWidgetBase::SetLabelText(const FText& InText) {
 void UActionButtonWidgetBase::SetIcon(UTexture2D* InTexture) {
 	if (!Img_Icon) return;
 
-	Img_Icon->SetVisibility(InTexture ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
-	Img_Icon->SetBrushFromTexture(InTexture, true);
+	
 }
 
 void UActionButtonWidgetBase::SetEnabledState(bool bInEnabled) {
 	if (Btn_Root) Btn_Root->SetIsEnabled(bInEnabled);
 
 	if (Img_DisabledOverlay) {
-		Img_DisabledOverlay->SetVisibility(bInEnabled ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+		
 	}
 }
 

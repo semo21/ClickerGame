@@ -4,21 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+
 #include "ActionButtonWidgetBase.generated.h"
 
 class UButton;
 class UTextBlock;
+class UImage;
 class UTexture2D;
 class UWidgetSwitcher;
+class UActionButtonStyleData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
-
-UENUM(BlueprintType)
-enum class EActionButtonMode : uint8 {
-	IconOnly,
-	TextOnly,
-	IconText
-};
 
 UCLASS()
 class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
@@ -26,6 +22,21 @@ class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Data", meta=(ExposeOnSpawn="true"))
+	TObjectPtr<UActionButtonStyleData> StyleData = nullptr;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Overrides", meta=(ExposeOnspawn="true"))
+	bool bOverrideLabel = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
+	FText OverrideLabelText;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
+	bool bOverrideIcon = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
+	TObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
+
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void SetLabelText(const FText& InText);
 
@@ -49,7 +60,7 @@ protected:
 	UWidgetSwitcher* Switcher_Mode = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UImage* Img_DisabledOverlay = nullptr;
+	UTexture2D* Img_DisabledOverlay = nullptr;
 
 	// Icon Only
 	UPROPERTY(meta = (BindWidgetOptional))
