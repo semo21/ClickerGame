@@ -8,11 +8,11 @@
 
 
 UENUM(BlueprintType)
-enum class EActionButtonMode : uint8 {
-	Auto		UMETA(DisplayName = "Auto"),
+enum class EActionButtonMode : uint8 {	
 	IconOnly	UMETA(DisplayName = "IconOnly"),
 	TextOnly	UMETA(DisplayName = "TextOnly"),
-	IconText	UMETA(DisplayName = "IconText")
+	IconText	UMETA(DisplayName = "IconText"),
+	Auto		UMETA(DisplayName = "Auto")
 };
 
 UCLASS(BlueprintType)

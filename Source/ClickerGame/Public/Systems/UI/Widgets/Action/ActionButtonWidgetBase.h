@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Systems/UI/Settings/ActionButtonStyleData.h"
 
 #include "ActionButtonWidgetBase.generated.h"
 
@@ -12,7 +13,6 @@ class UTextBlock;
 class UImage;
 class UTexture2D;
 class UWidgetSwitcher;
-class UActionButtonStyleData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
 
@@ -37,6 +37,12 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
 	TObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnspawn = "true"))
+	EActionButtonMode Mode = EActionButtonMode::Auto;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnspawn = "true"))
+	bool bEnabled = true;
+
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void SetLabelText(const FText& InText);
 
@@ -46,36 +52,40 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void SetEnabledState(bool bInEnabled);
 
+	UFUNCTION(BlueprintCallable, Category="ActionButton")
+	void SetMode(EActionButtonMode InMode);
+
 	UPROPERTY(BlueprintAssignable, Category = "ActionButton")
 	FOnActionButtonClicked OnClicked;
 
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativePreConstruct() override;
+	virtual void SynchronizeProperties() override;
 
 	UPROPERTY(meta=(BindWidget))
-	UButton* Btn_Root = nullptr;
+	TObjectPtr<UButton> Btn_Root = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UWidgetSwitcher* Switcher_Mode = nullptr;
+	TObjectPtr<UWidgetSwitcher> Switcher_Mode = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UTexture2D* Img_DisabledOverlay = nullptr;
+	TObjectPtr<UImage> Img_DisabledOverlay = nullptr;
 
 	// Icon Only
 	UPROPERTY(meta = (BindWidgetOptional))
-	UTexture2D* Img_Icon_Only = nullptr;
+	TObjectPtr<UImage> Img_Icon_Only = nullptr;
 
 	// Text Only
 	UPROPERTY(meta = (BindWidgetOptional))
-	UTextBlock* Txt_Label_Only = nullptr;
+	TObjectPtr<UTextBlock> Txt_Label_Only = nullptr;
 
 	// Icon + Text	
 	UPROPERTY(meta = (BindWidgetOptional))
-	UTexture2D* Img_Icon = nullptr;
+	TObjectPtr<UImage> Img_Icon = nullptr;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	UTextBlock* Txt_Label = nullptr;
+	TObjectPtr<UTextBlock> Txt_Label = nullptr;
 
 	// Preview
 	UPROPERTY(EditDefaultsOnly, Category="ActionButton|Priview")
@@ -87,4 +97,12 @@ protected:
 private:
 	UFUNCTION()
 	void HandleClicked();
+
+	void ApplyResolvedDataToWidgets();
+	void ApplyMode(EActionButtonMode FinalMode);
+	
+	FText ResolveLabel() const;
+	UTexture2D* ResolveIcon() const;
+	bool ResolveEnabled() const;
+	EActionButtonMode ResolveMode() const;
 };
