@@ -160,8 +160,8 @@ void UActionButtonWidgetBase::ApplyMode(EActionButtonMode FinalMode) {
 	case EActionButtonMode::IconOnly:	index = 0; break;
 	case EActionButtonMode::TextOnly:	index = 1; break;
 	case EActionButtonMode::IconText:	index = 2; break;
-	case EActionButtonMode::Auto:		index = 3; break;
-	default:							index = 3; break;
+	case EActionButtonMode::Auto:		index = 2; break;
+	default:							index = 2; break;
 	}
 
 	Switcher_Mode->SetActiveWidgetIndex(index);
