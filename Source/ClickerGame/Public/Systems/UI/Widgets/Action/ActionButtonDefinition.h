@@ -8,13 +8,13 @@
 
 #include "ActionButtonDefinition.generated.h"
 
-UENUM(BlueprintType)
-enum class EActionButtonMode : uint8 {
-	IconOnly	UMETA(DisplayName = "Icon Only"),
-	TextOnly	UMETA(DisplayName = "Text Only"),
-	IconText	UMETA(DisplayName = "Icon and Text"),
-	Auto		UMETA(DisplayName = "Auto")
-};
+//UENUM(BlueprintType)
+//enum class EActionButtonMode : uint8 {
+//	IconOnly	UMETA(DisplayName = "Icon Only"),
+//	TextOnly	UMETA(DisplayName = "Text Only"),
+//	IconText	UMETA(DisplayName = "Icon and Text"),
+//	Auto		UMETA(DisplayName = "Auto")
+//};
 
 USTRUCT(BlueprintType)
 struct FActionButtonDefinition {
@@ -29,8 +29,8 @@ struct FActionButtonDefinition {
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	TObjectPtr<UTexture2D> IconTexture = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
-	EActionButtonMode Mode = EActionButtonMode::Auto;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
+	//EActionButtonMode Mode = EActionButtonMode::Auto;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	bool bDefaultEnabled = true;
