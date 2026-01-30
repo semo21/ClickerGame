@@ -4,16 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Systems/UI/ActionButtonTypes.h"
+
 #include "ActionButtonStyleData.generated.h"
 
-
-UENUM(BlueprintType)
-enum class EActionButtonMode : uint8 {	
-	IconOnly	UMETA(DisplayName = "IconOnly"),
-	TextOnly	UMETA(DisplayName = "TextOnly"),
-	IconText	UMETA(DisplayName = "IconText"),
-	Auto		UMETA(DisplayName = "Auto")
-};
 
 UCLASS(BlueprintType)
 class CLICKERGAME_API UActionButtonStyleData : public UDataAsset
@@ -28,7 +22,7 @@ public:
 	TObjectPtr<UTexture2D> IconTexture = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ActionButton")
-	EActionButtonMode Mode = EActionButtonMode::Auto;
+	EActionButtonType Type = EActionButtonType::Auto;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ActionButton")
 	bool bEnabled = true;

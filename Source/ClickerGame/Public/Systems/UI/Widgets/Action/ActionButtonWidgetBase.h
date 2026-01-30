@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Systems/UI/Settings/ActionButtonStyleData.h"
+#include "Systems/UI/ActionButtonTypes.h"
 
 #include "ActionButtonWidgetBase.generated.h"
 
@@ -25,22 +26,22 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Data", meta=(ExposeOnSpawn="true"))
 	TObjectPtr<UActionButtonStyleData> StyleData = nullptr;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Overrides", meta=(ExposeOnspawn="true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Overrides", meta=(ExposeOnSpawn="true"))
 	bool bOverrideLabel = false;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
 	FText OverrideLabelText;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
 	bool bOverrideIcon = false;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnspawn = "true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
 	TObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnspawn = "true"))
-	EActionButtonMode Mode = EActionButtonMode::Auto;
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
+	EActionButtonType Type = EActionButtonType::Auto;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnspawn = "true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
 	bool bEnabled = true;
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
@@ -53,7 +54,7 @@ public:
 	void SetEnabledState(bool bInEnabled);
 
 	UFUNCTION(BlueprintCallable, Category="ActionButton")
-	void SetMode(EActionButtonMode InMode);
+	void SetType(EActionButtonType InType);
 
 	UPROPERTY(BlueprintAssignable, Category = "ActionButton")
 	FOnActionButtonClicked OnClicked;
@@ -99,10 +100,10 @@ private:
 	void HandleClicked();
 
 	void ApplyResolvedDataToWidgets();
-	void ApplyMode(EActionButtonMode FinalMode);
+	void ApplyType(EActionButtonType FinalType);
 	
 	FText ResolveLabel() const;
 	UTexture2D* ResolveIcon() const;
 	bool ResolveEnabled() const;
-	EActionButtonMode ResolveMode() const;
+	EActionButtonType ResolveType() const;
 };
