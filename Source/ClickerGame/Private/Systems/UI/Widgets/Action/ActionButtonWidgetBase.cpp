@@ -26,7 +26,7 @@ void UActionButtonWidgetBase::NativePreConstruct() {
 		OverrideIconTexture = nullptr;
 		bOverrideIcon = bPreviewIcon;
 
-		Type = EActionButtonType::Auto;
+		Mode = EActionButtonMode::Auto;
 		bEnabled = true;		
 	}	
 
@@ -58,8 +58,8 @@ void UActionButtonWidgetBase::SetEnabledState(bool bInEnabled) {
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::SetMode(EActionButtonType InType) {
-	Type = InType;
+void UActionButtonWidgetBase::SetMode(EActionButtonMode InMode) {
+	Mode = InMode;
 	ApplyResolvedDataToWidgets();
 }
 
@@ -93,15 +93,15 @@ bool UActionButtonWidgetBase::ResolveEnabled() const {
 	return bEnabled;
 }
 
-EActionButtonType UActionButtonWidgetBase::ResolveType() const {
+EActionButtonMode UActionButtonWidgetBase::ResolveMode() const {
 	// 인스턴스 Mode가 Auto가 아니라면 인스턴스 Mode값 사용
-	if (Type != EActionButtonType::Auto) {
-		return Type;
+	if (Mode != EActionButtonMode::Auto) {
+		return Mode;
 	}
 
-	// DA가 Auto가 아니라면 DA값 사용
-	if (StyleData && StyleData->Type!= EActionButtonType::Auto) {
-		return StyleData->Type;
+	// Definition Mode가 Auto가 아니라면 Definition Mode값 사용
+	if (Mode!= EActionButtonMode::Auto) {
+		return Mode;
 	}
 
 	// Auto: Label/Icon 존재 여부에 따라 결정
@@ -149,7 +149,7 @@ void UActionButtonWidgetBase::ApplyResolvedDataToWidgets() {
 	}
 
 	// 3) Mode 적용
-	ApplyType(ResolveType());
+	ApplyMode(ResolveMode());
 }
 
 void UActionButtonWidgetBase::ApplyMode(EActionButtonMode FinalMode) {

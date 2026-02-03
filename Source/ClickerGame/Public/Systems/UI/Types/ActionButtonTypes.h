@@ -10,7 +10,7 @@
  */
 
 UENUM(BlueprintType)
-enum class EActionButtonType : uint8 {
+enum class EActionButtonMode : uint8 {
 	IconOnly	UMETA(DisplayName = "IconOnly"),
 	TextOnly	UMETA(DisplayName = "TextOnly"),
 	IconText	UMETA(DisplayName = "IconText"),

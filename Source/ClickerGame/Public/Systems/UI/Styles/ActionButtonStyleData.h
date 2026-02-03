@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Systems/UI/ActionButtonTypes.h"
+#include "Systems/UI/Types/ActionButtonTypes.h"
 
 #include "ActionButtonStyleData.generated.h"
 

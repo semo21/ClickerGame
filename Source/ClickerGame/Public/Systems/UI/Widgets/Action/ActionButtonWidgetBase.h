@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Systems/UI/Settings/ActionButtonStyleData.h"
-#include "Systems/UI/ActionButtonTypes.h"
+#include "Systems/UI/Styles/ActionButtonStyleData.h"
+#include "Systems/UI/Types/ActionButtonTypes.h"
 
 #include "ActionButtonWidgetBase.generated.h"
 
@@ -39,7 +39,7 @@ public:
 	TObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
-	EActionButtonType Type = EActionButtonType::Auto;
+	EActionButtonMode Mode = EActionButtonMode::Auto;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
 	bool bEnabled = true;
@@ -54,7 +54,7 @@ public:
 	void SetEnabledState(bool bInEnabled);
 
 	UFUNCTION(BlueprintCallable, Category="ActionButton")
-	void SetType(EActionButtonType InType);
+	void SetMode(EActionButtonMode InMode);
 
 	UPROPERTY(BlueprintAssignable, Category = "ActionButton")
 	FOnActionButtonClicked OnClicked;
@@ -100,10 +100,10 @@ private:
 	void HandleClicked();
 
 	void ApplyResolvedDataToWidgets();
-	void ApplyType(EActionButtonType FinalType);
+	void ApplyMode(EActionButtonMode FinalMode);
 	
 	FText ResolveLabel() const;
 	UTexture2D* ResolveIcon() const;
 	bool ResolveEnabled() const;
-	EActionButtonType ResolveType() const;
+	EActionButtonMode ResolveMode() const;
 };
