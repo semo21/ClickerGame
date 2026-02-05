@@ -6,6 +6,8 @@
 #include "GameplayTagContainer.h"
 #include "Engine/Texture2D.h"
 
+#include "Systems/UI/Types/ActionButtonTypes.h"
+
 #include "ActionButtonDefinition.generated.h"
 
 USTRUCT(BlueprintType)
@@ -21,8 +23,8 @@ struct FActionButtonDefinition {
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	TObjectPtr<UTexture2D> IconTexture = nullptr;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
-	//EActionButtonType Type = EActionButtonType::Auto;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
+	EActionButtonMode Mode = EActionButtonMode::Auto;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	bool bDefaultEnabled = true;

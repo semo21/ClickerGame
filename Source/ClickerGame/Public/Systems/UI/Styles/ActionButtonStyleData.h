@@ -15,15 +15,5 @@ class CLICKERGAME_API UActionButtonStyleData : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ActionButton")
-	FText LabelText;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ActionButton")
-	TObjectPtr<UTexture2D> IconTexture = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ActionButton")
-	EActionButtonType Type = EActionButtonType::Auto;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ActionButton")
-	bool bEnabled = true;
+	
 };
