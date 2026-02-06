@@ -13,5 +13,7 @@ UCLASS()
 class CLICKERGAME_API UActionButtonRegistry : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
+
+
 	
 };

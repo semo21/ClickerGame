@@ -72,9 +72,9 @@ FText UActionButtonWidgetBase::ResolveLabel() const {
 		return OverrideLabelText;
 	}
 
-	if (StyleData) {
-		return StyleData->LabelText;
-	}
+	//if (StyleData) {
+	//	return StyleData->LabelText;
+	//}
 	return FText::GetEmpty();
 }
 
@@ -82,9 +82,9 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 	if (bOverrideIcon) {
 		return OverrideIconTexture.Get();
 	}
-	if (StyleData) {
-		return StyleData->IconTexture.Get();
-	}
+	//if (StyleData) {
+	//	return StyleData->IconTexture.Get();
+	//}
 
 	return nullptr;
 }
