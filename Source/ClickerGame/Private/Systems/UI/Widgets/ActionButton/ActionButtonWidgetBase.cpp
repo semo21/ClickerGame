@@ -19,7 +19,7 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
 
-	if (IsDesignTime() && !StyleData && !bOverrideLabel && !bOverrideIcon) {
+	if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
 		OverrideLabelText = PreviewLabelText;
 		bOverrideLabel = true;
 

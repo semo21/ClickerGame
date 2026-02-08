@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Engine/Texture2D.h"
 
 #include "Systems/UI/Types/ActionButtonTypes.h"
@@ -14,8 +13,8 @@ USTRUCT(BlueprintType)
 struct FActionButtonDefinition {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ActionButton")
-	FGameplayTag ActionTag;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ActionButton")
+	//FGameplayTag ActionTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	FText LabelText;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Blueprint/UserWidget.h"
 #include "Systems/UI/Styles/ActionButtonStyleData.h"
 #include "Systems/UI/Types/ActionButtonTypes.h"
@@ -24,7 +25,10 @@ class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
 
 public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Data", meta=(ExposeOnSpawn="true"))
-	TObjectPtr<UActionButtonStyleData> StyleData = nullptr;
+	TObjectPtr<UActionButtonStyleData> DefaultStyle = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
+	FGameplayTag ActionTag;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Overrides", meta=(ExposeOnSpawn="true"))
 	bool bOverrideLabel = false;
