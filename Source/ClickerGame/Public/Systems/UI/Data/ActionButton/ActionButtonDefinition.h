@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/Texture2D.h"
-
+#include "GameplayTagContainer.h"
 #include "Systems/UI/Types/ActionButtonTypes.h"
 
 #include "ActionButtonDefinition.generated.h"
@@ -13,14 +13,14 @@ USTRUCT(BlueprintType)
 struct FActionButtonDefinition {
 	GENERATED_BODY()
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ActionButton")
-	//FGameplayTag ActionTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ActionButton")
+	FGameplayTag ActionTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	FText LabelText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
-	TObjectPtr<UTexture2D> IconTexture = nullptr;
+	TSoftObjectPtr<UTexture2D> IconTexture = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	EActionButtonMode Mode = EActionButtonMode::Auto;

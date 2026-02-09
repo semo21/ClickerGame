@@ -4,16 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "GameplayTagContainer.h"
+
+#include "Systems/UI/Data/ActionButton/ActionButtonDefinition.h"
+#include "Systems/UI/Types/ActionButtonTypes.h"
+
 #include "ActionButtonRegistry.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class CLICKERGAME_API UActionButtonRegistry : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TMap<FGameplayTag, FActionButtonDefinition> Definitions;
 
+	const FActionButtonDefinition* Find(const FGameplayTag& Tag) const {
+		return Definitions.Find(Tag);
+	}
 	
 };
