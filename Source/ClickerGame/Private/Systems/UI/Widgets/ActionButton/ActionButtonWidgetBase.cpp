@@ -1,12 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
-
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/WidgetSwitcher.h"
+
+#include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
+#include "Systems/UI/ClickerUISubsystem.h"
+
+const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
+	if (!ActionTag.IsValid())	return nullptr;
+
+	const UWorld* World = GetWorld();
+	if (!World)					return nullptr;
+
+	UGameInstance* GI = World->GetGameInstance();
+	if (!GI)					return nullptr;
+
+	const UClickerUISubsystem* UISubsystem = GI->GetSubsystem<UClickerUISubsystem>();
+	if (!UISubsystem)			return nullptr;
+
+	return UISubsystem->FindActionButtonDefinition(ActionTag);
+}
 
 void UActionButtonWidgetBase::NativeOnInitialized() {
 	Super::NativeOnInitialized();
@@ -72,9 +87,10 @@ FText UActionButtonWidgetBase::ResolveLabel() const {
 		return OverrideLabelText;
 	}
 
-	//if (StyleData) {
-	//	return StyleData->LabelText;
-	//}
+	
+	if (const FActionButtonDefinition* Def = GetDefinition()) {
+		return Def->LabelText;
+	}
 	return FText::GetEmpty();
 }
 
@@ -82,10 +98,10 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 	if (bOverrideIcon) {
 		return OverrideIconTexture.Get();
 	}
-	//if (StyleData) {
-	//	return StyleData->IconTexture.Get();
-	//}
 
+	if (const FActionButtonDefinition* Def = GetDefinition()) {
+		return Def->IconTexture.Get();
+	}
 	return nullptr;
 }
 

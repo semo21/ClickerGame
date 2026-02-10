@@ -4,16 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "GameplayTagContainer.h"
 
 #include "ClickerUISubsystem.generated.h"
 
-class USoundBase; class UUserWidget; class UButton;
-class UTextBlock; class UNiagaraSystem;
+class USoundBase;				class UUserWidget; 
+class UButton;					class UTextBlock; 
+class UNiagaraSystem;
 
 class UClickerEconomySubsystem; class AMyPlayerController;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
-struct FEconomySnapshot;		class UClickerUISettings;
-class UToastWidgetBase;
+class UClickerUISettings;		class UToastWidgetBase;			
+class UActionButtonRegistry;	
+
+struct FEconomySnapshot;		struct FActionButtonDefinition;
 /**
  *
  */
@@ -32,16 +36,19 @@ public:
 	void ShowOfflineReward(float OfflineReward);
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
-
+	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
 	UFUNCTION()	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
 	UFUNCTION() void OnPassiveIncome(double AmountPerSec);
 	UFUNCTION() void OnOfflineReward(double Amount);
 
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
+	UPROPERTY(EditDefaultsOnly, Category="UI|ActionButtons")
+	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
 	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
 	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
 	UPROPERTY()	USoundBase* ClickRewardSound = nullptr;
 	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
+	
 
 protected:
 	UToastWidgetBase* GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass);

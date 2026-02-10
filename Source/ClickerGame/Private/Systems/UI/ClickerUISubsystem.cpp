@@ -20,6 +20,7 @@
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 #include "Systems/UI/Settings/ClickerUISettings.h"
+#include "Systems/UI/Data/ActionButton/ActionButtonRegistry.h"
 
 // public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
@@ -150,6 +151,12 @@ void UClickerUISubsystem::HideUpgradeSuccessText() {
 	if (UpgradeSuccessText) {
 		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 	}
+}
+
+const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(const FGameplayTag& Tag) const {
+	if (!ActionButtonRegistry || !Tag.IsValid()) return nullptr;
+
+	return ActionButtonRegistry->Find(Tag);
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {

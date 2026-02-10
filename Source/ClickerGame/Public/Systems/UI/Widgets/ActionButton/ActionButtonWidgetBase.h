@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Systems/UI/Styles/ActionButtonStyleData.h"
 #include "Systems/UI/Types/ActionButtonTypes.h"
+#include "Systems/UI/Data/ActionButton/ActionButtonDefinition.h"
 
 #include "ActionButtonWidgetBase.generated.h"
 
@@ -24,7 +25,7 @@ class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Data", meta=(ExposeOnSpawn="true"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Style", meta=(ExposeOnSpawn="true"))
 	TObjectPtr<UActionButtonStyleData> DefaultStyle = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
@@ -40,7 +41,7 @@ public:
 	bool bOverrideIcon = false;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
-	TObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
+	TSoftObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
 	EActionButtonMode Mode = EActionButtonMode::Auto;
@@ -67,6 +68,8 @@ protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativePreConstruct() override;
 	virtual void SynchronizeProperties() override;
+
+	const FActionButtonDefinition* GetDefinition() const;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Btn_Root = nullptr;
@@ -99,6 +102,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "ActionButton|Preview")
 	bool bPreviewIcon = false;
 
+	void RefreshFromData();
 private:
 	UFUNCTION()
 	void HandleClicked();
