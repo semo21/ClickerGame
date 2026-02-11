@@ -25,7 +25,7 @@ const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
 
 void UActionButtonWidgetBase::NativeOnInitialized() {
 	Super::NativeOnInitialized();
-
+	RefreshFromData();
 	if (Btn_Root) {
 		Btn_Root->OnClicked.AddDynamic(this, &UActionButtonWidgetBase::HandleClicked);
 	}
@@ -33,7 +33,7 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
-
+	RefreshFromData();
 	if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
 		OverrideLabelText = PreviewLabelText;
 		bOverrideLabel = true;
@@ -106,30 +106,18 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 }
 
 bool UActionButtonWidgetBase::ResolveEnabled() const {
-	return bEnabled;
+	if (const FActionButtonDefinition* Def = GetDefinition()) {
+		return Def->bDefaultEnabled;
+	}
+	return true;
 }
 
 EActionButtonMode UActionButtonWidgetBase::ResolveMode() const {
-	// 인스턴스 Mode가 Auto가 아니라면 인스턴스 Mode값 사용
-	if (Mode != EActionButtonMode::Auto) {
-		return Mode;
+	if (const FActionButtonDefinition* Def = GetDefinition()) {
+		return Def->Mode;
 	}
 
-	// Definition Mode가 Auto가 아니라면 Definition Mode값 사용
-	if (Mode!= EActionButtonMode::Auto) {
-		return Mode;
-	}
-
-	// Auto: Label/Icon 존재 여부에 따라 결정
-	const bool bHasLabel = !ResolveLabel().IsEmpty();
-	const bool bHasIcon = (ResolveIcon() != nullptr);
-	
-	if (bHasLabel && bHasIcon)	return EActionButtonMode::IconText;
-	if (bHasIcon)				return EActionButtonMode::IconOnly;
-	if (bHasLabel)				return EActionButtonMode::TextOnly;
-
-	// 아무것도 없다면 TextOnly로 설정
-	return EActionButtonMode::TextOnly;
+	return EActionButtonMode::Auto;
 }
 
 void UActionButtonWidgetBase::ApplyResolvedDataToWidgets() {
@@ -181,4 +169,17 @@ void UActionButtonWidgetBase::ApplyMode(EActionButtonMode FinalMode) {
 	}
 
 	Switcher_Mode->SetActiveWidgetIndex(index);
+}
+
+void UActionButtonWidgetBase::RefreshFromData() {
+	const FText Label = ResolveLabel();
+	UTexture2D* Icon = ResolveIcon();
+	const bool bEnabled = ResolveEnabled();
+	const EActionButtonMode Mode = ResolveMode();
+
+	SetLabelText(Label);
+	SetIcon(Icon);
+	SetEnabledState(bEnabled);
+
+	SetMode(Mode);
 }
