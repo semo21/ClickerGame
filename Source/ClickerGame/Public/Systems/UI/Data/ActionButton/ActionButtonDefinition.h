@@ -13,9 +13,6 @@ USTRUCT(BlueprintType)
 struct FActionButtonDefinition {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ActionButton")
-	FGameplayTag ActionTag;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
 	FText LabelText;
 
