@@ -101,8 +101,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "ActionButton|Preview")
 	bool bPreviewIcon = false;
-
-	void RefreshFromData();
 private:
 	UFUNCTION()
 	void HandleClicked();

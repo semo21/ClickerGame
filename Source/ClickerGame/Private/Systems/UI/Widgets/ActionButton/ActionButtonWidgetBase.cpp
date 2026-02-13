@@ -25,7 +25,6 @@ const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
 
 void UActionButtonWidgetBase::NativeOnInitialized() {
 	Super::NativeOnInitialized();
-	RefreshFromData();
 	if (Btn_Root) {
 		Btn_Root->OnClicked.AddDynamic(this, &UActionButtonWidgetBase::HandleClicked);
 	}
@@ -33,7 +32,6 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
-	RefreshFromData();
 	if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
 		OverrideLabelText = PreviewLabelText;
 		bOverrideLabel = true;
@@ -106,6 +104,7 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 }
 
 bool UActionButtonWidgetBase::ResolveEnabled() const {
+
 	if (const FActionButtonDefinition* Def = GetDefinition()) {
 		return Def->bDefaultEnabled;
 	}
@@ -169,17 +168,4 @@ void UActionButtonWidgetBase::ApplyMode(EActionButtonMode FinalMode) {
 	}
 
 	Switcher_Mode->SetActiveWidgetIndex(index);
-}
-
-void UActionButtonWidgetBase::RefreshFromData() {
-	const FText Label = ResolveLabel();
-	UTexture2D* Icon = ResolveIcon();
-	const bool bEnabled = ResolveEnabled();
-	const EActionButtonMode Mode = ResolveMode();
-
-	SetLabelText(Label);
-	SetIcon(Icon);
-	SetEnabledState(bEnabled);
-
-	SetMode(Mode);
 }
