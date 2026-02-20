@@ -40,8 +40,8 @@ void UActionButtonWidgetBase::NativePreConstruct() {
 		bOverrideIcon = bPreviewIcon;
 
 		Mode = EActionButtonMode::Auto;
-		bEnabled = true;		
-	}	
+		bEnabled = true;
+	}
 
 	ApplyResolvedDataToWidgets();
 }
@@ -63,7 +63,7 @@ void UActionButtonWidgetBase::SetIcon(UTexture2D* InTexture) {
 	bOverrideIcon = true;
 	OverrideIconTexture = InTexture;
 
-	ApplyResolvedDataToWidgets();	
+	ApplyResolvedDataToWidgets();
 }
 
 void UActionButtonWidgetBase::SetEnabledState(bool bInEnabled) {
@@ -85,7 +85,7 @@ FText UActionButtonWidgetBase::ResolveLabel() const {
 		return OverrideLabelText;
 	}
 
-	
+
 	if (const FActionButtonDefinition* Def = GetDefinition()) {
 		return Def->LabelText;
 	}
@@ -104,17 +104,20 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 }
 
 bool UActionButtonWidgetBase::ResolveEnabled() const {
+	if (!bEnabled)	return false;
 
-	if (const FActionButtonDefinition* Def = GetDefinition()) {
+	if (const FActionButtonDefinition* Def = GetDefinition())
 		return Def->bDefaultEnabled;
-	}
+
 	return true;
 }
 
 EActionButtonMode UActionButtonWidgetBase::ResolveMode() const {
-	if (const FActionButtonDefinition* Def = GetDefinition()) {
+	if (Mode != EActionButtonMode::Auto)	return Mode;
+
+	if (const FActionButtonDefinition* Def = GetDefinition()) 
 		return Def->Mode;
-	}
+	
 
 	return EActionButtonMode::Auto;
 }
