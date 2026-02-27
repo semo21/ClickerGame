@@ -16,6 +16,7 @@
 
 #include "Gameplay/Player/MyPlayerController.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
+#include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
@@ -82,43 +83,30 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		if (!PlayerController.IsValid()) return;
 	}
 
-	if (GEngine && GEngine->GameViewport) {
-		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
-	}
-
-
-	if (!ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()), TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass))) {
-		return;
-	}
 	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
 	if (!HUDWidget) return;
 	HUDWidget->AddToViewport();
 
-	CurrencyText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("CurrencyText")));
-	ClickValueText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("ClickValueText")));
-	UpgradeCostText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("UpgradeCostText")));
-	PassiveIncomeText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("PassiveIncomeText")));
-	UpgradeSuccessText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("UpgradeSuccessText")));
-	UpgradeButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("UpgradeButton")));
-	SaveButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("SaveButton")));
-	LoadButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("LoadButton")));
-
-	if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-
-	if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
-		if (UpgradeButton)
-			UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
-
-		if (SaveButton)
-			SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
-
-		if (LoadButton)
-			LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
+	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(HUDWidget)) {
+		Root->InitializeRoot(this, EconomySubsystemRef, Cast<AMyPlayerController>(PlayerController.Get()));
 	}
-		
-	if (EconomySubsystemRef) {
-		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-	}
+
+	//if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
+
+	//if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
+	//	if (UpgradeButton)
+	//		UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
+
+	//	if (SaveButton)
+	//		SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
+
+	//	if (LoadButton)
+	//		LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
+	//}
+	//	
+	//if (EconomySubsystemRef) {
+	//	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	//}
 	bHUDReady = true;
 	TryFlushOfflineReward();
 }

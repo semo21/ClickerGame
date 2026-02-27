@@ -8,19 +8,28 @@
 #include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
 #include "Systems/UI/ClickerUISubsystem.h"
 
+void UActionButtonWidgetBase::InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag) {
+	CachedUI = InUI;
+	ActionTag = InTag;
+	SynchronizeProperties();
+}
+
 const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
 	if (!ActionTag.IsValid())	return nullptr;
 
-	const UWorld* World = GetWorld();
-	if (!World)					return nullptr;
+	if (CachedUI.IsValid()) {
+		return CachedUI->FindActionButtonDefinition(ActionTag);
+	}
 
-	UGameInstance* GI = World->GetGameInstance();
-	if (!GI)					return nullptr;
+	//const UWorld* World = GetWorld();
+	//if (!World) return nullptr;
 
-	const UClickerUISubsystem* UISubsystem = GI->GetSubsystem<UClickerUISubsystem>();
-	if (!UISubsystem)			return nullptr;
+	//const UGameInstance* GI = World->GetGameInstance();
+	//if (!GI) return nullptr;
 
-	return UISubsystem->FindActionButtonDefinition(ActionTag);
+	//const UClickerUISubsystem* UISubsystem = GI->GetSubsystem<UClickerUISubsystem>();
+	//return UISubsystem ? UISubsystem->FindActionButtonDefinition(ActionTag) : nullptr;
+	
 }
 
 void UActionButtonWidgetBase::NativeOnInitialized() {

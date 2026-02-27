@@ -16,6 +16,7 @@ class UTextBlock;
 class UImage;
 class UTexture2D;
 class UWidgetSwitcher;
+class UClickerUISubsystem;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
 
@@ -105,6 +106,9 @@ private:
 	UFUNCTION()
 	void HandleClicked();
 
+	UFUNCTION(BlueprintCallable, Category="ActionButton")
+	void InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag);
+
 	void ApplyResolvedDataToWidgets();
 	void ApplyMode(EActionButtonMode FinalMode);
 	
@@ -112,4 +116,8 @@ private:
 	UTexture2D* ResolveIcon() const;
 	bool ResolveEnabled() const;
 	EActionButtonMode ResolveMode() const;
+
+	UPROPERTY(Transient)
+	TWeakObjectPtr<UClickerUISubsystem> CachedUI;
+
 };
