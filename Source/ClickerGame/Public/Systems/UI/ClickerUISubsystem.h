@@ -18,9 +18,9 @@ class UClickerUISettings;		class UToastWidgetBase;
 class UActionButtonRegistry;	
 
 struct FEconomySnapshot;		struct FActionButtonDefinition;
-/**
- *
- */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FEconomySnapshot&, Snapshot);
+
 UCLASS(Config=Game, DefaultConfig)
 class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 {
@@ -37,10 +37,17 @@ public:
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
-	UFUNCTION()	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
-	UFUNCTION() void OnPassiveIncome(double AmountPerSec);
-	UFUNCTION() void OnOfflineReward(double Amount);
+	UFUNCTION()	
+	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+	UFUNCTION() 
+	void OnPassiveIncome(double AmountPerSec);
+	UFUNCTION() 
+	void OnOfflineReward(double Amount);
+	UFUNCTION(BlueprintCallable, Category="UI|Economy")
+	const FEconomySnapshot& GetCachedEconomySnapshot() const { return CachedEconomySnapshot; }
 
+	UPROPERTY(BlueprintAssignable, Category="UI|Events")
+	FOnEconomyChangedUI OnEconomyChangedUI;
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
 	UPROPERTY(EditDefaultsOnly, Category="UI|ActionButtons")
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
@@ -65,7 +72,7 @@ private:
 	void HandlePassiveIncome(double Amount);
 	void HandleOfflineReward(double Amount);
 	void TryFlushOfflineReward();
-	
+
 	UPROPERTY()	UUserWidget* HUDWidget;
 	UPROPERTY()	UTextBlock* CurrencyText;
 	UPROPERTY()	UTextBlock* ClickValueText;
@@ -76,6 +83,8 @@ private:
 	UPROPERTY()	UButton* SaveButton;
 	UPROPERTY()	UButton* LoadButton;
 	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
+	UPROPERTY(Transient) FEconomySnapshot CachedEconomySnapshot;
+	
 	double PendingOfflineReward = 0.0;
 	bool bHUDReady = false;
 	FTimerHandle UpgradeSuccessTimerHandle;

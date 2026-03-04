@@ -18,7 +18,8 @@ class CLICKERGAME_API UClickerHUDRootWidgetBase : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void InitializeRoot(UClickerUISubsystem* UI, UClickerEconomySubsystem* Economy, AMyPlayerController* PC);
+	UFUNCTION(BlueprintCallable, Category="UI")
+	void InitializeRoot(UClickerUISubsystem* InUI, UClickerEconomySubsystem* InEconomy, AMyPlayerController* InPC);
 
 protected:
 	UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly)
@@ -32,7 +33,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void HandleEconomyChanged(const FEconomySnapshot& Snapshot);
+	void HandleEconomyChangedUI(const FEconomySnapshot& Snapshot);
 
 	UPROPERTY()
 	TObjectPtr<UClickerUISubsystem> UIRef;

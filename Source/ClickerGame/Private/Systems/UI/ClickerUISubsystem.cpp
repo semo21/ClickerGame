@@ -31,6 +31,10 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	EconomySubsystemRef = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
 	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
 
+	if (EconomySubsystemRef) {
+		EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
+	}
+
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
 	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
 	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
@@ -148,6 +152,8 @@ const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(c
 }
 
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
+	CachedEconomySnapshot = Snapshot;
+	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
 	UpdateScore(Snapshot);
 }
 

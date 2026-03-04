@@ -16,15 +16,15 @@ void UClickerHUDRootWidgetBase::InitializeRoot(UClickerUISubsystem* UI, UClicker
 	if (DevButtonsPart)		DevButtonsPart->InitializePart(UI, Eco, PC);
 
 	if (UIRef) {
-		UIRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::HandleEconomyChanged);
+		UIRef->OnEconomyChangedUI.AddUniqueDynamic(this, &ThisClass::HandleEconomyChangedUI);
 	}
 
 	if (EcoRef) {
-		HandleEconomyChanged(EcoRef->GetSnapshot());
+		HandleEconomyChangedUI(UIRef->GetCachedEconomySnapshot());
 	}
 }
 
-void UClickerHUDRootWidgetBase::HandleEconomyChanged(const FEconomySnapshot& Snapshot) {
+void UClickerHUDRootWidgetBase::HandleEconomyChangedUI(const FEconomySnapshot& Snapshot) {
 	if (StatsPart)			StatsPart->OnEconomyChanged(Snapshot);
 	if (PrimaryActionPart)	PrimaryActionPart->OnEconomyChanged(Snapshot);
 	if (DevButtonsPart)		DevButtonsPart->OnEconomyChanged(Snapshot);
