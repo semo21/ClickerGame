@@ -33,6 +33,9 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	if (EconomySubsystemRef) {
 		EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
+
+		CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
+		OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
 	}
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
@@ -154,7 +157,7 @@ const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(c
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
 	CachedEconomySnapshot = Snapshot;
 	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
-	UpdateScore(Snapshot);
+	UpdateScore(Snapshot);	// HUDRoot 리팩터 후 이 부분은 HUDRoot에서 처리하도록 변경 예정
 }
 
 void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {

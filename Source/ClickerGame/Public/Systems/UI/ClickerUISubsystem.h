@@ -19,6 +19,7 @@ class UActionButtonRegistry;
 
 struct FEconomySnapshot;		struct FActionButtonDefinition;
 
+// Economy changed event for UI, passes the new snapshot to update displays
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FEconomySnapshot&, Snapshot);
 
 UCLASS(Config=Game, DefaultConfig)
@@ -48,23 +49,33 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="UI|Events")
 	FOnEconomyChangedUI OnEconomyChangedUI;
-	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
+	UPROPERTY(Config, EditAnywhere, Category = "Settings")	
+	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
 	UPROPERTY(EditDefaultsOnly, Category="UI|ActionButtons")
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
-	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
-	UPROPERTY()	USoundBase* ClickRewardSound = nullptr;
-	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
+	UPROPERTY() 
+	TSubclassOf<UUserWidget> HUDWidgetClass;
+	UPROPERTY() 
+	UNiagaraSystem* ClickEffectAsset = nullptr;
+	UPROPERTY()	
+	USoundBase* ClickRewardSound = nullptr;
+	UPROPERTY()	
+	USoundBase* OfflineRewardSound = nullptr;
 	
 
 protected:
 	UToastWidgetBase* GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass);
 
-	UPROPERTY() TArray<UToastWidgetBase*> FloatingTextPool;
-	UPROPERTY() TArray<UToastWidgetBase*> RewardPool;
-	UPROPERTY() TSubclassOf<UToastWidgetBase> FloatingTextWidgetClass;
-	UPROPERTY() TSubclassOf<UToastWidgetBase> RewardToastClass;
-	UPROPERTY() TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
+	UPROPERTY() 
+	TArray<UToastWidgetBase*> FloatingTextPool;
+	UPROPERTY() 
+	TArray<UToastWidgetBase*> RewardPool;
+	UPROPERTY() 
+	TSubclassOf<UToastWidgetBase> FloatingTextWidgetClass;
+	UPROPERTY() 
+	TSubclassOf<UToastWidgetBase> RewardToastClass;
+	UPROPERTY() 
+	TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
 	TWeakObjectPtr<APlayerController> PlayerController;
 
 private:
@@ -73,17 +84,28 @@ private:
 	void HandleOfflineReward(double Amount);
 	void TryFlushOfflineReward();
 
-	UPROPERTY()	UUserWidget* HUDWidget;
-	UPROPERTY()	UTextBlock* CurrencyText;
-	UPROPERTY()	UTextBlock* ClickValueText;
-	UPROPERTY()	UTextBlock* UpgradeCostText;
-	UPROPERTY()	UTextBlock* PassiveIncomeText;
-	UPROPERTY()	UTextBlock* UpgradeSuccessText;
-	UPROPERTY()	UButton* UpgradeButton;
-	UPROPERTY()	UButton* SaveButton;
-	UPROPERTY()	UButton* LoadButton;
-	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
-	UPROPERTY(Transient) FEconomySnapshot CachedEconomySnapshot;
+	UPROPERTY()	
+	UUserWidget* HUDWidget;
+	UPROPERTY()	
+	UTextBlock* CurrencyText;
+	UPROPERTY()	
+	UTextBlock* ClickValueText;
+	UPROPERTY()	
+	UTextBlock* UpgradeCostText;
+	UPROPERTY()	
+	UTextBlock* PassiveIncomeText;
+	UPROPERTY()	
+	UTextBlock* UpgradeSuccessText;
+	UPROPERTY()	
+	UButton* UpgradeButton;
+	UPROPERTY()	
+	UButton* SaveButton;
+	UPROPERTY()	
+	UButton* LoadButton;
+	UPROPERTY()	
+	TArray<UIdleRewardTextWidget*> RewardTextPool;	
+	UPROPERTY(Transient) 
+	FEconomySnapshot CachedEconomySnapshot;
 	
 	double PendingOfflineReward = 0.0;
 	bool bHUDReady = false;

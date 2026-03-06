@@ -9,7 +9,6 @@
 #include "ClickerHUDPartWidgetBase.generated.h"
 
 class UClickerUISubsystem;
-class UClickerEconomySubsystem;
 class AMyPlayerController;
 UCLASS(Abstract, Blueprintable)
 class CLICKERGAME_API UClickerHUDPartWidgetBase : public UUserWidget
@@ -18,8 +17,11 @@ class CLICKERGAME_API UClickerHUDPartWidgetBase : public UUserWidget
 	
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="UI")
-	void InitializePart(UClickerUISubsystem* UI, UClickerEconomySubsystem* Economy, AMyPlayerController* PC);
+	void InitializePart(UClickerUISubsystem* InUI, AMyPlayerController* InPC);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "UI")
-	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+	void OnEconomyChangedUI(const FEconomySnapshot& Snapshot);
+
+protected:
+	TObjectPtr<UClickerUISubsystem> UIRef;
 };

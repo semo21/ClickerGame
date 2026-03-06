@@ -6,26 +6,24 @@
 #include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
 #include "Gameplay/Player/MyPlayerController.h"
 
-void UClickerHUDRootWidgetBase::InitializeRoot(UClickerUISubsystem* UI, UClickerEconomySubsystem* Eco, AMyPlayerController* PC) {
+void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AMyPlayerController* PC) {
 	UIRef = UI;
-	EcoRef = Eco;
 	PCRef = PC;
 
-	if (StatsPart)			StatsPart->InitializePart(UI, Eco, PC);
-	if (PrimaryActionPart)	PrimaryActionPart->InitializePart(UI, Eco, PC);
-	if (DevButtonsPart)		DevButtonsPart->InitializePart(UI, Eco, PC);
+	if (StatsPart)			StatsPart->InitializePart(UI, PC);
+	if (PrimaryActionPart)	PrimaryActionPart->InitializePart(UI, PC);
+	if (DevButtonsPart)		DevButtonsPart->InitializePart(UI, PC);
 
 	if (UIRef) {
 		UIRef->OnEconomyChangedUI.AddUniqueDynamic(this, &ThisClass::HandleEconomyChangedUI);
-	}
-
-	if (EcoRef) {
 		HandleEconomyChangedUI(UIRef->GetCachedEconomySnapshot());
 	}
+
+	
 }
 
 void UClickerHUDRootWidgetBase::HandleEconomyChangedUI(const FEconomySnapshot& Snapshot) {
-	if (StatsPart)			StatsPart->OnEconomyChanged(Snapshot);
-	if (PrimaryActionPart)	PrimaryActionPart->OnEconomyChanged(Snapshot);
-	if (DevButtonsPart)		DevButtonsPart->OnEconomyChanged(Snapshot);
+	if (StatsPart)			StatsPart->OnEconomyChangedUI(Snapshot);
+	if (PrimaryActionPart)	PrimaryActionPart->OnEconomyChangedUI(Snapshot);
+	if (DevButtonsPart)		DevButtonsPart->OnEconomyChangedUI(Snapshot);
 }
