@@ -95,7 +95,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	HUDWidget->AddToViewport();
 
 	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(HUDWidget)) {
-		Root->InitializeRoot(this, EconomySubsystemRef, Cast<AMyPlayerController>(PlayerController.Get()));
+		Root->InitializeHUDRoot(this, Cast<AMyPlayerController>(PlayerController.Get()));
 	}
 
 	//if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);

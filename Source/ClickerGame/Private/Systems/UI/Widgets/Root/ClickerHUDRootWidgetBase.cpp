@@ -13,13 +13,9 @@ void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AMyPl
 	if (StatsPart)			StatsPart->InitializePart(UI, PC);
 	if (PrimaryActionPart)	PrimaryActionPart->InitializePart(UI, PC);
 	if (DevButtonsPart)		DevButtonsPart->InitializePart(UI, PC);
-
-	if (UIRef) {
-		UIRef->OnEconomyChangedUI.AddUniqueDynamic(this, &ThisClass::HandleEconomyChangedUI);
-		HandleEconomyChangedUI(UIRef->GetCachedEconomySnapshot());
-	}
-
-	
+		
+	UIRef->OnEconomyChangedUI.AddUniqueDynamic(this, &ThisClass::HandleEconomyChangedUI);
+	HandleEconomyChangedUI(UIRef->GetCachedEconomySnapshot());	
 }
 
 void UClickerHUDRootWidgetBase::HandleEconomyChangedUI(const FEconomySnapshot& Snapshot) {

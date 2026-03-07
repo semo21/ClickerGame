@@ -23,5 +23,8 @@ public:
 	void OnEconomyChangedUI(const FEconomySnapshot& Snapshot);
 
 protected:
+	UPROPERTY(Transient, BlueprintReadOnly)
 	TObjectPtr<UClickerUISubsystem> UIRef;
+	UPROPERTY(Transient, BlueprintReadOnly)
+	TObjectPtr<AMyPlayerController> PCRef;
 };

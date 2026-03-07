@@ -34,6 +34,7 @@ private:
 	UFUNCTION()
 	void HandleEconomyChangedUI(const FEconomySnapshot& Snapshot);
 
+protected:
 	UPROPERTY()
 	TObjectPtr<UClickerUISubsystem> UIRef;
 

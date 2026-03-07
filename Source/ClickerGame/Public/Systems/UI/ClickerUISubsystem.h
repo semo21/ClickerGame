@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayTagContainer.h"
+#include "Systems/Economy/Data/EconomySnapshot.h"
 
 #include "ClickerUISubsystem.generated.h"
 
