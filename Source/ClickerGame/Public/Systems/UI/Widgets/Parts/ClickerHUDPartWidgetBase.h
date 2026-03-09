@@ -18,9 +18,12 @@ class CLICKERGAME_API UClickerHUDPartWidgetBase : public UUserWidget
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="UI")
 	void InitializePart(UClickerUISubsystem* InUI, AMyPlayerController* InPC);
+	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerController* InPC);
+
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "UI")
 	void OnEconomyChangedUI(const FEconomySnapshot& Snapshot);
+	virtual void OnEconomyChangedUI_Implementation(const FEconomySnapshot& Snapshot);
 
 protected:
 	UPROPERTY(Transient, BlueprintReadOnly)
