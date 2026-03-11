@@ -22,13 +22,13 @@ public:
 
 protected:
 	UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly)
-	TObjectPtr<UClickerHUDPartWidgetBase> StatsPart;
+	TObjectPtr<UClickerHUDPartWidgetBase> Part_Stats;
 
 	UPROPERTY(meta = (BindWidgetOptional), BlueprintReadOnly)
-	TObjectPtr<UClickerHUDPartWidgetBase> PrimaryActionPart;
+	TObjectPtr<UClickerHUDPartWidgetBase> Part_PrimaryActions;
 
 	UPROPERTY(meta = (BindWidgetOptional), BlueprintReadOnly)
-	TObjectPtr<UClickerHUDPartWidgetBase> DevButtonsPart;
+	TObjectPtr<UClickerHUDPartWidgetBase> Part_DevButtons;
 
 private:
 	UFUNCTION()

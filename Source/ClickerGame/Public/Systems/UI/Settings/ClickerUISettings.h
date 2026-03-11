@@ -21,7 +21,7 @@ class CLICKERGAME_API UClickerUISettings : public UPrimaryDataAsset
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UUserWidget> HUDWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UUserWidget> InGameRootWidgetClass;
 	UPROPERTY(EditDefaultsOnly, Category = "FX") TSoftObjectPtr<UNiagaraSystem> ClickEffectAsset = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UToastWidgetBase> IdleRewardTextWidgetClass;
 	UPROPERTY(EditDefaultsOnly, Category = "UI") TSubclassOf<UToastWidgetBase> FloatingTextWidgetClass;

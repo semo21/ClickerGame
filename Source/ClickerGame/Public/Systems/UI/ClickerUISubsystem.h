@@ -55,7 +55,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="UI|ActionButtons")
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
 	UPROPERTY() 
-	TSubclassOf<UUserWidget> HUDWidgetClass;
+	TSubclassOf<UUserWidget> InGameRootWidgetClass;
 	UPROPERTY() 
 	UNiagaraSystem* ClickEffectAsset = nullptr;
 	UPROPERTY()	
@@ -86,7 +86,7 @@ private:
 	void TryFlushOfflineReward();
 
 	UPROPERTY()	
-	UUserWidget* HUDWidget;
+	UUserWidget* InGameRootWidget;
 	UPROPERTY()	
 	UTextBlock* CurrencyText;
 	UPROPERTY()	

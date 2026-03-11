@@ -30,17 +30,14 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	EconomySubsystemRef = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
 	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
-
-	if (EconomySubsystemRef) {
-		EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
-
-		CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
-		OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
-	}
+	if (!EconomySubsystemRef)	return;
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
 	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
 	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
+	
+	CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
+	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);	
 
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
@@ -48,7 +45,7 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
 			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize DA Load"));
 
-			HUDWidgetClass = Settings->HUDWidgetClass;
+			InGameRootWidgetClass = Settings->InGameRootWidgetClass;
 			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
 			RewardToastClass = Settings->IdleRewardTextWidgetClass;
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
@@ -68,7 +65,7 @@ void UClickerUISubsystem::Deinitialize() {
 		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
 	}
 
-	HUDWidget = nullptr;
+	InGameRootWidget = nullptr;
 	CurrencyText = ClickValueText = UpgradeCostText = PassiveIncomeText = UpgradeSuccessText = nullptr;
 	UpgradeButton = SaveButton = LoadButton = nullptr;
 	EconomySubsystemRef = nullptr;
@@ -80,7 +77,7 @@ void UClickerUISubsystem::Deinitialize() {
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	if (!World || HUDWidget || !HUDWidgetClass) return;
+	if (!World || InGameRootWidget || !InGameRootWidgetClass) return;
 
 	if (!PlayerController.IsValid()) {
 		if (auto* PC = World->GetFirstPlayerController()) {
@@ -90,11 +87,11 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		if (!PlayerController.IsValid()) return;
 	}
 
-	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
-	if (!HUDWidget) return;
-	HUDWidget->AddToViewport();
+	InGameRootWidget = CreateWidget<UUserWidget>(World, InGameRootWidgetClass);
+	if (!InGameRootWidget) return;
+	InGameRootWidget->AddToViewport();
 
-	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(HUDWidget)) {
+	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(InGameRootWidget)) {
 		Root->InitializeHUDRoot(this, Cast<AMyPlayerController>(PlayerController.Get()));
 	}
 
