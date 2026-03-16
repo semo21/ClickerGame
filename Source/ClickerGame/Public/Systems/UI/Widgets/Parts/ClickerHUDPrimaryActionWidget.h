@@ -10,7 +10,7 @@
 
 class UClickerUISubsystem;
 class AMyPlayerController;
-class UButton;
+class UActionButtonWidgetBase;
 
 UCLASS()
 class CLICKERGAME_API UClickerHUDPrimaryActionWidget : public UClickerHUDPartWidgetBase
@@ -22,16 +22,20 @@ public:
 
 protected:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
-	TObjectPtr<UButton> Btn_Upgrade;
+	TObjectPtr<UActionButtonWidgetBase> Btn_Upgrade;
 
 	UPROPERTY(meta = (BindWidgetOptional), BlueprintReadOnly)
-	TObjectPtr<UButton> Btn_Boost;
+	TObjectPtr<UActionButtonWidgetBase> Btn_Boost;
 
 	UPROPERTY(meta = (BindWidgetOptional), BlueprintReadOnly)
-	TObjectPtr<UButton> Btn_Test;
+	TObjectPtr<UActionButtonWidgetBase> Btn_Test;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Action")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Actions")
 	FGameplayTag UpgradeActionTag;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Actions")
+	FGameplayTag BoostActionTag;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Actions")
+	FGameplayTag TestActionTag;
 };

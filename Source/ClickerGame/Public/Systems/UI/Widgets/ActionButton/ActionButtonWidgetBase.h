@@ -51,6 +51,9 @@ public:
 	bool bEnabled = true;
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag);
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void SetLabelText(const FText& InText);
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
@@ -105,10 +108,6 @@ protected:
 private:
 	UFUNCTION()
 	void HandleClicked();
-
-	UFUNCTION(BlueprintCallable, Category="ActionButton")
-	void InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag);
-
 	void ApplyResolvedDataToWidgets();
 	void ApplyMode(EActionButtonMode FinalMode);
 	
