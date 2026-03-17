@@ -11,6 +11,7 @@
 void UActionButtonWidgetBase::InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag) {
 	CachedUI = InUI;
 	ActionTag = InTag;
+	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::InitializeButton - Initialized with tag: %s"), *ActionTag.ToString());
 	SynchronizeProperties();
 }
 
@@ -18,6 +19,7 @@ const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
 	if (!ActionTag.IsValid())	return nullptr;
 
 	if (CachedUI.IsValid()) {
+		UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::GetDefinition - CachedUI is valid, trying to find definition for tag: %s"), *ActionTag.ToString());
 		return CachedUI->FindActionButtonDefinition(ActionTag);
 	}
 

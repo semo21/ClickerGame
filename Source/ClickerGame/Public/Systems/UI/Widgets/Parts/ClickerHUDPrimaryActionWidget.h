@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
 #include "GameplayTagContainer.h"
+#include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
 
 #include "ClickerHUDPrimaryActionWidget.generated.h"
 

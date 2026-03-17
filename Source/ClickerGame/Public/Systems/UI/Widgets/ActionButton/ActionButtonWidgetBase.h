@@ -101,7 +101,7 @@ protected:
 
 	// Preview
 	UPROPERTY(EditDefaultsOnly, Category="ActionButton|Priview")
-	FText PreviewLabelText = FText::FromString(TEXT("Preview"));
+	FText PreviewLabelText = FText::FromString(TEXT("C++_Preview"));
 
 	UPROPERTY(EditDefaultsOnly, Category = "ActionButton|Preview")
 	bool bPreviewIcon = false;
