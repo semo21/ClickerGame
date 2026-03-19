@@ -50,9 +50,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="UI|Events")
 	FOnEconomyChangedUI OnEconomyChangedUI;
-	UPROPERTY(Config, EditAnywhere, Category = "Settings")	
+	UPROPERTY(Config, EditAnywhere, Category="Settings")	
 	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
-	UPROPERTY(EditDefaultsOnly, Category="UI|ActionButtons")
+	UPROPERTY(Config, EditAnywhere, Category="Settings")
+	TSoftObjectPtr<UActionButtonRegistry> ActionButtonRegistryAsset = nullptr;
+	UPROPERTY(Transient)
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
 	UPROPERTY() 
 	TSubclassOf<UUserWidget> InGameRootWidgetClass;

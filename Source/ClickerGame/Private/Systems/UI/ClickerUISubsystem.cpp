@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Systems/UI/ClickerUISubsystem.h"
 
 #include "Blueprint/UserWidget.h"
@@ -39,6 +38,7 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
 	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);	
 
+	UE_LOG(LogTemp, Warning, TEXT("UISettingsAsset: %s, ActionButtonRegistryAsset: %s"), *UISettingsAsset.ToString(), *ActionButtonRegistryAsset.ToString());
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
 
@@ -52,6 +52,12 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
 		}
+	}
+
+	if (!ActionButtonRegistryAsset.IsNull()) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found ActionButtonRegistry"));
+		ActionButtonRegistry = ActionButtonRegistryAsset.LoadSynchronous();
+
 	}
 }
 
@@ -146,6 +152,7 @@ void UClickerUISubsystem::HideUpgradeSuccessText() {
 }
 
 const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(const FGameplayTag& Tag) const {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::FindActionButtonDefinition Tag: %s"), *Tag.ToString());
 	if (!ActionButtonRegistry || !Tag.IsValid()) return nullptr;
 
 	return ActionButtonRegistry->Find(Tag);
