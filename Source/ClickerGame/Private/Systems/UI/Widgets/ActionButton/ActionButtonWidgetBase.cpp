@@ -90,28 +90,33 @@ void UActionButtonWidgetBase::SetMode(EActionButtonMode InMode) {
 }
 
 void UActionButtonWidgetBase::HandleClicked() {
+	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::HandleClicked - Button with tag %s clicked"), *ActionTag.ToString());
 	OnClicked.Broadcast();
 }
 
 FText UActionButtonWidgetBase::ResolveLabel() const {
-	if (bOverrideLabel) {
+	if (bOverrideLabel && !OverrideLabelText.IsEmpty()) {
 		return OverrideLabelText;
 	}
 
 
 	if (const FActionButtonDefinition* Def = GetDefinition()) {
-		return Def->LabelText;
+		if (!Def->LabelText.IsEmpty()) {
+			return Def->LabelText;
+		}		
 	}
 	return FText::GetEmpty();
 }
 
 UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
-	if (bOverrideIcon) {
+	if (bOverrideIcon && !OverrideIconTexture.IsNull()) {
 		return OverrideIconTexture.Get();
 	}
 
 	if (const FActionButtonDefinition* Def = GetDefinition()) {
-		return Def->IconTexture.Get();
+		if (!Def->IconTexture.IsNull()) {
+			return Def->IconTexture.LoadSynchronous();
+		}		
 	}
 	return nullptr;
 }

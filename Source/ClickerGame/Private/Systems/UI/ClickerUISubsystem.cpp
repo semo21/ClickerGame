@@ -57,6 +57,7 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	if (!ActionButtonRegistryAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found ActionButtonRegistry"));
 		ActionButtonRegistry = ActionButtonRegistryAsset.LoadSynchronous();
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize ActionButtonRegistry Load = %s"), ActionButtonRegistry ? TEXT("Success") : TEXT("Failed"));
 
 	}
 }
