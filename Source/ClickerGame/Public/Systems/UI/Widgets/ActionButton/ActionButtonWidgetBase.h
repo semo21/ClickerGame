@@ -50,6 +50,9 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
 	bool bEnabled = true;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton", meta=(EditCondition="bOverrideEnabled"))
+	bool bOverrideEnabledValue = true;
+
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag);
 

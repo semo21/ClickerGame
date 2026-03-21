@@ -110,7 +110,7 @@ FText UActionButtonWidgetBase::ResolveLabel() const {
 
 UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 	if (bOverrideIcon && !OverrideIconTexture.IsNull()) {
-		return OverrideIconTexture.Get();
+		return OverrideIconTexture.LoadSynchronous();
 	}
 
 	if (const FActionButtonDefinition* Def = GetDefinition()) {
