@@ -8,7 +8,8 @@
 
 #include "Systems/UI/ClickerUISubsystem.h"
 
-void UActionButtonWidgetBase::InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag) {
+void UActionButtonWidgetBase::InitializeButton(AMyPlayerController* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag) {
+	CachedPC = InPC;
 	CachedUI = InUI;
 	ActionTag = InTag;
 	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::InitializeButton - Initialized with tag: %s"), *ActionTag.ToString());
@@ -45,16 +46,16 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
-	if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
-		OverrideLabelText = PreviewLabelText;
-		bOverrideLabel = true;
+	//if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
+	//	OverrideLabelText = PreviewLabelText;
+	//	bOverrideLabel = true;
 
-		OverrideIconTexture = nullptr;
-		bOverrideIcon = bPreviewIcon;
+	//	OverrideIconTexture = nullptr;
+	//	bOverrideIcon = bPreviewIcon;
 
-		Mode = EActionButtonMode::Auto;
-		bEnabled = true;
-	}
+	//	Mode = EActionButtonMode::Auto;
+	//	bEnabled = true;
+	//}
 
 	ApplyResolvedDataToWidgets();
 }
@@ -80,7 +81,7 @@ void UActionButtonWidgetBase::SetIcon(UTexture2D* InTexture) {
 }
 
 void UActionButtonWidgetBase::SetEnabledState(bool bInEnabled) {
-	bEnabled = bInEnabled;
+	bOverrideEnabledValue = bInEnabled;
 	ApplyResolvedDataToWidgets();
 }
 
@@ -91,6 +92,12 @@ void UActionButtonWidgetBase::SetMode(EActionButtonMode InMode) {
 
 void UActionButtonWidgetBase::HandleClicked() {
 	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::HandleClicked - Button with tag %s clicked"), *ActionTag.ToString());
+
+	if (!CachedPC.IsValid() || !CachedUI.IsValid() || !ActionTag.IsValid()) {
+		return;
+	}
+
+	CachedPC->HandleActionButtonClicked(ActionTag);
 	OnClicked.Broadcast();
 }
 
@@ -122,7 +129,9 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 }
 
 bool UActionButtonWidgetBase::ResolveEnabled() const {
-	if (!bEnabled)	return false;
+	if (bOverrideEnabled) {
+		return bOverrideEnabledValue;
+	}
 
 	if (const FActionButtonDefinition* Def = GetDefinition())
 		return Def->bDefaultEnabled;

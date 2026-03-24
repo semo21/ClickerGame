@@ -77,3 +77,7 @@ void AMyPlayerController::OnLoadClicked() {
 		Eco->RequestLoad();
 	}
 }
+
+void AMyPlayerController::HandleActionButtonClicked(const FGameplayTag& ActionTag) {
+	//if(ActionTag.MatchesTagExact(TAG_UI_Action_Upgrade))
+}

@@ -48,13 +48,13 @@ public:
 	EActionButtonMode Mode = EActionButtonMode::Auto;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
-	bool bEnabled = true;
+	bool bOverrideEnabled = true;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton", meta=(EditCondition="bOverrideEnabled"))
 	bool bOverrideEnabledValue = true;
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
-	void InitializeButton(UClickerUISubsystem* InUI, FGameplayTag InTag);
+	void InitializeButton(AMyPlayerController* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag);
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void SetLabelText(const FText& InText);
@@ -122,4 +122,6 @@ private:
 	UPROPERTY(Transient)
 	TWeakObjectPtr<UClickerUISubsystem> CachedUI;
 
+	UPROPERTY(Transient)
+	TWeakObjectPtr<AMyPlayerController> CachedPC;
 };
