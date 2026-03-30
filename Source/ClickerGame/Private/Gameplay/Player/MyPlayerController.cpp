@@ -66,6 +66,18 @@ void AMyPlayerController::OnUpgradeClicked() {
 	}
 }
 
+void AMyPlayerController::OnBoostClicked() {
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+		UI->HideUpgradeSuccessText();
+	}
+}
+
+void AMyPlayerController::OnTestClicked() {
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+		UI->ShowUpgradeSuccessText();
+	}
+}
+
 void AMyPlayerController::OnSaveClicked() {
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestSave();
@@ -79,5 +91,13 @@ void AMyPlayerController::OnLoadClicked() {
 }
 
 void AMyPlayerController::HandleActionButtonClicked(const FGameplayTag& ActionTag) {
-	//if(ActionTag.MatchesTagExact(TAG_UI_Action_Upgrade))
+	if (ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Upgrade"))) {
+		OnUpgradeClicked();
+	}
+	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Save"))) {
+		OnBoostClicked();
+	}
+	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Load"))) {
+		OnTestClicked();
+	}
 }

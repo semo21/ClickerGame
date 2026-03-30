@@ -20,6 +20,8 @@ class CLICKERGAME_API AMyPlayerController : public APlayerController
 public:
 	UFUNCTION()	void OnClick();
 	UFUNCTION()	void OnUpgradeClicked();
+	UFUNCTION() void OnBoostClicked();
+	UFUNCTION() void OnTestClicked();
 	UFUNCTION()	void OnSaveClicked();
 	UFUNCTION()	void OnLoadClicked();
 	UFUNCTION() void HandleActionButtonClicked(const FGameplayTag& ActionTag);

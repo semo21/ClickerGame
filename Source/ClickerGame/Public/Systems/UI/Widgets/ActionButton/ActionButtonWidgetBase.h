@@ -17,6 +17,7 @@ class UImage;
 class UTexture2D;
 class UWidgetSwitcher;
 class UClickerUISubsystem;
+class AMyPlayerController;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
 
