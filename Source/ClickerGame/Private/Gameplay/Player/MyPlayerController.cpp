@@ -68,13 +68,13 @@ void AMyPlayerController::OnUpgradeClicked() {
 
 void AMyPlayerController::OnBoostClicked() {
 	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-		UI->HideUpgradeSuccessText();
+		UE_LOG(LogTemp, Warning, TEXT("Boost button clicked - this is a placeholder action"));
 	}
 }
 
 void AMyPlayerController::OnTestClicked() {
 	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
-		UI->ShowUpgradeSuccessText();
+		UE_LOG(LogTemp, Warning, TEXT("Test button clicked - this is a placeholder action"));
 	}
 }
 
