@@ -81,12 +81,14 @@ void AMyPlayerController::OnTestClicked() {
 void AMyPlayerController::OnSaveClicked() {
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestSave();
+		UE_LOG(LogTemp, Warning, TEXT("Save button clicked - this is a placeholder action"));
 	}
 }
 
 void AMyPlayerController::OnLoadClicked() {
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestLoad();
+		UE_LOG(LogTemp, Warning, TEXT("Load button clicked - this is a placeholder action"));
 	}
 }
 
@@ -94,10 +96,15 @@ void AMyPlayerController::HandleActionButtonClicked(const FGameplayTag& ActionTa
 	if (ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Upgrade"))) {
 		OnUpgradeClicked();
 	}
-	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Save"))) {
+	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Boost"))) {
 		OnBoostClicked();
 	}
-	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Load"))) {
+	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Test"))) {
 		OnTestClicked();
+	}else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Save"))) {
+		OnSaveClicked();
+	}
+	else if (ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Load"))) {
+		OnLoadClicked();
 	}
 }
