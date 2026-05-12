@@ -178,6 +178,8 @@ void UClickerUISubsystem::OnOfflineReward(double Amount) {
 
 // private field
 void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
+
 	if (CurrencyText)
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
 
@@ -186,6 +188,8 @@ void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
 
 	if (UpgradeCostText)
 		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase)));
+
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpgradeCost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase);
 
 	if (PassiveIncomeText)
 		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), Snapshot.CurrencyPerSecond)));
