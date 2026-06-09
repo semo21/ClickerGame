@@ -35,6 +35,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::SetCurrentPortal(APortal* NewPortal) {
 	CurrentPortal = NewPortal;
+	UE_LOG(LogTemp, Warning, TEXT("CurrentPortal set to: %s"), *CurrentPortal->GetName());
 }
 
 void AMyCharacter::ClearCurrentPortal(APortal* PortalToClear) {

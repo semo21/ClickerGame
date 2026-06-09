@@ -48,7 +48,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USceneComponent> Root;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Portal", meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UBoxComponent> InteractionBox;
 
 	UPROPERTY(EditAnywhere, Category="Portal")
