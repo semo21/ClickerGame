@@ -3,6 +3,7 @@
 
 #include "Gameplay/Actors/Portal.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Gameplay/Character/MyCharacter.h"
 
 // Sets default values
@@ -54,5 +55,7 @@ void APortal::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 void APortal::Interact() {
 	UE_LOG(LogTemp, Warning, TEXT("Portal Interact"));
+	UGameplayStatics::OpenLevel(this, TargetLevelName);
+
 }
 
