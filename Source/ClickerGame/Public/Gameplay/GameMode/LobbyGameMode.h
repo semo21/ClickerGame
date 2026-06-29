@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "Gameplay/GameMode/MyGameModeBase.h"
 #include "LobbyGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CLICKERGAME_API ALobbyGameMode : public AGameModeBase
+class CLICKERGAME_API ALobbyGameMode : public AMyGameModeBase
 {
 	GENERATED_BODY()
 	

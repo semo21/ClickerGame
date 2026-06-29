@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+
 #include "GlobalUISubsystem.generated.h"
 
+class UUserWidget;
 /**
  * 
  */
@@ -14,4 +16,20 @@ class CLICKERGAME_API UGlobalUISubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable)
+	void ShowRootUI(TSubclassOf<UUserWidget> RootWidgetClass);
+	
+	UFUNCTION(BlueprintCallable)
+	void ClearRootUI();
+
+private:
+	UPROPERTY()
+	TObjectPtr<UUserWidget> CurrentRootWidget = nullptr;
+
+	
+	
+
+	
+
 };

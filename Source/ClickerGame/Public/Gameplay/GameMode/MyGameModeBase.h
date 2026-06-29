@@ -16,4 +16,9 @@ class CLICKERGAME_API AMyGameModeBase : public AGameModeBase
 	
 public:
 	AMyGameModeBase();
+
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	TSubclassOf<UUserWidget> RootWidgetClass;
 };
