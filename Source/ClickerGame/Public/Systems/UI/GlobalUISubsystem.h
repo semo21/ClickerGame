@@ -23,6 +23,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClearRootUI();
 
+	TObjectPtr<UUserWidget> GetCurrentRootWidget() const { return CurrentRootWidget; }
+
 private:
 	UPROPERTY()
 	TObjectPtr<UUserWidget> CurrentRootWidget = nullptr;
