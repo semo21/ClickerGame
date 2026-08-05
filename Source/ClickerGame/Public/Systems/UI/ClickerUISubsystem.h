@@ -4,19 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "GameplayTagContainer.h"
+#include "Systems/Economy/Data/EconomySnapshot.h"
 
 #include "ClickerUISubsystem.generated.h"
 
-class USoundBase; class UUserWidget; class UButton;
-class UTextBlock; class UNiagaraSystem;
+class USoundBase;				class UUserWidget; 
+class UButton;					class UTextBlock; 
+class UNiagaraSystem;
 
 class UClickerEconomySubsystem; class AMyPlayerController;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
-struct FEconomySnapshot;		class UClickerUISettings;
-class UToastWidgetBase;
-/**
- *
- */
+class UClickerUISettings;		class UToastWidgetBase;			
+class UActionButtonRegistry;	
+
+struct FEconomySnapshot;		struct FActionButtonDefinition;
+
+// Economy changed event for UI, passes the new snapshot to update displays
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FEconomySnapshot&, Snapshot);
+
 UCLASS(Config=Game, DefaultConfig)
 class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
 {
@@ -32,25 +38,47 @@ public:
 	void ShowOfflineReward(float OfflineReward);
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
+	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
+	UFUNCTION()	
+	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+	UFUNCTION() 
+	void OnPassiveIncome(double AmountPerSec);
+	UFUNCTION() 
+	void OnOfflineReward(double Amount);
+	UFUNCTION(BlueprintCallable, Category="UI|Economy")
+	const FEconomySnapshot& GetCachedEconomySnapshot() const { return CachedEconomySnapshot; }
 
-	UFUNCTION()	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
-	UFUNCTION() void OnPassiveIncome(double AmountPerSec);
-	UFUNCTION() void OnOfflineReward(double Amount);
-
-	UPROPERTY(Config, EditAnywhere, Category = "Settings")	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
-	UPROPERTY() TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY() UNiagaraSystem* ClickEffectAsset = nullptr;
-	UPROPERTY()	USoundBase* ClickRewardSound = nullptr;
-	UPROPERTY()	USoundBase* OfflineRewardSound = nullptr;
+	UPROPERTY(BlueprintAssignable, Category="UI|Events")
+	FOnEconomyChangedUI OnEconomyChangedUI;
+	UPROPERTY(Config, EditAnywhere, Category="Settings")	
+	TSoftObjectPtr<UClickerUISettings> UISettingsAsset;
+	UPROPERTY(Config, EditAnywhere, Category="Settings")
+	TSoftObjectPtr<UActionButtonRegistry> ActionButtonRegistryAsset = nullptr;
+	UPROPERTY(Transient)
+	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
+	UPROPERTY() 
+	TSubclassOf<UUserWidget> InGameRootWidgetClass;
+	UPROPERTY() 
+	UNiagaraSystem* ClickEffectAsset = nullptr;
+	UPROPERTY()	
+	USoundBase* ClickRewardSound = nullptr;
+	UPROPERTY()	
+	USoundBase* OfflineRewardSound = nullptr;
+	
 
 protected:
 	UToastWidgetBase* GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass);
 
-	UPROPERTY() TArray<UToastWidgetBase*> FloatingTextPool;
-	UPROPERTY() TArray<UToastWidgetBase*> RewardPool;
-	UPROPERTY() TSubclassOf<UToastWidgetBase> FloatingTextWidgetClass;
-	UPROPERTY() TSubclassOf<UToastWidgetBase> RewardToastClass;
-	UPROPERTY() TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
+	UPROPERTY() 
+	TArray<UToastWidgetBase*> FloatingTextPool;
+	UPROPERTY() 
+	TArray<UToastWidgetBase*> RewardPool;
+	UPROPERTY() 
+	TSubclassOf<UToastWidgetBase> FloatingTextWidgetClass;
+	UPROPERTY() 
+	TSubclassOf<UToastWidgetBase> RewardToastClass;
+	UPROPERTY() 
+	TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
 	TWeakObjectPtr<APlayerController> PlayerController;
 
 private:
@@ -58,17 +86,30 @@ private:
 	void HandlePassiveIncome(double Amount);
 	void HandleOfflineReward(double Amount);
 	void TryFlushOfflineReward();
+
+	UPROPERTY()	
+	UUserWidget* InGameRootWidget;
+	UPROPERTY()	
+	UTextBlock* CurrencyText;
+	UPROPERTY()	
+	UTextBlock* ClickValueText;
+	UPROPERTY()	
+	UTextBlock* UpgradeCostText;
+	UPROPERTY()	
+	UTextBlock* PassiveIncomeText;
+	UPROPERTY()	
+	UTextBlock* UpgradeSuccessText;
+	UPROPERTY()	
+	UButton* UpgradeButton;
+	UPROPERTY()	
+	UButton* SaveButton;
+	UPROPERTY()	
+	UButton* LoadButton;
+	UPROPERTY()	
+	TArray<UIdleRewardTextWidget*> RewardTextPool;	
+	UPROPERTY(Transient) 
+	FEconomySnapshot CachedEconomySnapshot;
 	
-	UPROPERTY()	UUserWidget* HUDWidget;
-	UPROPERTY()	UTextBlock* CurrencyText;
-	UPROPERTY()	UTextBlock* ClickValueText;
-	UPROPERTY()	UTextBlock* UpgradeCostText;
-	UPROPERTY()	UTextBlock* PassiveIncomeText;
-	UPROPERTY()	UTextBlock* UpgradeSuccessText;
-	UPROPERTY()	UButton* UpgradeButton;
-	UPROPERTY()	UButton* SaveButton;
-	UPROPERTY()	UButton* LoadButton;
-	UPROPERTY()	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	double PendingOfflineReward = 0.0;
 	bool bHUDReady = false;
 	FTimerHandle UpgradeSuccessTimerHandle;

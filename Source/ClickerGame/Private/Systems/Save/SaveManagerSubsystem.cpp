@@ -2,11 +2,11 @@
 
 
 #include "Systems/Save/SaveManagerSubsystem.h"
+#include "Systems/Economy/ClickerEconomySubsystem.h"
+#include "Systems/Save/Data/ClickerSaveGame.h"
 
 #include "Kismet/GameplayStatics.h"
 
-#include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "Data/Save/ClickerSaveGame.h"
 void USaveManagerSubsystem::SaveProgress(const FEconomySnapshot& S) {
 	auto* SaveGameObj = Cast<UClickerSaveGame>(UGameplayStatics::CreateSaveGameObject(UClickerSaveGame::StaticClass()));
 	SaveGameObj->Currency = S.Currency;

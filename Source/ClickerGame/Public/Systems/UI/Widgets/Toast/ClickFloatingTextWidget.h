@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Systems/UI/Widgets/ToastWidgetBase.h"
+#include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 
 #include "ClickFloatingTextWidget.generated.h"
 

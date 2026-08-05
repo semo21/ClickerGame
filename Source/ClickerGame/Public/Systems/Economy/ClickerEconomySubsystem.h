@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "Data/Economy/EconomySnapshot.h"
+#include "Systems/Economy/Data/EconomySnapshot.h"
 
 #include "ClickerEconomySubsystem.generated.h"
 

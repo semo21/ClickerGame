@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Systems/UI/ClickerUISubsystem.h"
 
 #include "Blueprint/UserWidget.h"
@@ -16,10 +15,12 @@
 
 #include "Gameplay/Player/MyPlayerController.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "Systems/UI/Widgets/ToastWidgetBase.h"
+#include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
+#include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 #include "Systems/UI/Settings/ClickerUISettings.h"
+#include "Systems/UI/Data/ActionButton/ActionButtonRegistry.h"
 
 // public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
@@ -28,24 +29,36 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	EconomySubsystemRef = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
 	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
+	if (!EconomySubsystemRef)	return;
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
 	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
 	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
+	
+	CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
+	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);	
 
+	UE_LOG(LogTemp, Warning, TEXT("UISettingsAsset: %s, ActionButtonRegistryAsset: %s"), *UISettingsAsset.ToString(), *ActionButtonRegistryAsset.ToString());
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
 
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
 			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize DA Load"));
 
-			HUDWidgetClass = Settings->HUDWidgetClass;
+			InGameRootWidgetClass = Settings->InGameRootWidgetClass;
 			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
 			RewardToastClass = Settings->IdleRewardTextWidgetClass;
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
 			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
 		}
+	}
+
+	if (!ActionButtonRegistryAsset.IsNull()) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found ActionButtonRegistry"));
+		ActionButtonRegistry = ActionButtonRegistryAsset.LoadSynchronous();
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize ActionButtonRegistry Load = %s"), ActionButtonRegistry ? TEXT("Success") : TEXT("Failed"));
+
 	}
 }
 
@@ -59,7 +72,7 @@ void UClickerUISubsystem::Deinitialize() {
 		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
 	}
 
-	HUDWidget = nullptr;
+	InGameRootWidget = nullptr;
 	CurrencyText = ClickValueText = UpgradeCostText = PassiveIncomeText = UpgradeSuccessText = nullptr;
 	UpgradeButton = SaveButton = LoadButton = nullptr;
 	EconomySubsystemRef = nullptr;
@@ -71,7 +84,7 @@ void UClickerUISubsystem::Deinitialize() {
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	if (!World || HUDWidget || !HUDWidgetClass) return;
+	if (!World || InGameRootWidget || !InGameRootWidgetClass) return;
 
 	if (!PlayerController.IsValid()) {
 		if (auto* PC = World->GetFirstPlayerController()) {
@@ -81,43 +94,30 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 		if (!PlayerController.IsValid()) return;
 	}
 
-	if (GEngine && GEngine->GameViewport) {
-		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
+	InGameRootWidget = CreateWidget<UUserWidget>(World, InGameRootWidgetClass);
+	if (!InGameRootWidget) return;
+	InGameRootWidget->AddToViewport();
+
+	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(InGameRootWidget)) {
+		Root->InitializeHUDRoot(this, Cast<AMyPlayerController>(PlayerController.Get()));
 	}
 
+	//if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
 
-	if (!ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()), TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass))) {
-		return;
-	}
-	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
-	if (!HUDWidget) return;
-	HUDWidget->AddToViewport();
+	//if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
+	//	if (UpgradeButton)
+	//		UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
 
-	CurrencyText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("CurrencyText")));
-	ClickValueText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("ClickValueText")));
-	UpgradeCostText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("UpgradeCostText")));
-	PassiveIncomeText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("PassiveIncomeText")));
-	UpgradeSuccessText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("UpgradeSuccessText")));
-	UpgradeButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("UpgradeButton")));
-	SaveButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("SaveButton")));
-	LoadButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("LoadButton")));
+	//	if (SaveButton)
+	//		SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
 
-	if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-
-	if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
-		if (UpgradeButton)
-			UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
-
-		if (SaveButton)
-			SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
-
-		if (LoadButton)
-			LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
-	}
-		
-	if (EconomySubsystemRef) {
-		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-	}
+	//	if (LoadButton)
+	//		LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
+	//}
+	//	
+	//if (EconomySubsystemRef) {
+	//	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
+	//}
 	bHUDReady = true;
 	TryFlushOfflineReward();
 }
@@ -152,8 +152,17 @@ void UClickerUISubsystem::HideUpgradeSuccessText() {
 	}
 }
 
+const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(const FGameplayTag& Tag) const {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::FindActionButtonDefinition Tag: %s"), *Tag.ToString());
+	if (!ActionButtonRegistry || !Tag.IsValid()) return nullptr;
+
+	return ActionButtonRegistry->Find(Tag);
+}
+
 void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
-	UpdateScore(Snapshot);
+	CachedEconomySnapshot = Snapshot;
+	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
+	UpdateScore(Snapshot);	// HUDRoot 리팩터 후 이 부분은 HUDRoot에서 처리하도록 변경 예정
 }
 
 void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
@@ -169,6 +178,8 @@ void UClickerUISubsystem::OnOfflineReward(double Amount) {
 
 // private field
 void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
+
 	if (CurrencyText)
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
 
@@ -177,6 +188,8 @@ void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
 
 	if (UpgradeCostText)
 		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase)));
+
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpgradeCost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase);
 
 	if (PassiveIncomeText)
 		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), Snapshot.CurrencyPerSecond)));

@@ -18,10 +18,10 @@ void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();	
 
 	auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
-	auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>();
+	//auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>();
 
 	Eco->StartWorld(GetWorld());
-	UI->ShowHUD(GetWorld());
+	//UI->ShowHUD(GetWorld());
 }
 
 void AMyPlayerController::SetupInputComponent() {
@@ -66,14 +66,45 @@ void AMyPlayerController::OnUpgradeClicked() {
 	}
 }
 
+void AMyPlayerController::OnBoostClicked() {
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+		UE_LOG(LogTemp, Warning, TEXT("Boost button clicked - this is a placeholder action"));
+	}
+}
+
+void AMyPlayerController::OnTestClicked() {
+	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+		UE_LOG(LogTemp, Warning, TEXT("Test button clicked - this is a placeholder action"));
+	}
+}
+
 void AMyPlayerController::OnSaveClicked() {
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestSave();
+		UE_LOG(LogTemp, Warning, TEXT("Save button clicked - this is a placeholder action"));
 	}
 }
 
 void AMyPlayerController::OnLoadClicked() {
 	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestLoad();
+		UE_LOG(LogTemp, Warning, TEXT("Load button clicked - this is a placeholder action"));
+	}
+}
+
+void AMyPlayerController::HandleActionButtonClicked(const FGameplayTag& ActionTag) {
+	if (ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Upgrade"))) {
+		OnUpgradeClicked();
+	}
+	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Boost"))) {
+		OnBoostClicked();
+	}
+	else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Test"))) {
+		OnTestClicked();
+	}else if(ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Save"))) {
+		OnSaveClicked();
+	}
+	else if (ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Load"))) {
+		OnLoadClicked();
 	}
 }

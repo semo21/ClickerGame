@@ -1,0 +1,128 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "Blueprint/UserWidget.h"
+#include "Systems/UI/Styles/ActionButtonStyleData.h"
+#include "Systems/UI/Types/ActionButtonTypes.h"
+#include "Systems/UI/Data/ActionButton/ActionButtonDefinition.h"
+
+#include "ActionButtonWidgetBase.generated.h"
+
+class UButton;
+class UTextBlock;
+class UImage;
+class UTexture2D;
+class UWidgetSwitcher;
+class UClickerUISubsystem;
+class AMyPlayerController;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
+
+UCLASS()
+class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Style", meta=(ExposeOnSpawn="true"))
+	TObjectPtr<UActionButtonStyleData> DefaultStyle = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ActionButton")
+	FGameplayTag ActionTag;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton|Overrides", meta=(ExposeOnSpawn="true"))
+	bool bOverrideLabel = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
+	FText OverrideLabelText;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
+	bool bOverrideIcon = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton|Overrides", meta = (ExposeOnSpawn = "true"))
+	TSoftObjectPtr<UTexture2D> OverrideIconTexture = nullptr;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
+	EActionButtonMode Mode = EActionButtonMode::Auto;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "ActionButton", meta = (ExposeOnSpawn = "true"))
+	bool bOverrideEnabled = true;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="ActionButton", meta=(EditCondition="bOverrideEnabled"))
+	bool bOverrideEnabledValue = true;
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void InitializeButton(AMyPlayerController* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag);
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void SetLabelText(const FText& InText);
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void SetIcon(UTexture2D* InTexture);
+
+	UFUNCTION(BlueprintCallable, Category = "ActionButton")
+	void SetEnabledState(bool bInEnabled);
+
+	UFUNCTION(BlueprintCallable, Category="ActionButton")
+	void SetMode(EActionButtonMode InMode);
+
+	UPROPERTY(BlueprintAssignable, Category = "ActionButton")
+	FOnActionButtonClicked OnClicked;
+
+protected:
+	virtual void NativeOnInitialized() override;
+	virtual void NativePreConstruct() override;
+	virtual void SynchronizeProperties() override;
+
+	const FActionButtonDefinition* GetDefinition() const;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UButton> Btn_Root = nullptr;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UWidgetSwitcher> Switcher_Mode = nullptr;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UImage> Img_DisabledOverlay = nullptr;
+
+	// Icon Only
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UImage> Img_Icon_Only = nullptr;
+
+	// Text Only
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> Txt_Label_Only = nullptr;
+
+	// Icon + Text	
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UImage> Img_Icon = nullptr;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> Txt_Label = nullptr;
+
+	// Preview
+	UPROPERTY(EditDefaultsOnly, Category="ActionButton|Priview")
+	FText PreviewLabelText = FText::FromString(TEXT("C++_Preview"));
+
+	UPROPERTY(EditDefaultsOnly, Category = "ActionButton|Preview")
+	bool bPreviewIcon = false;
+private:
+	UFUNCTION()
+	void HandleClicked();
+	void ApplyResolvedDataToWidgets();
+	void ApplyMode(EActionButtonMode FinalMode);
+	
+	FText ResolveLabel() const;
+	UTexture2D* ResolveIcon() const;
+	bool ResolveEnabled() const;
+	EActionButtonMode ResolveMode() const;
+
+	UPROPERTY(Transient)
+	TWeakObjectPtr<UClickerUISubsystem> CachedUI;
+
+	UPROPERTY(Transient)
+	TWeakObjectPtr<AMyPlayerController> CachedPC;
+};

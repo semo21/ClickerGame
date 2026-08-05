@@ -53,3 +53,7 @@ Content/__ExternalObjects__/
 # Configuration override files
 Config/DefaultEditor.ini
 Config/DefaultEditorPerProjectUserSettings.ini
+
+# etc
+docs/Todo.md
+docs/planning/Sketch.md
