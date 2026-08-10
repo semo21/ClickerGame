@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Systems/UI/Widgets/Root/GlobalHUDRootWidgetBase.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "ClickerHUDRootWidgetBase.generated.h"
 
@@ -12,7 +12,7 @@ class AMyPlayerController;
 class UClickerHUDPartWidgetBase;
 
 UCLASS(Abstract, Blueprintable)
-class CLICKERGAME_API UClickerHUDRootWidgetBase : public UUserWidget
+class CLICKERGAME_API UClickerHUDRootWidgetBase : public UGlobalHUDRootWidgetBase
 {
 	GENERATED_BODY()
 
