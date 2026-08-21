@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Subsystems/WorldSubsystem.h"
 #include "Systems/Economy/Data/EconomySnapshot.h"
 
 #include "ClickerEconomySubsystem.generated.h"
@@ -19,7 +19,7 @@ class USaveManagerSubsystem;
  * 
  */
 UCLASS(BlueprintType)
-class CLICKERGAME_API UClickerEconomySubsystem : public UGameInstanceSubsystem
+class CLICKERGAME_API UClickerEconomySubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 

@@ -57,7 +57,7 @@ bool UClickerEconomySubsystem::TryUpgrade() {
 }
 
 void UClickerEconomySubsystem::RequestSave() {
-	if (USaveManagerSubsystem* Save = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
+	if (USaveManagerSubsystem* Save = GetWorld()->GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot Out = MakeSnapshot();
 
 		Save->SaveProgress(Out);
@@ -66,7 +66,7 @@ void UClickerEconomySubsystem::RequestSave() {
 
 void UClickerEconomySubsystem::RequestLoad() {
 
-	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
+	if (USaveManagerSubsystem* Load = GetWorld()->GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
 		FEconomySnapshot In;
 		if (Load->LoadProgress(In)) {		
 			UpdateLastOfflineReward(In);

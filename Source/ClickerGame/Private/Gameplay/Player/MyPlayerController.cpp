@@ -17,7 +17,7 @@
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();	
 
-	auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
+	auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
 	//auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>();
 
 	Eco->StartWorld(GetWorld());
@@ -46,7 +46,7 @@ void AMyPlayerController::OnClick() {
 
 	if (!HitResult.bBlockingHit || !HitResult.GetActor() || !HitResult.GetActor()->IsA(AClickTargetActor::StaticClass())) return;
 
-	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->OnClicked();
 		if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
 			UI->ShowClickEffect(HitResult.Location);
@@ -56,7 +56,7 @@ void AMyPlayerController::OnClick() {
 }
 
 void AMyPlayerController::OnUpgradeClicked() {
-	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		const bool bSuccess = Eco->TryUpgrade();
 		if (bSuccess) {
 			if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
@@ -79,14 +79,14 @@ void AMyPlayerController::OnTestClicked() {
 }
 
 void AMyPlayerController::OnSaveClicked() {
-	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestSave();
 		UE_LOG(LogTemp, Warning, TEXT("Save button clicked - this is a placeholder action"));
 	}
 }
 
 void AMyPlayerController::OnLoadClicked() {
-	if (auto* Eco = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>()) {
+	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestLoad();
 		UE_LOG(LogTemp, Warning, TEXT("Load button clicked - this is a placeholder action"));
 	}
