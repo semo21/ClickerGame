@@ -55,6 +55,8 @@ private:
 	void UpdateLastOfflineReward(FEconomySnapshot& In);
 	
 private:
+	UPROPERTY()
+	TObjectPtr<USaveManagerSubsystem> SaveManagerSubsystemRef;
 	FEconomySnapshot EconomySnapshot;
 	FTimerHandle AutoSaveHandle;
 	FTimerHandle TickHandle;

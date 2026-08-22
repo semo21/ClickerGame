@@ -13,6 +13,10 @@
 
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
+	
+	if (UGameInstance* GI = GetWorld() ? GetWorld()->GetGameInstance() : nullptr) {
+		SaveManagerSubsystemRef = GI->GetSubsystem<USaveManagerSubsystem>();
+	}	
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
@@ -57,18 +61,18 @@ bool UClickerEconomySubsystem::TryUpgrade() {
 }
 
 void UClickerEconomySubsystem::RequestSave() {
-	if (USaveManagerSubsystem* Save = GetWorld()->GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
+	if (SaveManagerSubsystemRef) {
 		FEconomySnapshot Out = MakeSnapshot();
 
-		Save->SaveProgress(Out);
+		SaveManagerSubsystemRef->SaveProgress(Out);
 	}
 }
 
 void UClickerEconomySubsystem::RequestLoad() {
 
-	if (USaveManagerSubsystem* Load = GetWorld()->GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
+	if (SaveManagerSubsystemRef) {
 		FEconomySnapshot In;
-		if (Load->LoadProgress(In)) {		
+		if (SaveManagerSubsystemRef->LoadProgress(In)) {
 			UpdateLastOfflineReward(In);
 			TriggerOfflineReward();
 			ApplySnapshot(In);
