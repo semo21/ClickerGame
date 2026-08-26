@@ -113,6 +113,8 @@ private:
 	double PendingOfflineReward = 0.0;
 	bool bHUDReady = false;
 	FTimerHandle UpgradeSuccessTimerHandle;
+
+	UPROPERTY()
 	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;
 	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 };

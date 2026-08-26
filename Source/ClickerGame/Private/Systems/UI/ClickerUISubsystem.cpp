@@ -25,7 +25,6 @@
 // public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-	Collection.InitializeDependency(UClickerEconomySubsystem::StaticClass());
 
 	EconomySubsystemRef = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
 	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
