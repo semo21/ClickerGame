@@ -26,18 +26,8 @@
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 
-	EconomySubsystemRef = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
-	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
-	if (!EconomySubsystemRef)	return;
-
-	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
-	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
-	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
+	UE_LOG(LogTemp, Warning, TEXT("UISettingsAsset: &s, ActionButtonRegistryAsset: %s"), *UISettingsAsset.ToString(), *ActionButtonRegistryAsset.ToString());
 	
-	CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
-	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);	
-
-	UE_LOG(LogTemp, Warning, TEXT("UISettingsAsset: %s, ActionButtonRegistryAsset: %s"), *UISettingsAsset.ToString(), *ActionButtonRegistryAsset.ToString());
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
 
@@ -80,6 +70,19 @@ void UClickerUISubsystem::Deinitialize() {
 	PlayerController.Reset();
 
 	Super::Deinitialize();
+}
+
+void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
+	EconomySubsystemRef = Eco;
+
+	if (!EconomySubsystemRef) return;
+
+	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
+	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass:OnPassiveIncome);
+	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
+
+	CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
+	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
 }
 
 void UClickerUISubsystem::ShowHUD(UWorld* World) {
