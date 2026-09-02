@@ -78,7 +78,7 @@ void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
 	if (!EconomySubsystemRef) return;
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
-	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass:OnPassiveIncome);
+	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
 	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
 
 	CachedEconomySnapshot = EconomySubsystemRef->GetSnapshot();
