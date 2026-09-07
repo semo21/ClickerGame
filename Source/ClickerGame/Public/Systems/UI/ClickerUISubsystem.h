@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Subsystems/WorldSubsystem.h"
 #include "GameplayTagContainer.h"
 #include "Systems/Economy/Data/EconomySnapshot.h"
 
@@ -24,7 +24,7 @@ struct FEconomySnapshot;		struct FActionButtonDefinition;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FEconomySnapshot&, Snapshot);
 
 UCLASS(Config=Game, DefaultConfig)
-class CLICKERGAME_API UClickerUISubsystem : public UGameInstanceSubsystem
+class CLICKERGAME_API UClickerUISubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 

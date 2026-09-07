@@ -48,7 +48,7 @@ void AMyPlayerController::OnClick() {
 
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->OnClicked();
-		if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+		if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
 			UI->ShowClickEffect(HitResult.Location);
 			UI->ShowFloatingText(FString::Printf(TEXT("%f"), Eco->GetSnapshot().CurrencyPerClick), HitResult.Location);
 		}
@@ -59,7 +59,7 @@ void AMyPlayerController::OnUpgradeClicked() {
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		const bool bSuccess = Eco->TryUpgrade();
 		if (bSuccess) {
-			if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+			if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
 				UI->ShowUpgradeSuccessText();
 			}
 		}
@@ -67,13 +67,13 @@ void AMyPlayerController::OnUpgradeClicked() {
 }
 
 void AMyPlayerController::OnBoostClicked() {
-	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+	if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
 		UE_LOG(LogTemp, Warning, TEXT("Boost button clicked - this is a placeholder action"));
 	}
 }
 
 void AMyPlayerController::OnTestClicked() {
-	if (auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>()) {
+	if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
 		UE_LOG(LogTemp, Warning, TEXT("Test button clicked - this is a placeholder action"));
 	}
 }
