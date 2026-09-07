@@ -12,16 +12,11 @@
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Gameplay/Actors/ClickTargetActor.h"
+#include "Gameplay/GameMode/ClickerGameMode.h"
 
 // protected field
 void AMyPlayerController::BeginPlay() {
 	Super::BeginPlay();	
-
-	auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
-	//auto* UI = GetGameInstance()->GetSubsystem<UClickerUISubsystem>();
-
-	Eco->StartWorld(GetWorld());
-	//UI->ShowHUD(GetWorld());
 }
 
 void AMyPlayerController::SetupInputComponent() {

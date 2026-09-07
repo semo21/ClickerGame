@@ -17,6 +17,7 @@ void AClickerGameMode::BeginPlay() {
 	auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
 
 	if (Root && ClickerUI && PC && Eco) {
+		Eco->StartWorld(GetWorld());
 		ClickerUI->BindEconomySubsystem(Eco);
 		Root->InitializeHUDRoot(ClickerUI, PC);
 	}
