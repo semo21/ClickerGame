@@ -13,10 +13,6 @@
 
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-	
-	if (UGameInstance* GI = GetWorld() ? GetWorld()->GetGameInstance() : nullptr) {
-		SaveManagerSubsystemRef = GI->GetSubsystem<USaveManagerSubsystem>();
-	}	
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
@@ -29,7 +25,12 @@ void UClickerEconomySubsystem::Deinitialize() {
 
 void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 	if (!World || bWorldStarted) return;
+
 	bWorldStarted = true;
+
+	if (UGameInstance* GI = World->GetGameInstance()) {
+		SaveManagerSubsystemRef = GI->GetSubsystem<USaveManagerSubsystem>();
+	}
 
 	RequestLoad();
 	StartAutoSaveTimer();
