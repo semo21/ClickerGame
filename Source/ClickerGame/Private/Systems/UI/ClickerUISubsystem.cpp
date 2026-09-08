@@ -45,7 +45,9 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	if (!ActionButtonRegistryAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found ActionButtonRegistry"));
+
 		ActionButtonRegistry = ActionButtonRegistryAsset.LoadSynchronous();
+
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize ActionButtonRegistry Load = %s"), ActionButtonRegistry ? TEXT("Success") : TEXT("Failed"));
 
 	}
@@ -103,23 +105,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(InGameRootWidget)) {
 		Root->InitializeHUDRoot(this, Cast<AMyPlayerController>(PlayerController.Get()));
 	}
-
-	//if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-
-	//if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
-	//	if (UpgradeButton)
-	//		UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
-
-	//	if (SaveButton)
-	//		SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
-
-	//	if (LoadButton)
-	//		LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
-	//}
-	//	
-	//if (EconomySubsystemRef) {
-	//	OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-	//}
+	
 	bHUDReady = true;
 	TryFlushOfflineReward();
 }
@@ -180,7 +166,7 @@ void UClickerUISubsystem::OnOfflineReward(double Amount) {
 
 // private field
 void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
 
 	if (CurrencyText)
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
@@ -220,7 +206,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	if (!RewardToastClass)	return;
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
 	const FVector2D ScreenPos(640.0f, 120.0f);
 
 	if (UToastWidgetBase* Widget = GetWidgetFromPool(RewardPool, RewardToastClass)) {
