@@ -8,7 +8,7 @@
 
 AMyGameModeBase::AMyGameModeBase() {
 	// Set the player controller class to our custom player controller
-	PlayerControllerClass = AMyPlayerController::StaticClass();
+	PlayerControllerClass = AMyPlayerControllerBase::StaticClass();
 }
 
 void AMyGameModeBase::BeginPlay() {

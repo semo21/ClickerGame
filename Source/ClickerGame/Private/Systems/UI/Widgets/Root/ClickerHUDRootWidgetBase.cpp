@@ -6,7 +6,7 @@
 #include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
 #include "Gameplay/Player/MyPlayerController.h"
 
-void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AMyPlayerController* PC) {
+void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AMyPlayerControllerBase* PC) {
 	UIRef = UI;
 	PCRef = PC;
 

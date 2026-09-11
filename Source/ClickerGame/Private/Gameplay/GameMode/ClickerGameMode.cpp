@@ -13,7 +13,7 @@ void AClickerGameMode::BeginPlay() {
 	auto* GlobalUI = GetGameInstance()->GetSubsystem<UGlobalUISubsystem>();
 	auto* Root = Cast<UClickerHUDRootWidgetBase>(GlobalUI->GetCurrentRootWidget());
 	auto* ClickerUI = GetWorld()->GetSubsystem<UClickerUISubsystem>();
-	auto* PC = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+	auto* PC = Cast<AMyPlayerControllerBase>(GetWorld()->GetFirstPlayerController());
 	auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
 
 	if (GlobalUI && Root && ClickerUI && PC && Eco) {

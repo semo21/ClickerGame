@@ -8,13 +8,13 @@
 #include "NiagaraSystem.h"
 #include "GameplayTagContainer.h"
 
-#include "MyPlayerController.generated.h"
+#include "MyPlayerControllerBase.generated.h"
 
 class UClickFloatingTextWidget;
 class UIdleRewardTextWidget;
 
 UCLASS()
-class CLICKERGAME_API AMyPlayerController : public APlayerController
+class CLICKERGAME_API AMyPlayerControllerBase : public APlayerController
 {
 	GENERATED_BODY()	
 public:

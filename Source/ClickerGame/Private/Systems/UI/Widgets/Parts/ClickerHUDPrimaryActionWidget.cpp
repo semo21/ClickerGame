@@ -8,7 +8,7 @@
 #include "Gameplay/Player/MyPlayerController.h"
 #include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
 
-void UClickerHUDPrimaryActionWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerController* InPC){
+void UClickerHUDPrimaryActionWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC){
 	Super::InitializePart_Implementation(InUI, InPC);
 	UE_LOG(LogTemp, Warning, TEXT("UClickerHUDPrimaryActionWidget::InitializePart_Implementation - Initializing primary action buttons"));
 	UE_LOG(LogTemp, Warning, TEXT("UpgradeActionTag: %s, BoostActionTag: %s, TestActionTag: %s"), *UpgradeActionTag.ToString(), *BoostActionTag.ToString(), *TestActionTag.ToString());

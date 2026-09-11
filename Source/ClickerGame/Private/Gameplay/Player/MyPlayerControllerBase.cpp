@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
 
 #include "Blueprint/WidgetTree.h"
 #include "UObject/ConstructorHelpers.h"
@@ -15,11 +15,11 @@
 #include "Gameplay/GameMode/ClickerGameMode.h"
 
 // protected field
-void AMyPlayerController::BeginPlay() {
+void AMyPlayerControllerBase::BeginPlay() {
 	Super::BeginPlay();	
 }
 
-void AMyPlayerController::SetupInputComponent() {
+void AMyPlayerControllerBase::SetupInputComponent() {
 	Super::SetupInputComponent();
 
 	if (IsLocalController()) {
@@ -30,12 +30,12 @@ void AMyPlayerController::SetupInputComponent() {
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 		SetInputMode(InputMode);
 
-		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AMyPlayerController::OnClick);
+		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AMyPlayerControllerBase::OnClick);
 	}
 }
 
 // private field
-void AMyPlayerController::OnClick() {
+void AMyPlayerControllerBase::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 
@@ -50,7 +50,7 @@ void AMyPlayerController::OnClick() {
 	}
 }
 
-void AMyPlayerController::OnUpgradeClicked() {
+void AMyPlayerControllerBase::OnUpgradeClicked() {
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		const bool bSuccess = Eco->TryUpgrade();
 		if (bSuccess) {
@@ -61,33 +61,33 @@ void AMyPlayerController::OnUpgradeClicked() {
 	}
 }
 
-void AMyPlayerController::OnBoostClicked() {
+void AMyPlayerControllerBase::OnBoostClicked() {
 	if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
 		UE_LOG(LogTemp, Warning, TEXT("Boost button clicked - this is a placeholder action"));
 	}
 }
 
-void AMyPlayerController::OnTestClicked() {
+void AMyPlayerControllerBase::OnTestClicked() {
 	if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
 		UE_LOG(LogTemp, Warning, TEXT("Test button clicked - this is a placeholder action"));
 	}
 }
 
-void AMyPlayerController::OnSaveClicked() {
+void AMyPlayerControllerBase::OnSaveClicked() {
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestSave();
 		UE_LOG(LogTemp, Warning, TEXT("Save button clicked - this is a placeholder action"));
 	}
 }
 
-void AMyPlayerController::OnLoadClicked() {
+void AMyPlayerControllerBase::OnLoadClicked() {
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->RequestLoad();
 		UE_LOG(LogTemp, Warning, TEXT("Load button clicked - this is a placeholder action"));
 	}
 }
 
-void AMyPlayerController::HandleActionButtonClicked(const FGameplayTag& ActionTag) {
+void AMyPlayerControllerBase::HandleActionButtonClicked(const FGameplayTag& ActionTag) {
 	if (ActionTag.MatchesTagExact(FGameplayTag::RequestGameplayTag("UI.Action.Upgrade"))) {
 		OnUpgradeClicked();
 	}

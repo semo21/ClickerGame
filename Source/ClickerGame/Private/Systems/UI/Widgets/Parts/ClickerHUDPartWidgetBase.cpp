@@ -3,7 +3,7 @@
 
 #include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
 
-void UClickerHUDPartWidgetBase::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerController* InPC) {
+void UClickerHUDPartWidgetBase::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC) {
 	// Implement in Blueprint
 	UIRef = InUI;
 	PCRef = InPC;	

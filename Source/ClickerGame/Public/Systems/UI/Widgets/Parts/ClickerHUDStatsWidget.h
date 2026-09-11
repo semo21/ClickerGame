@@ -16,7 +16,7 @@ class CLICKERGAME_API UClickerHUDStatsWidget : public UClickerHUDPartWidgetBase
 	GENERATED_BODY()
 	
 public:
-	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerController* InPC) override;
+	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC) override;
 
 	virtual void OnEconomyChangedUI_Implementation(const FEconomySnapshot& Snapshot) override;
 

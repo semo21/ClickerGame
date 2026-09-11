@@ -9,7 +9,7 @@
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Gameplay/Player/MyPlayerController.h"
 
-void UActionButtonWidgetBase::InitializeButton(AMyPlayerController* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag) {
+void UActionButtonWidgetBase::InitializeButton(AMyPlayerControllerBase* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag) {
 	CachedPC = InPC;
 	CachedUI = InUI;
 	ActionTag = InTag;

@@ -10,7 +10,7 @@
 
 class UActionButtonWidgetBase;
 class UClickerUISubsystem;
-class AMyPlayerController;
+class AMyPlayerControllerBase;
 /**
  * 
  */
@@ -20,7 +20,7 @@ class CLICKERGAME_API UClickerHUDDevButtonsWidget : public UClickerHUDPartWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerController* InPC) override;
+	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC) override;
 
 protected:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)

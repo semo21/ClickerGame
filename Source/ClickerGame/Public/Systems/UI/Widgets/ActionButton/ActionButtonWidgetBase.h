@@ -17,7 +17,7 @@ class UImage;
 class UTexture2D;
 class UWidgetSwitcher;
 class UClickerUISubsystem;
-class AMyPlayerController;
+class AMyPlayerControllerBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
 
@@ -55,7 +55,7 @@ public:
 	bool bOverrideEnabledValue = true;
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
-	void InitializeButton(AMyPlayerController* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag);
+	void InitializeButton(AMyPlayerControllerBase* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag);
 
 	UFUNCTION(BlueprintCallable, Category = "ActionButton")
 	void SetLabelText(const FText& InText);
@@ -124,5 +124,5 @@ private:
 	TWeakObjectPtr<UClickerUISubsystem> CachedUI;
 
 	UPROPERTY(Transient)
-	TWeakObjectPtr<AMyPlayerController> CachedPC;
+	TWeakObjectPtr<AMyPlayerControllerBase> CachedPC;
 };

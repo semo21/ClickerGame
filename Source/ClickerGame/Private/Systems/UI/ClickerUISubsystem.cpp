@@ -92,7 +92,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 
 	if (!PlayerController.IsValid()) {
 		if (auto* PC = World->GetFirstPlayerController()) {
-			PlayerController = Cast<AMyPlayerController>(PC);
+			PlayerController = Cast<AMyPlayerControllerBase>(PC);
 		}
 
 		if (!PlayerController.IsValid()) return;
@@ -103,7 +103,7 @@ void UClickerUISubsystem::ShowHUD(UWorld* World) {
 	InGameRootWidget->AddToViewport();
 
 	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(InGameRootWidget)) {
-		Root->InitializeHUDRoot(this, Cast<AMyPlayerController>(PlayerController.Get()));
+		Root->InitializeHUDRoot(this, Cast<AMyPlayerControllerBase>(PlayerController.Get()));
 	}
 	
 	bHUDReady = true;

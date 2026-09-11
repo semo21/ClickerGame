@@ -13,7 +13,7 @@ class USoundBase;				class UUserWidget;
 class UButton;					class UTextBlock; 
 class UNiagaraSystem;
 
-class UClickerEconomySubsystem; class AMyPlayerController;
+class UClickerEconomySubsystem; class AMyPlayerControllerBase;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
 class UClickerUISettings;		class UToastWidgetBase;			
 class UActionButtonRegistry;	
