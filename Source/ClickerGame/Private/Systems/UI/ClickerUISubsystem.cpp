@@ -13,7 +13,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "TimerManager.h"
 
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"

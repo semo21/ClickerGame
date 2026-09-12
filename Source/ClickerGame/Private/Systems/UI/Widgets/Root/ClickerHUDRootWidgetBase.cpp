@@ -4,7 +4,7 @@
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
 
 void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AMyPlayerControllerBase* PC) {
 	UIRef = UI;

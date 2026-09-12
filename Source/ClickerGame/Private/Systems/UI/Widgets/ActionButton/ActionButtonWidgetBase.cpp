@@ -7,7 +7,7 @@
 #include "Components/WidgetSwitcher.h"
 
 #include "Systems/UI/ClickerUISubsystem.h"
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
 
 void UActionButtonWidgetBase::InitializeButton(AMyPlayerControllerBase* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag) {
 	CachedPC = InPC;

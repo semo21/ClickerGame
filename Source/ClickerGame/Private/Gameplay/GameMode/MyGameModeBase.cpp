@@ -2,7 +2,7 @@
 
 
 #include "Gameplay/GameMode/MyGameModeBase.h"
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
 #include "Systems/UI/GlobalUISUbsystem.h"
 #include "Blueprint/UserWidget.h"
 

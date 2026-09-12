@@ -5,7 +5,7 @@
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Systems/UI/GlobalUISubsystem.h"
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
 
 void AClickerGameMode::BeginPlay() {
 	Super::BeginPlay();
