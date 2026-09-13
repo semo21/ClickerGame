@@ -8,7 +8,7 @@
 #include "ClickerHUDRootWidgetBase.generated.h"
 
 class UClickerUISubsystem;
-class AMyPlayerControllerBase;
+class AClickerPlayerController;
 class UClickerHUDPartWidgetBase;
 
 UCLASS(Abstract, Blueprintable)
@@ -18,7 +18,7 @@ class CLICKERGAME_API UClickerHUDRootWidgetBase : public UGlobalHUDRootWidgetBas
 
 public:
 	UFUNCTION(BlueprintCallable, Category="UI")
-	void InitializeHUDRoot(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC);
+	void InitializeHUDRoot(UClickerUISubsystem* InUI, AClickerPlayerController* InPC);
 
 protected:
 	UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly)
@@ -39,5 +39,5 @@ protected:
 	TObjectPtr<UClickerUISubsystem> UIRef;
 
 	UPROPERTY()
-	TObjectPtr<AMyPlayerControllerBase> PCRef;
+	TObjectPtr<AClickerPlayerController> PCRef;
 };

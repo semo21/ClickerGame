@@ -5,7 +5,7 @@
 
 #include "Components/TextBlock.h"
 
-void UClickerHUDStatsWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC) {
+void UClickerHUDStatsWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) {
 	Super::InitializePart_Implementation(InUI, InPC);
 	// Implement in Blueprint
 }

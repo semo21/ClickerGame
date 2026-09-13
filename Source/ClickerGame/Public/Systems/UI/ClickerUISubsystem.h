@@ -13,7 +13,7 @@ class USoundBase;				class UUserWidget;
 class UButton;					class UTextBlock; 
 class UNiagaraSystem;
 
-class UClickerEconomySubsystem; class AMyPlayerControllerBase;
+class UClickerEconomySubsystem; class AClickerPlayerController;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
 class UClickerUISettings;		class UToastWidgetBase;			
 class UActionButtonRegistry;	
@@ -80,7 +80,7 @@ protected:
 	TSubclassOf<UToastWidgetBase> RewardToastClass;
 	UPROPERTY() 
 	TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
-	TWeakObjectPtr<APlayerController> PlayerController;
+	TWeakObjectPtr<AClickerPlayerController> PlayerController;
 
 private:
 	void UpdateScore(const FEconomySnapshot& S);

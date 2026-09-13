@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Blueprint/UserWidget.h"
-#include "NiagaraSystem.h"
 #include "GameplayTagContainer.h"
 
 #include "MyPlayerControllerBase.generated.h"
@@ -18,13 +16,7 @@ class CLICKERGAME_API AMyPlayerControllerBase : public APlayerController
 {
 	GENERATED_BODY()	
 public:
-	UFUNCTION()	void OnClick();
-	UFUNCTION()	void OnUpgradeClicked();
-	UFUNCTION() void OnBoostClicked();
-	UFUNCTION() void OnTestClicked();
-	UFUNCTION()	void OnSaveClicked();
-	UFUNCTION()	void OnLoadClicked();
-	UFUNCTION() void HandleActionButtonClicked(const FGameplayTag& ActionTag);
+	UFUNCTION()	virtual void HandleActionButtonClicked(const FGameplayTag& ActionTag);
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

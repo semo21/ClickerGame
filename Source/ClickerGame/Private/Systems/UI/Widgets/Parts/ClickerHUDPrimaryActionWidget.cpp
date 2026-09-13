@@ -5,10 +5,10 @@
 
 #include "Components/Button.h"
 #include "Systems/UI/ClickerUISubsystem.h"
-#include "Gameplay/Player/MyPlayerControllerBase.h"
+#include "Gameplay/Player/ClickerPlayerController.h"
 #include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
 
-void UClickerHUDPrimaryActionWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC){
+void UClickerHUDPrimaryActionWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC){
 	Super::InitializePart_Implementation(InUI, InPC);
 	UE_LOG(LogTemp, Warning, TEXT("UClickerHUDPrimaryActionWidget::InitializePart_Implementation - Initializing primary action buttons"));
 	UE_LOG(LogTemp, Warning, TEXT("UpgradeActionTag: %s, BoostActionTag: %s, TestActionTag: %s"), *UpgradeActionTag.ToString(), *BoostActionTag.ToString(), *TestActionTag.ToString());

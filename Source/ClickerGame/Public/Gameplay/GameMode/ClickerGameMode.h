@@ -14,6 +14,8 @@ class CLICKERGAME_API AClickerGameMode : public AMyGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	AClickerGameMode();
 protected:
 	virtual void BeginPlay() override;
 };

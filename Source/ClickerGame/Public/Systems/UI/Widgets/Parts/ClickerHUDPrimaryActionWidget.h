@@ -9,7 +9,7 @@
 #include "ClickerHUDPrimaryActionWidget.generated.h"
 
 class UClickerUISubsystem;
-class AMyPlayerControllerBase;
+class AClickerPlayerController;
 class UActionButtonWidgetBase;
 
 UCLASS()
@@ -18,7 +18,7 @@ class CLICKERGAME_API UClickerHUDPrimaryActionWidget : public UClickerHUDPartWid
 	GENERATED_BODY()
 	
 public:
-	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC) override;
+	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) override;
 
 protected:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)

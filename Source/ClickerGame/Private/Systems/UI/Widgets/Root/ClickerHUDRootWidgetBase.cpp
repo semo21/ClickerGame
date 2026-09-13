@@ -4,9 +4,9 @@
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
-#include "Gameplay/Player/MyPlayerControllerBase.h"
+#include "Gameplay/Player/ClickerPlayerController.h"
 
-void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AMyPlayerControllerBase* PC) {
+void UClickerHUDRootWidgetBase::InitializeHUDRoot(UClickerUISubsystem* UI, AClickerPlayerController* PC) {
 	UIRef = UI;
 	PCRef = PC;
 

@@ -4,10 +4,10 @@
 #include "Systems/UI/Widgets/Parts/ClickerHUDDevButtonsWidget.h"
 
 #include "Systems/UI/ClickerUISubsystem.h"
-#include "Gameplay/Player/MyPlayerControllerBase.h"
+#include "Gameplay/Player/ClickerPlayerController.h"
 #include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
 
-void UClickerHUDDevButtonsWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AMyPlayerControllerBase* InPC) {
+void UClickerHUDDevButtonsWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) {
 	Super::InitializePart_Implementation(InUI, InPC);
 	UE_LOG(LogTemp, Warning, TEXT("UClickerHUDDevButtonsWidget::InitializePart_Implementation - Initializing dev buttons"));
 	if (Btn_Save && SaveActionTag.IsValid()) {
