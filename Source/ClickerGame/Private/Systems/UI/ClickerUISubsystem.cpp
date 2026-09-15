@@ -87,29 +87,6 @@ void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
 	OnEconomyChangedUI.Broadcast(CachedEconomySnapshot);
 }
 
-void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	if (!World || InGameRootWidget || !InGameRootWidgetClass) return;
-
-	if (!PlayerController.IsValid()) {
-		if (auto* PC = World->GetFirstPlayerController()) {
-			PlayerController = Cast<AClickerPlayerController>(PC);
-		}
-
-		if (!PlayerController.IsValid()) return;
-	}
-
-	InGameRootWidget = CreateWidget<UUserWidget>(World, InGameRootWidgetClass);
-	if (!InGameRootWidget) return;
-	InGameRootWidget->AddToViewport();
-
-	if (auto* Root = Cast<UClickerHUDRootWidgetBase>(InGameRootWidget)) {
-		Root->InitializeHUDRoot(this, Cast<AClickerPlayerController>(PlayerController.Get()));
-	}
-	
-	bHUDReady = true;
-	TryFlushOfflineReward();
-}
-
 void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
 

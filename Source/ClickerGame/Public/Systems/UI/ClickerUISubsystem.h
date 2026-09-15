@@ -32,7 +32,6 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	void BindEconomySubsystem(UClickerEconomySubsystem* Eco);
-	void ShowHUD(UWorld* World);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
 	void ShowClickEffect(const FVector& WorldLocation);
