@@ -8,6 +8,8 @@
 #include "SaveManagerSubsystem.generated.h"
 
 struct FEconomySnapshot;
+struct FMetaEconomySnapshot;
+class UPlayerSaveGame;
 /**
  * 
  */
@@ -19,8 +21,13 @@ class CLICKERGAME_API USaveManagerSubsystem : public UGameInstanceSubsystem
 public:
 	void SaveProgress(const FEconomySnapshot& Snapshot);	
 	bool LoadProgress(FEconomySnapshot& OutSnapshot);
+
+	void SaveProgress(const FMetaEconomySnapshot& Snapshot);
+	bool LoadProgress(FMetaEconomySnapshot& OutSnapshot);
 	
 private:
+	UPlayerSaveGame* LoadOrCreateSaveObject() const;
+
 	const FString SaveSlotName = TEXT("ClickerSaveSlot");
 	const int32 UserIndex = 0;
 };

@@ -16,7 +16,8 @@ public class ClickerGame : ModuleRules
 			"EnhancedInput", 
 			"UMG", 
 			"Niagara",
-			"GameplayTags"
+			"GameplayTags",
+			"StructUtils"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

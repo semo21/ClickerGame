@@ -3,6 +3,7 @@
 
 #include "Gameplay/GameMode/MyGameModeBase.h"
 #include "Gameplay/Player/MyPlayerControllerBase.h"
+#include "Systems/Economy/GlobalEconomySubsystem.h"
 #include "Systems/UI/GlobalUISUbsystem.h"
 #include "Blueprint/UserWidget.h"
 
@@ -14,7 +15,11 @@ AMyGameModeBase::AMyGameModeBase() {
 void AMyGameModeBase::BeginPlay() {
 	Super::BeginPlay();
 
-	if (UGlobalUISubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UGlobalUISubsystem>()) {
-		UISubsystem->ShowRootUI(RootWidgetClass);
+	if (UGlobalUISubsystem* GlobalUI = GetGameInstance()->GetSubsystem<UGlobalUISubsystem>()) {
+		GlobalUI->ShowRootUI(RootWidgetClass);
+	}
+
+	if (UGlobalEconomySubsystem* GlobalEco = GetGameInstance()->GetSubsystem<UGlobalEconomySubsystem>()) {
+		GlobalEco->StartGame();
 	}
 }

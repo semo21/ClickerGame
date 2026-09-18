@@ -9,6 +9,7 @@
 
 #include "GlobalEconomySubsystem.generated.h"
 
+class USaveManagerSubsystem;
 /**
  *
  */
@@ -19,6 +20,8 @@ class CLICKERGAME_API UGlobalEconomySubsystem : public UGameInstanceSubsystem
 
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	void StartGame();
 
 	UFUNCTION(BlueprintCallable, Category="Economy|Meta")
 	bool IsLevelUnlocked(const FGameplayTag& LevelTag) const;
@@ -34,4 +37,8 @@ public:
 private:
 	UPROPERTY()
 	FMetaEconomySnapshot MetaSnapshot;
+
+	UPROPERTY()
+	TObjectPtr<USaveManagerSubsystem> SaveManagerRef;
+	bool bStarted = false;
 };
