@@ -9,6 +9,12 @@ void UGlobalEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 }
 
+void UGlobalEconomySubsystem::Deinitialize() {
+	if (SaveManagerRef) {
+		SaveManagerRef->SaveProgress(MetaSnapshot);
+	}	
+	Super::Deinitialize();
+}
 void UGlobalEconomySubsystem::StartGame() {
 	if (bStarted) return;
 	bStarted = true;
@@ -30,5 +36,5 @@ void UGlobalEconomySubsystem::UnlockLevel(const FGameplayTag& LevelTag) {
 }
 
 void UGlobalEconomySubsystem::AddGlobalCurrency(double Amount) {
-	MetaSnapshot.GlobalCurrenty += Amount;
+	MetaSnapshot.GlobalCurrency += Amount;
 }

@@ -20,6 +20,7 @@ class CLICKERGAME_API UGlobalEconomySubsystem : public UGameInstanceSubsystem
 
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 
 	void StartGame();
 
