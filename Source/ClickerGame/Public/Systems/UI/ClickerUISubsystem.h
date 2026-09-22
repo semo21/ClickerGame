@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "GameplayTagContainer.h"
-#include "Systems/Economy/Data/EconomySnapshot.h"
+#include "Systems/Economy/Data/ClickerEconomySnapshot.h"
 
 #include "ClickerUISubsystem.generated.h"
 
@@ -18,10 +18,10 @@ class UClickFloatingTextWidget; class UIdleRewardTextWidget;
 class UClickerUISettings;		class UToastWidgetBase;			
 class UActionButtonRegistry;	
 
-struct FEconomySnapshot;		struct FActionButtonDefinition;
+struct FClickerEconomySnapshot;		struct FActionButtonDefinition;
 
 // Economy changed event for UI, passes the new snapshot to update displays
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FEconomySnapshot&, Snapshot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FClickerEconomySnapshot&, Snapshot);
 
 UCLASS(Config=Game, DefaultConfig)
 class CLICKERGAME_API UClickerUISubsystem : public UWorldSubsystem
@@ -40,13 +40,13 @@ public:
 	void HideUpgradeSuccessText();
 	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
 	UFUNCTION()	
-	void OnEconomyChanged(const FEconomySnapshot& Snapshot);
+	void OnEconomyChanged(const FClickerEconomySnapshot& Snapshot);
 	UFUNCTION() 
 	void OnPassiveIncome(double AmountPerSec);
 	UFUNCTION() 
 	void OnOfflineReward(double Amount);
 	UFUNCTION(BlueprintCallable, Category="UI|Economy")
-	const FEconomySnapshot& GetCachedEconomySnapshot() const { return CachedEconomySnapshot; }
+	const FClickerEconomySnapshot& GetCachedClickerEconomySnapshot() const { return CachedClickerEconomySnapshot; }
 
 	UPROPERTY(BlueprintAssignable, Category="UI|Events")
 	FOnEconomyChangedUI OnEconomyChangedUI;
@@ -82,7 +82,7 @@ protected:
 	TWeakObjectPtr<AClickerPlayerController> PlayerController;
 
 private:
-	void UpdateScore(const FEconomySnapshot& S);
+	void UpdateScore(const FClickerEconomySnapshot& S);
 	void HandlePassiveIncome(double Amount);
 	void HandleOfflineReward(double Amount);
 	void TryFlushOfflineReward();
@@ -108,7 +108,7 @@ private:
 	UPROPERTY()	
 	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	UPROPERTY(Transient) 
-	FEconomySnapshot CachedEconomySnapshot;
+	FClickerEconomySnapshot CachedClickerEconomySnapshot;
 	
 	double PendingOfflineReward = 0.0;
 	bool bHUDReady = false;

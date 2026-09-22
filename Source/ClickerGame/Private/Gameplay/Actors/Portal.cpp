@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Gameplay/Character/MyCharacter.h"
+#include "Systems/Progress/GlobalProgressSubsystem.h"
 
 // Sets default values
 APortal::APortal()
@@ -55,7 +56,10 @@ void APortal::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 void APortal::Interact() {
 	UE_LOG(LogTemp, Warning, TEXT("Portal Interact"));
-	UGameplayStatics::OpenLevel(this, TargetLevelName);
+	auto* GlobalProgress = GetGameInstance()->GetSubsystem<UGlobalProgressSubsystem>();
+	if (GlobalProgress && GlobalProgress->IsLevelUnlocked(TargetLevelTag)) {
+		UGameplayStatics::OpenLevel(this, TargetLevelName);
+	}
 
 }
 

@@ -3,13 +3,12 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 
-#include "MetaEconomySnapshot.generated.h"
+#include "GlobalProgressSnapshot.generated.h"
 
 USTRUCT(BlueprintType)
-struct FMetaEconomySnapshot {
+struct FGlobalProgressSnapshot {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) double GlobalCurrency = 0.0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FGameplayTagContainer UnlockedLevels;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FGameplayTagContainer UnlockedGlobalUpgrades;
 };

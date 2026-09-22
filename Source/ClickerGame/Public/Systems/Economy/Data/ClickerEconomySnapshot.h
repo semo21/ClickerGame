@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 
-#include "EconomySnapshot.generated.h"
+#include "ClickerEconomySnapshot.generated.h"
 
 USTRUCT(BlueprintType)
-struct FEconomySnapshot
+struct FClickerEconomySnapshot
 {
 	GENERATED_BODY()
 

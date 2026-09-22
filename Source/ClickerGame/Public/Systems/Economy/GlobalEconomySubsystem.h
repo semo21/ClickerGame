@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayTagContainer.h"
-#include "Systems/Economy/Data/MetaEconomySnapshot.h"
+#include "Systems/Economy/Data/GlobalEconomySnapshot.h"
 
 #include "GlobalEconomySubsystem.generated.h"
 
@@ -23,23 +23,15 @@ public:
 	virtual void Deinitialize() override;
 
 	void StartGame();
-
-	UFUNCTION(BlueprintCallable, Category="Economy|Meta")
-	bool IsLevelUnlocked(const FGameplayTag& LevelTag) const;
-
-	UFUNCTION(BlueprintCallable, Category = "Economy|Meta")
-	void UnlockLevel(const FGameplayTag& LevelTag);
-
 	UFUNCTION(BlueprintCallable, Category = "Economy|Meta")
 	void AddGlobalCurrency(double Amount);
 
-	const FMetaEconomySnapshot& GetSnapshot() const { return MetaSnapshot; }
+	const FGlobalEconomySnapshot& GetSnapshot() const { return GlobalEconomySnapshot; }
 
 private:
-	UPROPERTY()
-	FMetaEconomySnapshot MetaSnapshot;
-
-	UPROPERTY()
+	UPROPERTY()	
+	FGlobalEconomySnapshot GlobalEconomySnapshot;
+	UPROPERTY()	
 	TObjectPtr<USaveManagerSubsystem> SaveManagerRef;
 	bool bStarted = false;
 };

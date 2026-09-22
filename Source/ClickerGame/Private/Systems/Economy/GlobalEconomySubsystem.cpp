@@ -11,7 +11,7 @@ void UGlobalEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 void UGlobalEconomySubsystem::Deinitialize() {
 	if (SaveManagerRef) {
-		SaveManagerRef->SaveProgress(MetaSnapshot);
+		SaveManagerRef->SaveProgress(GlobalEconomySnapshot);
 	}	
 	Super::Deinitialize();
 }
@@ -23,18 +23,10 @@ void UGlobalEconomySubsystem::StartGame() {
 		SaveManagerRef = GI->GetSubsystem<USaveManagerSubsystem>();
 	}
 	if (SaveManagerRef) {
-		SaveManagerRef->LoadProgress(MetaSnapshot);
+		SaveManagerRef->LoadProgress(GlobalEconomySnapshot);
 	}
 }
 
-bool UGlobalEconomySubsystem::IsLevelUnlocked(const FGameplayTag& LevelTag) const {
-	return MetaSnapshot.UnlockedLevels.HasTag(LevelTag);
-}
-
-void UGlobalEconomySubsystem::UnlockLevel(const FGameplayTag& LevelTag) {
-	MetaSnapshot.UnlockedLevels.AddTag(LevelTag);
-}
-
 void UGlobalEconomySubsystem::AddGlobalCurrency(double Amount) {
-	MetaSnapshot.GlobalCurrency += Amount;
+	GlobalEconomySnapshot.GlobalCurrency += Amount;
 }

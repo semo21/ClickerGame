@@ -10,7 +10,7 @@ void UClickerHUDStatsWidget::InitializePart_Implementation(UClickerUISubsystem* 
 	// Implement in Blueprint
 }
 
-void UClickerHUDStatsWidget::OnEconomyChangedUI_Implementation(const FEconomySnapshot& Snapshot) {
+void UClickerHUDStatsWidget::OnEconomyChangedUI_Implementation(const FClickerEconomySnapshot& Snapshot) {
 	//UE_LOG(LogTemp, Warning, TEXT("ClickerHUDStatsWidget::OnEconomyChangedUI_Implementation Currency: %f, CPC: %f, CPS: %f"), Snapshot.Currency, Snapshot.CurrencyPerClick, Snapshot.CurrencyPerSecond);
 	Super::OnEconomyChangedUI_Implementation(Snapshot);
 	Txt_Value_Currency->SetText(FText::AsNumber(Snapshot.Currency));

@@ -10,7 +10,7 @@ void UClickerHUDPartWidgetBase::InitializePart_Implementation(UClickerUISubsyste
 
 }
 
-void UClickerHUDPartWidgetBase::OnEconomyChangedUI_Implementation(const FEconomySnapshot& Snapshot) {
+void UClickerHUDPartWidgetBase::OnEconomyChangedUI_Implementation(const FClickerEconomySnapshot& Snapshot) {
 	// Implement in Blueprint
 
 }

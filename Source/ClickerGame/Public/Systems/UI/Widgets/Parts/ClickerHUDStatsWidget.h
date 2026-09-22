@@ -18,7 +18,7 @@ class CLICKERGAME_API UClickerHUDStatsWidget : public UClickerHUDPartWidgetBase
 public:
 	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) override;
 
-	virtual void OnEconomyChangedUI_Implementation(const FEconomySnapshot& Snapshot) override;
+	virtual void OnEconomyChangedUI_Implementation(const FClickerEconomySnapshot& Snapshot) override;
 
 protected:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)

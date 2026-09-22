@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 
 #include "Portal.generated.h"
@@ -19,6 +20,9 @@ public:
 	APortal();
 
 	virtual void Interact();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -40,10 +44,6 @@ protected:
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USceneComponent> Root;
@@ -53,4 +53,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Portal")
 	FName TargetLevelName;
+
+	UPROPERTY(EditAnywhere, Category="Portal")
+	FGameplayTag TargetLevelTag;
 };

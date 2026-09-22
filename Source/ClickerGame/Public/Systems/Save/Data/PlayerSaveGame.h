@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "Systems/Economy/Data/MetaEconomySnapshot.h"
+#include "Systems/Economy/Data/GlobalEconomySnapshot.h"
+#include "Systems/Progress/Data/GlobalProgressSnapshot.h"
 #include "InstancedStruct.h"
 
 #include "PlayerSaveGame.generated.h"
@@ -19,5 +20,6 @@ class CLICKERGAME_API UPlayerSaveGame : public USaveGame
 
 public:	
 	UPROPERTY(SaveGame) TMap<FName, FInstancedStruct> LevelSnapshots;
-	UPROPERTY(SaveGame) FMetaEconomySnapshot MetaSnapshot;
+	UPROPERTY(SaveGame) FGlobalEconomySnapshot GlobalEconomySnapshot;
+	UPROPERTY(SaveGame) FGlobalProgressSnapshot GlobalProgressSnapshot;
 };

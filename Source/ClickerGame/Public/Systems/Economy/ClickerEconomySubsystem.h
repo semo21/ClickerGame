@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 
 #include "Subsystems/WorldSubsystem.h"
-#include "Systems/Economy/Data/EconomySnapshot.h"
+#include "Systems/Economy/Data/ClickerEconomySnapshot.h"
 
 #include "ClickerEconomySubsystem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FEconomySnapshot&, Snapshot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FClickerEconomySnapshot&, Snapshot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfflineReward, double, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
 
@@ -32,7 +32,7 @@ public:
 	void RequestSave();
 	void RequestLoad();
 
-	UFUNCTION(BlueprintPure, Category = "Economy") const FEconomySnapshot& GetSnapshot() const { return EconomySnapshot; }
+	UFUNCTION(BlueprintPure, Category = "Economy") const FClickerEconomySnapshot& GetSnapshot() const { return ClickerEconomySnapshot; }
 	UFUNCTION(BlueprintPure) double GetLastOfflineReward() const { return LastOfflineReward; }
 
 	// Delegate
@@ -48,16 +48,16 @@ private:
 	void StopAutoSaveTimer();
 	void StopTickTimer();
 	double GetUpgradeCost() const;
-	FEconomySnapshot MakeSnapshot() const;
+	FClickerEconomySnapshot MakeSnapshot() const;
 	void TriggerOfflineReward();
-	void ApplySnapshot(const FEconomySnapshot& In);
+	void ApplySnapshot(const FClickerEconomySnapshot& In);
 	void ApplyOfflineReward(double Amount);
-	void UpdateLastOfflineReward(FEconomySnapshot& In);
+	void UpdateLastOfflineReward(FClickerEconomySnapshot& In);
 	
 private:
 	UPROPERTY()
 	TObjectPtr<USaveManagerSubsystem> SaveManagerSubsystemRef;
-	FEconomySnapshot EconomySnapshot;
+	FClickerEconomySnapshot ClickerEconomySnapshot;
 	FTimerHandle AutoSaveHandle;
 	FTimerHandle TickHandle;
 	bool bWorldStarted = false;

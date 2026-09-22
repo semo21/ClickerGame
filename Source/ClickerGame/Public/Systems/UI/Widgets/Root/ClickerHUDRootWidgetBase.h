@@ -32,7 +32,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void HandleEconomyChangedUI(const FEconomySnapshot& Snapshot);
+	void HandleEconomyChangedUI(const FClickerEconomySnapshot& Snapshot);
 
 protected:
 	UPROPERTY()
