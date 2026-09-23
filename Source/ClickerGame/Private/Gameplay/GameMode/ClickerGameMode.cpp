@@ -2,13 +2,15 @@
 
 
 #include "Gameplay/GameMode/ClickerGameMode.h"
+#include "Gameplay/Character/MyCharacter.h"
+#include "Gameplay/Player/ClickerPlayerController.h"
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Systems/UI/GlobalUISubsystem.h"
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
-#include "Gameplay/Player/ClickerPlayerController.h"
 
 AClickerGameMode::AClickerGameMode() {
 	PlayerControllerClass = AClickerPlayerController::StaticClass();
+	DefaultPawnClass = AMyCharacter::StaticClass();
 }
 
 void AClickerGameMode::BeginPlay() {

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Gameplay/GameMode/MyGameModeBase.h"
+
 #include "ClickerGameMode.generated.h"
 
 /**
