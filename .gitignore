@@ -35,10 +35,6 @@ Android_ASTC/
 *.obj
 *.iobj
 *.ipdb
-*.uasset
-*.umap
-*.upk
-*.pak
 *.exe
 *.dll
 *.lib
@@ -47,8 +43,11 @@ Android_ASTC/
 *.bat
 
 # Ignore external actors/objects
-Content/__ExternalActors__/
-Content/__ExternalObjects__/
+Content/*
+!Content/Core/
+!Content/Gameplay/
+!Content/Systems/
+!Content/Levels/
 
 # Configuration override files
 Config/DefaultEditor.ini
