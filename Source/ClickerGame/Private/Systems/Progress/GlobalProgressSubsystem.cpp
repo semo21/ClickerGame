@@ -32,6 +32,7 @@ void UGlobalProgressSubsystem::StartGame()
 	}
 
 	if (GlobalProgressSnapshot.UnlockedLevels.IsEmpty()) {
+		UnlockLevel(FGameplayTag::RequestGameplayTag("Level.Lobby"));
 		UnlockLevel(FGameplayTag::RequestGameplayTag("Level.Clicker"));
 	}
 }
