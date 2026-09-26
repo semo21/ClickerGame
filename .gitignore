@@ -47,7 +47,6 @@ Content/*
 !Content/Core/
 !Content/Gameplay/
 !Content/Systems/
-!Content/Levels/
 
 # Configuration override files
 Config/DefaultEditor.ini
