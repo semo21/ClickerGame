@@ -3,6 +3,7 @@
 
 #include "Gameplay/GameMode/MyGameModeBase.h"
 #include "Gameplay/Player/MyPlayerControllerBase.h"
+#include "Gameplay/Character/MyCharacter.h"
 #include "Systems/Economy/GlobalEconomySubsystem.h"
 #include "Systems/Progress/GlobalProgressSubsystem.h"
 #include "Systems/UI/GlobalUISUbsystem.h"
@@ -11,6 +12,7 @@
 AMyGameModeBase::AMyGameModeBase() {
 	// Set the player controller class to our custom player controller
 	PlayerControllerClass = AMyPlayerControllerBase::StaticClass();
+	DefaultPawnClass = AMyCharacter::StaticClass();
 }
 
 void AMyGameModeBase::BeginPlay() {
