@@ -5,7 +5,7 @@
 
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "Systems/UI/ClickerUISubsystem.h"
-#include "Gameplay/Actors/ClickTargetActor.h"
+#include "Gameplay/Actors/Clicker/ClickTargetActor.h"
 
 // private field
 void AClickerPlayerController::OnClick() {
