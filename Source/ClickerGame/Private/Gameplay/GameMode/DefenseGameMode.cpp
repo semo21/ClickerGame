@@ -6,4 +6,5 @@
 
 ADefenseGameMode::ADefenseGameMode() {
 	PlayerControllerClass = ADefensePlayerController::StaticClass();
+	DefaultPawnClass = nullptr;
 }

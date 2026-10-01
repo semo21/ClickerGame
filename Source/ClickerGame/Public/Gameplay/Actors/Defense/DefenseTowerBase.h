@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "DefenseTowerBase.generated.h"
+
+class UStaticMeshComponent;
 
 UCLASS()
 class CLICKERGAME_API ADefenseTowerBase : public AActor
@@ -16,11 +19,9 @@ public:
 	ADefenseTowerBase();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, Category="Tower")
+	TObjectPtr<USceneComponent> Root;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(VisibleAnywhere, Category="Tower")
+	TObjectPtr<UStaticMeshComponent> Body;
 };

@@ -2,26 +2,18 @@
 
 
 #include "Gameplay/Actors/Defense/DefenseTowerBase.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ADefenseTowerBase::ADefenseTowerBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-}
-
-// Called when the game starts or when spawned
-void ADefenseTowerBase::BeginPlay()
-{
-	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = false;
 	
-}
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
 
-// Called every frame
-void ADefenseTowerBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
+	Body->SetupAttachment(Root);
 
 }
 
