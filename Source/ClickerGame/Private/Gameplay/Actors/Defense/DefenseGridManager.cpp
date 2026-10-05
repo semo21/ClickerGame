@@ -72,11 +72,26 @@ bool ADefenseGridManager::PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerB
 
 TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex) const {
 	TQueue<int32> PathQueue;
+	TArray<int32> CameFrom;
 	TArray<bool> Visited;
+	int32 OutIndex;
+	CameFrom.Init(-1, Tiles.Num());
 	Visited.SetNum(Tiles.Num());
 	PathQueue.Enqueue(StartIndex);
-
+		
 	
+	while (!PathQueue.IsEmpty()) {		
+		PathQueue.Dequeue(OutIndex);
+		Visited[OutIndex] = true;
+		
+		if (OutIndex == GoalIndex) {
+			
+			break;
+		}
+
+	}
+
+	return {};
 }
 
 
