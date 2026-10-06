@@ -46,6 +46,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Grid")
 	float TileSize = 100.0f;
 
+	UPROPERTY(EditAnywhere, Category="Path")
+	int32 SpawnTileIndex = 0;
+
+	UPROPERTY(EditAnywhere, Category="Path")
+	int32 GoalTileIndex = 99;
+
 private:
 	bool IsValidCoord(int32 X, int32 Y) const;
 

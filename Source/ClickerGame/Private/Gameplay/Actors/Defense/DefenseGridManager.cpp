@@ -4,6 +4,9 @@
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
 #include "Gameplay/Actors/Defense/DefenseTowerBase.h"
 
+#include "Algo/Reverse.h"
+
+#include "DrawDebugHelpers.h"
 // Sets default values
 ADefenseGridManager::ADefenseGridManager()
 {
@@ -16,6 +19,14 @@ void ADefenseGridManager::BeginPlay()
 	Super::BeginPlay();	
 
 	Tiles.SetNum(GridWidth * GridHeight);
+	TArray<int32> Path = FindPath(SpawnTileIndex, GoalTileIndex);
+
+	for (int32 i = 0; i < Path.Num()-1; ++i) {
+		FVector From = TileIndexToWorld(Path[i]) + FVector(0, 0, 50);
+		FVector To = TileIndexToWorld(Path[i + 1]) + FVector(0, 0, 50);
+
+		DrawDebugLine(GetWorld(), From, To, FColor::Green, true, -1.0f, 0, 5.0f);
+	}
 }
 
 bool ADefenseGridManager::IsValidCoord(int32 X, int32 Y) const {
@@ -71,24 +82,56 @@ bool ADefenseGridManager::PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerB
 }
 
 TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex) const {
+	if(!Tiles.IsValidIndex(StartIndex) || !Tiles.IsValidIndex(GoalIndex)) return {};
+	if (StartIndex == GoalIndex) return { StartIndex };
+
 	TQueue<int32> PathQueue;
 	TArray<int32> CameFrom;
 	TArray<bool> Visited;
-	int32 OutIndex;
-	CameFrom.Init(-1, Tiles.Num());
+	int32 Current = INDEX_NONE;
+
+	CameFrom.Init(INDEX_NONE, Tiles.Num());
 	Visited.SetNum(Tiles.Num());
 	PathQueue.Enqueue(StartIndex);
-		
+	Visited[StartIndex] = true;
 	
+	const int32 Directions[4][2] = {
+		{ 0, -1 }, // Up
+		{ 0, 1 },  // Down
+		{ -1, 0 }, // Left
+		{ 1, 0 }   // Right
+	};
 	while (!PathQueue.IsEmpty()) {		
-		PathQueue.Dequeue(OutIndex);
-		Visited[OutIndex] = true;
-		
-		if (OutIndex == GoalIndex) {
-			
-			break;
-		}
+		PathQueue.Dequeue(Current);
 
+		if (Current == GoalIndex) {
+			TArray<int32> Path;
+			while (Current != INDEX_NONE) {
+				Path.Add(Current);
+				Current = CameFrom[Current];
+			}
+			Algo::Reverse(Path);
+
+			return Path;
+		}
+		
+		int32 X = Current % GridWidth;
+		int32 Y = Current / GridWidth;
+
+		int32 NX, NY;
+		for (int32 i = 0; i < 4; ++i) {
+			NX = X + Directions[i][0];
+			NY = Y + Directions[i][1];
+
+			if (!IsValidCoord(NX, NY)) continue;
+
+			int32 NeighborIndex = NY * GridWidth + NX;
+			if (Visited[NeighborIndex] || Tiles[NeighborIndex].IsOccupied()) continue;
+
+			Visited[NeighborIndex] = true;
+			CameFrom[NeighborIndex] = Current;
+			PathQueue.Enqueue(NeighborIndex);
+		}
 	}
 
 	return {};
