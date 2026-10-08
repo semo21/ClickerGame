@@ -57,4 +57,10 @@ private:
 
 	UPROPERTY()
 	TArray<FDefenseTileData> Tiles;
+
+	UPROPERTY()
+	TArray<int32> CurrentPath;
+
+	void RecalculatePath();
+	void DrawDebugPath() const;
 };

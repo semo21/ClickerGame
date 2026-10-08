@@ -19,14 +19,7 @@ void ADefenseGridManager::BeginPlay()
 	Super::BeginPlay();	
 
 	Tiles.SetNum(GridWidth * GridHeight);
-	TArray<int32> Path = FindPath(SpawnTileIndex, GoalTileIndex);
-
-	for (int32 i = 0; i < Path.Num()-1; ++i) {
-		FVector From = TileIndexToWorld(Path[i]) + FVector(0, 0, 50);
-		FVector To = TileIndexToWorld(Path[i + 1]) + FVector(0, 0, 50);
-
-		DrawDebugLine(GetWorld(), From, To, FColor::Green, true, -1.0f, 0, 5.0f);
-	}
+	RecalculatePath();
 }
 
 bool ADefenseGridManager::IsValidCoord(int32 X, int32 Y) const {
@@ -73,11 +66,12 @@ bool ADefenseGridManager::PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerB
 	if (!World) return false;
 
 	const FVector SpawnLocation = TileIndexToWorld(TileIndex);
-
+	if (WorldToTileIndex(SpawnLocation) == SpawnTileIndex || WorldToTileIndex(SpawnLocation) == GoalTileIndex) return false;
 	ADefenseTowerBase* Tower = World->SpawnActor<ADefenseTowerBase>(TowerClass, SpawnLocation, FRotator::ZeroRotator);
 	if (!Tower) return false;
 
 	Tiles[TileIndex].PlacedTower = Tower;
+	RecalculatePath();
 	return true;
 }
 
@@ -135,6 +129,22 @@ TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex) c
 	}
 
 	return {};
+}
+
+void ADefenseGridManager::RecalculatePath() {
+	CurrentPath = FindPath(SpawnTileIndex, GoalTileIndex);
+	DrawDebugPath();
+}
+
+void ADefenseGridManager::DrawDebugPath() const {
+	FlushPersistentDebugLines(GetWorld());
+
+	for (int32 i = 0; i < CurrentPath.Num()-1; ++i) {
+		FVector From = TileIndexToWorld(CurrentPath[i]) + FVector(0, 0, 50);
+		FVector To = TileIndexToWorld(CurrentPath[i + 1]) + FVector(0, 0, 50);
+
+		DrawDebugLine(GetWorld(), From, To, FColor::Green, true, -1.0f, 0, 5.0f);
+	}
 }
 
 
