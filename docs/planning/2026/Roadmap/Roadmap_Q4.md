@@ -20,6 +20,15 @@
 - Global / Level 책임이 코드와 BP 양쪽에서 명시적으로 드러나는 상태
 - Lobby <-> Clicker 전체 흐름이 암묵적 의존 없이 동작하는 빌드
 
+### Revision (2026-10-07)
+- 사유: 위 Tasks 중 구조 점검 3건이 W39~W40에 조기 완료되어, 11월 계획이던 두 번째 장르 룸(Defense) 구현을 9/28부터 앞당겨 시작함
+- 추가 Tasks
+  - Defense 타일 그리드, 타워 배치, 경로탐색
+  - Defense 적 스폰 및 경로 이동, 타워 공격
+  - Defense 웨이브 진행 및 승패 판정
+- 이관: "Clicker에서 Global 재화를 획득하는 방식 결정 및 연결" → 11월
+- 추가 Deliverable: Lobby에서 Defense로 진입해 웨이브 한 판을 승패까지 플레이할 수 있는 빌드
+
 ---
 ## November 2026 — 두 번째 장르 룸 구현
 
@@ -34,6 +43,14 @@ Mode 시스템 뼈대를 세우고, 그 위에 두 번째 장르 룸을 플레�
 
 ### Deliverables
 - 두 개 이상의 장르 룸을 오갈 수 있는 플레이 가능한 빌드
+
+### Revision (2026-10-07)
+- 사유: 두 번째 장르 룸(Defense) 구현이 10월로 앞당겨짐
+- 10월로 이동: "두 번째 장르 룸의 GameMode/PlayerController 서브클래스 구현", "Portal을 통한 Lobby <-> 두 번째 룸 이동 연결" (9/28 착수)
+- 10월에서 이관: "Clicker / Defense에서 Global 재화를 획득하는 방식 결정 및 연결"
+- 추가 Task: Global 재화 사용처 최소 1개 연결
+- 변경된 Goal: 룸의 결과를 Global 재화로 정산하는 최소 루프를 연결하고, Mode 시스템 뼈대를 세운다
+- 변경된 Deliverable: Lobby <-> Clicker / Defense를 오가며 Global 재화를 벌고 쓰는 플레이 가능한 빌드
 
 ---
 ## December 2026 — 에셋 적용 및 폴리싱
