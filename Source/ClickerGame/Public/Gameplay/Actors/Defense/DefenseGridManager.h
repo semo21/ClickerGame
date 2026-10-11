@@ -31,7 +31,9 @@ public:
 	FVector TileIndexToWorld(int32 TileIndex) const;
 	bool CanPlaceTower(int32 TileIndex) const;
 	bool PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerBase> TowerClass);
-	TArray<int32> FindPath(int32 StartIndex, int32 GoalIndex) const;	
+	TArray<int32> FindPath(int32 StartIndex, int32 GoalIndex, int32 BlockedIndex = INDEX_NONE) const;	
+
+	FVector GetSpawnLocation() const;
 
 protected:
 	// Called when the game starts or when spawned

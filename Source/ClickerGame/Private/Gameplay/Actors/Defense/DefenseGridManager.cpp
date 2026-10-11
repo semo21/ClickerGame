@@ -55,8 +55,11 @@ FVector ADefenseGridManager::TileIndexToWorld(int32 TileIndex) const {
 
 bool ADefenseGridManager::CanPlaceTower(int32 TileIndex) const {
 	if (!Tiles.IsValidIndex(TileIndex)) return false;
+	if (Tiles[TileIndex].IsOccupied()) return false;
+	if (TileIndex == SpawnTileIndex || TileIndex == GoalTileIndex) return false;
+	if (FindPath(SpawnTileIndex, GoalTileIndex, TileIndex).Num() == 0) return false;
 
-	return !Tiles[TileIndex].IsOccupied();
+	return true;
 }
 
 bool ADefenseGridManager::PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerBase> TowerClass) {
@@ -75,7 +78,7 @@ bool ADefenseGridManager::PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerB
 	return true;
 }
 
-TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex) const {
+TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex, int32 BlockedIndex) const {
 	if(!Tiles.IsValidIndex(StartIndex) || !Tiles.IsValidIndex(GoalIndex)) return {};
 	if (StartIndex == GoalIndex) return { StartIndex };
 
@@ -120,7 +123,7 @@ TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex) c
 			if (!IsValidCoord(NX, NY)) continue;
 
 			int32 NeighborIndex = NY * GridWidth + NX;
-			if (Visited[NeighborIndex] || Tiles[NeighborIndex].IsOccupied()) continue;
+			if (Visited[NeighborIndex] || Tiles[NeighborIndex].IsOccupied() || NeighborIndex == BlockedIndex) continue;
 
 			Visited[NeighborIndex] = true;
 			CameFrom[NeighborIndex] = Current;
@@ -129,6 +132,10 @@ TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex) c
 	}
 
 	return {};
+}
+
+FVector ADefenseGridManager::GetSpawnLocation() const {
+	return TileIndexToWorld(SpawnTileIndex);
 }
 
 void ADefenseGridManager::RecalculatePath() {
