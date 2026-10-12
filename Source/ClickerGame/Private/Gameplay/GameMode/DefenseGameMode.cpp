@@ -26,5 +26,10 @@ void ADefenseGameMode::SpawnEnemy() {
 
 	const FVector SpawnLocation = GridManager->GetSpawnLocation();
 
-	GetWorld()->SpawnActor<ADefenseEnemyBase>(EnemyClass, SpawnLocation, FRotator::ZeroRotator);
+	ADefenseEnemyBase* Enemy = GetWorld()->SpawnActor<ADefenseEnemyBase>(EnemyClass, SpawnLocation, FRotator::ZeroRotator);
+	
+	if (Enemy) {
+		Enemy->InitPath(GridManager);
+	}
+	
 }

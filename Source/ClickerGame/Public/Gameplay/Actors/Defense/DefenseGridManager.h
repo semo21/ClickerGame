@@ -34,10 +34,12 @@ public:
 	TArray<int32> FindPath(int32 StartIndex, int32 GoalIndex, int32 BlockedIndex = INDEX_NONE) const;	
 
 	FVector GetSpawnLocation() const;
+	const TArray<int32>& GetCurrentPath() const { return CurrentPath; }
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(EditAnywhere, Category="Grid")
 	int32 GridWidth = 10;

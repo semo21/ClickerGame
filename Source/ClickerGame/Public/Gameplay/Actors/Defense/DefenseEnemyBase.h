@@ -7,6 +7,7 @@
 #include "DefenseEnemyBase.generated.h"
 
 class UStaticMeshComponent;
+class ADefenseGridManager;
 
 UCLASS()
 class CLICKERGAME_API ADefenseEnemyBase : public AActor
@@ -16,6 +17,7 @@ class CLICKERGAME_API ADefenseEnemyBase : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ADefenseEnemyBase();
+	void InitPath(ADefenseGridManager* InGrid);
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,5 +33,19 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category="Enemy")
 	TObjectPtr<UStaticMeshComponent> Body;
+
+	UPROPERTY(EditAnywhere, Category="Enemy")
+	float MoveSpeed = 100.0f;
+
+	UPROPERTY(VisibleInstanceOnly, Category="Enemy")
+	TArray<int32> CurrentPath;
+
+	UPROPERTY(VisibleInstanceOnly, Category="Enemy")
+	TObjectPtr<ADefenseGridManager> GridManager;
+
+	int32 PathStep = 1;
+	
+
+private:
 
 };

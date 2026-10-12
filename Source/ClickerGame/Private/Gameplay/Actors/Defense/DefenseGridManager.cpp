@@ -17,9 +17,13 @@ ADefenseGridManager::ADefenseGridManager()
 void ADefenseGridManager::BeginPlay()
 {
 	Super::BeginPlay();	
+	DrawDebugPath();
+}
 
+void ADefenseGridManager::PostInitializeComponents() {
+	Super::PostInitializeComponents();
 	Tiles.SetNum(GridWidth * GridHeight);
-	RecalculatePath();
+	CurrentPath = FindPath(SpawnTileIndex, GoalTileIndex);
 }
 
 bool ADefenseGridManager::IsValidCoord(int32 X, int32 Y) const {

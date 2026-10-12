@@ -2,6 +2,7 @@
 
 
 #include "Gameplay/Actors/Defense/DefenseEnemyBase.h"
+#include "Gameplay/Actors/Defense/DefenseGridManager.h"
 
 // Sets default values
 ADefenseEnemyBase::ADefenseEnemyBase()
@@ -29,5 +30,22 @@ void ADefenseEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!GridManager) return;	
+	if (PathStep >= CurrentPath.Num()) { 
+		Destroy();
+		return;
+	}
+	FVector Target = GridManager->TileIndexToWorld(CurrentPath[PathStep]);
+	const FVector NewLocation = FMath::VInterpConstantTo(GetActorLocation(), Target, DeltaTime, MoveSpeed);
+	SetActorLocation(NewLocation);
+	if (FVector::Dist(NewLocation, Target) < 1.0f) ++PathStep;
+	
+}
+
+void ADefenseEnemyBase::InitPath(ADefenseGridManager* InGrid) {
+	if (!InGrid) return;
+	GridManager = InGrid;
+	CurrentPath = InGrid->GetCurrentPath();
+	PathStep = 1;	
 }
 
