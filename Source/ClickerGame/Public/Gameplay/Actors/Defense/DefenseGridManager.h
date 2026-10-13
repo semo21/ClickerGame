@@ -19,6 +19,8 @@ struct FDefenseTileData {
 	bool IsOccupied() const { return PlacedTower != nullptr; }
 };
 
+DECLARE_MULTICAST_DELEGATE(FOnDefensePathChanged);
+
 UCLASS()
 class CLICKERGAME_API ADefenseGridManager : public AActor
 {
@@ -32,10 +34,12 @@ public:
 	bool CanPlaceTower(int32 TileIndex) const;
 	bool PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerBase> TowerClass);
 	TArray<int32> FindPath(int32 StartIndex, int32 GoalIndex, int32 BlockedIndex = INDEX_NONE) const;	
-
 	FVector GetSpawnLocation() const;
 	const TArray<int32>& GetCurrentPath() const { return CurrentPath; }
+	int32 GetGoalTileIndex() const { return GoalTileIndex; }
 
+	FOnDefensePathChanged OnPathChanged;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

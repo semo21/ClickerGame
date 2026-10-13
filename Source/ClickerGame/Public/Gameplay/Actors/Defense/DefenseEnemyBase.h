@@ -18,11 +18,12 @@ public:
 	// Sets default values for this actor's properties
 	ADefenseEnemyBase();
 	void InitPath(ADefenseGridManager* InGrid);
+	int32 GetTargetTileIndex() const { return CurrentPath.IsValidIndex(PathStep) ? CurrentPath[PathStep] : INDEX_NONE; };
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -47,5 +48,5 @@ protected:
 	
 
 private:
-
+	void HandlePathChanged();
 };

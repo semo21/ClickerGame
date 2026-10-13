@@ -145,6 +145,7 @@ FVector ADefenseGridManager::GetSpawnLocation() const {
 void ADefenseGridManager::RecalculatePath() {
 	CurrentPath = FindPath(SpawnTileIndex, GoalTileIndex);
 	DrawDebugPath();
+	OnPathChanged.Broadcast();
 }
 
 void ADefenseGridManager::DrawDebugPath() const {

@@ -47,5 +47,19 @@ void ADefenseEnemyBase::InitPath(ADefenseGridManager* InGrid) {
 	GridManager = InGrid;
 	CurrentPath = InGrid->GetCurrentPath();
 	PathStep = 1;	
+
+	GridManager->OnPathChanged.AddUObject(this, &ADefenseEnemyBase::HandlePathChanged);
+
 }
 
+void ADefenseEnemyBase::HandlePathChanged() {
+	if (!GridManager || !CurrentPath.IsValidIndex(PathStep)) return;
+	TArray<int32> NewPath = GridManager->FindPath(CurrentPath[PathStep], GridManager->GetGoalTileIndex());
+
+	if (NewPath.Num() <= 1) {
+		return;
+	}
+
+	CurrentPath = NewPath;
+	PathStep = 0;
+}
