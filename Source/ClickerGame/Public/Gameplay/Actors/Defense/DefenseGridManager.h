@@ -36,7 +36,7 @@ public:
 	TArray<int32> FindPath(int32 StartIndex, int32 GoalIndex, int32 BlockedIndex = INDEX_NONE) const;	
 	FVector GetSpawnLocation() const;
 	const TArray<int32>& GetCurrentPath() const { return CurrentPath; }
-	int32 GetGoalTileIndex() const { return GoalTileIndex; }
+	TArray<int32> FindPathToGoal(int32 FromTile) const;
 
 	FOnDefensePathChanged OnPathChanged;
 	

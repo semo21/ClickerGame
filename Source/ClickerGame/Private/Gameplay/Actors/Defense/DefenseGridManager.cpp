@@ -73,7 +73,7 @@ bool ADefenseGridManager::PlaceTower(int32 TileIndex, TSubclassOf<ADefenseTowerB
 	if (!World) return false;
 
 	const FVector SpawnLocation = TileIndexToWorld(TileIndex);
-	if (WorldToTileIndex(SpawnLocation) == SpawnTileIndex || WorldToTileIndex(SpawnLocation) == GoalTileIndex) return false;
+
 	ADefenseTowerBase* Tower = World->SpawnActor<ADefenseTowerBase>(TowerClass, SpawnLocation, FRotator::ZeroRotator);
 	if (!Tower) return false;
 
@@ -136,6 +136,10 @@ TArray<int32> ADefenseGridManager::FindPath(int32 StartIndex, int32 GoalIndex, i
 	}
 
 	return {};
+}
+
+TArray<int32> ADefenseGridManager::FindPathToGoal(int32 FromTile) const {
+	return FindPath(FromTile, GoalTileIndex);
 }
 
 FVector ADefenseGridManager::GetSpawnLocation() const {

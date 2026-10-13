@@ -54,9 +54,9 @@ void ADefenseEnemyBase::InitPath(ADefenseGridManager* InGrid) {
 
 void ADefenseEnemyBase::HandlePathChanged() {
 	if (!GridManager || !CurrentPath.IsValidIndex(PathStep)) return;
-	TArray<int32> NewPath = GridManager->FindPath(CurrentPath[PathStep], GridManager->GetGoalTileIndex());
+	TArray<int32> NewPath = GridManager->FindPathToGoal(CurrentPath[PathStep]);
 
-	if (NewPath.Num() <= 1) {
+	if (NewPath.IsEmpty()) {
 		return;
 	}
 
