@@ -25,7 +25,12 @@ void UClickerEconomySubsystem::Deinitialize() {
 
 void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 	if (!World || bWorldStarted) return;
+
 	bWorldStarted = true;
+
+	if (UGameInstance* GI = World->GetGameInstance()) {
+		SaveManagerSubsystemRef = GI->GetSubsystem<USaveManagerSubsystem>();
+	}
 
 	RequestLoad();
 	StartAutoSaveTimer();
@@ -33,42 +38,42 @@ void UClickerEconomySubsystem::StartWorld(UWorld* World) {
 }
 
 void UClickerEconomySubsystem::OnClicked() {
-	EconomySnapshot.Currency += EconomySnapshot.CurrencyPerClick;
+	ClickerEconomySnapshot.Currency += ClickerEconomySnapshot.CurrencyPerClick;
 	Broadcast();
 }
 
 void UClickerEconomySubsystem::OnTick1Second() {
-	EconomySnapshot.Currency += EconomySnapshot.CurrencyPerSecond;
-	OnPassiveIncome.Broadcast(EconomySnapshot.CurrencyPerSecond);
+	ClickerEconomySnapshot.Currency += ClickerEconomySnapshot.CurrencyPerSecond;
+	OnPassiveIncome.Broadcast(ClickerEconomySnapshot.CurrencyPerSecond);
 	Broadcast();
 }
 
 bool UClickerEconomySubsystem::TryUpgrade() {
 	const double UpgradeCost = GetUpgradeCost();
-	if (EconomySnapshot.Currency < UpgradeCost) return false;
+	if (ClickerEconomySnapshot.Currency < UpgradeCost) return false;
 
-	EconomySnapshot.Currency -= UpgradeCost;
-	EconomySnapshot.UpgradeLevel++;
-	EconomySnapshot.CurrencyPerClick += 1.0;
-	EconomySnapshot.CurrencyPerSecond += 0.5;
+	ClickerEconomySnapshot.Currency -= UpgradeCost;
+	ClickerEconomySnapshot.UpgradeLevel++;
+	ClickerEconomySnapshot.CurrencyPerClick += 1.0;
+	ClickerEconomySnapshot.CurrencyPerSecond += 0.5;
 
 	Broadcast();
 	return true;
 }
 
 void UClickerEconomySubsystem::RequestSave() {
-	if (USaveManagerSubsystem* Save = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
-		FEconomySnapshot Out = MakeSnapshot();
+	if (SaveManagerSubsystemRef) {
+		FClickerEconomySnapshot Out = MakeSnapshot();
 
-		Save->SaveProgress(Out);
+		SaveManagerSubsystemRef->SaveProgress(Out);
 	}
 }
 
 void UClickerEconomySubsystem::RequestLoad() {
 
-	if (USaveManagerSubsystem* Load = GetGameInstance()->GetSubsystem<USaveManagerSubsystem>()) {
-		FEconomySnapshot In;
-		if (Load->LoadProgress(In)) {		
+	if (SaveManagerSubsystemRef) {
+		FClickerEconomySnapshot In;
+		if (SaveManagerSubsystemRef->LoadProgress(In)) {
 			UpdateLastOfflineReward(In);
 			TriggerOfflineReward();
 			ApplySnapshot(In);
@@ -81,7 +86,7 @@ void UClickerEconomySubsystem::RequestLoad() {
 }
 
 double UClickerEconomySubsystem::GetUpgradeCost() const {
-	return FMath::Pow(EconomySnapshot.UpgradeGrowth, EconomySnapshot.UpgradeLevel + 1) * EconomySnapshot.UpgradeCostBase;
+	return FMath::Pow(ClickerEconomySnapshot.UpgradeGrowth, ClickerEconomySnapshot.UpgradeLevel + 1) * ClickerEconomySnapshot.UpgradeCostBase;
 }
 
 void UClickerEconomySubsystem::TriggerOfflineReward() {
@@ -91,7 +96,7 @@ void UClickerEconomySubsystem::TriggerOfflineReward() {
 }
 
 void UClickerEconomySubsystem::Broadcast() {
-	OnEconomyChanged.Broadcast(EconomySnapshot);
+	OnEconomyChanged.Broadcast(ClickerEconomySnapshot);
 }
 
 void UClickerEconomySubsystem::StartAutoSaveTimer() {
@@ -128,13 +133,13 @@ void UClickerEconomySubsystem::StopTickTimer() {
 	}
 }
 
-FEconomySnapshot UClickerEconomySubsystem::MakeSnapshot() const {
-	return EconomySnapshot;
+FClickerEconomySnapshot UClickerEconomySubsystem::MakeSnapshot() const {
+	return ClickerEconomySnapshot;
 }
 
-void UClickerEconomySubsystem::ApplySnapshot(const FEconomySnapshot& In) {
+void UClickerEconomySubsystem::ApplySnapshot(const FClickerEconomySnapshot& In) {
 
-	EconomySnapshot = In;
+	ClickerEconomySnapshot = In;
 	Broadcast();
 }
 
@@ -144,7 +149,7 @@ void UClickerEconomySubsystem::ApplyOfflineReward(double Amount) {
 	Broadcast();
 }
 
-void UClickerEconomySubsystem::UpdateLastOfflineReward(FEconomySnapshot& In) {
+void UClickerEconomySubsystem::UpdateLastOfflineReward(FClickerEconomySnapshot& In) {
 	// Offline Reward max 8 hours
 	const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
 	const int64 DeltaSec = 

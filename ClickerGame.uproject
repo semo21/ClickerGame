@@ -24,6 +24,10 @@
 			]
 		},
 		{
+			"Name": "StructUtils",
+			"Enabled": true
+		},
+		{
 			"Name": "GeometryCache",
 			"Enabled": false
 		},

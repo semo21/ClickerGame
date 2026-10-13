@@ -2,31 +2,72 @@
 
 
 #include "Systems/Save/SaveManagerSubsystem.h"
+#include "Systems/Economy/Data/ClickerEconomySnapshot.h"
+#include "Systems/Economy/Data/GlobalEconomySnapshot.h"
+#include "Systems/Progress/Data/GlobalProgressSnapshot.h"
+#include "Systems/Save/Data/PlayerSaveGame.h"
 
 #include "Kismet/GameplayStatics.h"
 
-#include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "Data/Save/ClickerSaveGame.h"
-void USaveManagerSubsystem::SaveProgress(const FEconomySnapshot& S) {
-	auto* SaveGameObj = Cast<UClickerSaveGame>(UGameplayStatics::CreateSaveGameObject(UClickerSaveGame::StaticClass()));
-	SaveGameObj->Currency = S.Currency;
-	SaveGameObj->CurrencyPerClick = S.CurrencyPerClick;
-	SaveGameObj->CurrencyPerSecond = S.CurrencyPerSecond;
-	SaveGameObj->UpgradeLevel = S.UpgradeLevel;
-	SaveGameObj->LastSaveUnixTime = FDateTime::UtcNow().ToUnixTimestamp();
-	//UE_LOG(LogTemp, Warning, TEXT("SaveManagerSubsystem::SaveProgress Called LastSaveTime: %d"), SaveGameObj->LastSaveUnixTime);
+UPlayerSaveGame* USaveManagerSubsystem::LoadOrCreateSaveObject() const {
+	if (auto* Existing = Cast<UPlayerSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex))) {
+		return Existing;
+	}
+	return Cast<UPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(UPlayerSaveGame::StaticClass()));
+}
+
+void USaveManagerSubsystem::SaveProgress(const FClickerEconomySnapshot& S) {
+	auto* SaveGameObj = LoadOrCreateSaveObject();
+
+	FClickerEconomySnapshot Stamped = S;
+	Stamped.LastSaveTime = FDateTime::UtcNow().ToUnixTimestamp();
+
+	SaveGameObj->LevelSnapshots.Add(TEXT("Clicker"), FInstancedStruct::Make<FClickerEconomySnapshot>(Stamped));
 	UGameplayStatics::SaveGameToSlot(SaveGameObj, SaveSlotName, UserIndex);
 }
 
-bool USaveManagerSubsystem::LoadProgress(FEconomySnapshot& Out) {
+bool USaveManagerSubsystem::LoadProgress(FClickerEconomySnapshot& Out) {
 	if (USaveGame* Loaded = UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex)) {
-		if (auto* SaveObj = Cast<UClickerSaveGame>(Loaded)){
-			Out.Currency = SaveObj->Currency;
-			Out.CurrencyPerClick = SaveObj->CurrencyPerClick;
-			Out.CurrencyPerSecond = SaveObj->CurrencyPerSecond;
-			Out.UpgradeLevel = SaveObj->UpgradeLevel;
-			Out.LastSaveTime = SaveObj->LastSaveUnixTime;
+		if (auto* SaveObj = Cast<UPlayerSaveGame>(Loaded)){
+			if (const FInstancedStruct* Found = SaveObj->LevelSnapshots.Find(TEXT("Clicker"))) {
+				if (const FClickerEconomySnapshot* Snapshot = Found->GetPtr<FClickerEconomySnapshot>()) {
+					Out = *Snapshot;
+					return true;
+				}
+			}
 			
+			return true;
+		}
+	}
+	return false;
+}
+
+void USaveManagerSubsystem::SaveProgress(const FGlobalEconomySnapshot& S) {
+	auto* SaveGameObj = LoadOrCreateSaveObject();
+	SaveGameObj->GlobalEconomySnapshot = S;
+	UGameplayStatics::SaveGameToSlot(SaveGameObj, SaveSlotName, UserIndex);
+}
+
+bool USaveManagerSubsystem::LoadProgress(FGlobalEconomySnapshot& Out) {
+	if (USaveGame* Loaded = UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex)) {
+		if (auto* SaveObj = Cast<UPlayerSaveGame>(Loaded)) {
+			Out = SaveObj->GlobalEconomySnapshot;
+			return true;
+		}
+	}
+	return false;
+}
+
+void USaveManagerSubsystem::SaveProgress(const FGlobalProgressSnapshot& S) {
+	auto* SaveGameObj = LoadOrCreateSaveObject();
+	SaveGameObj->GlobalProgressSnapshot = S;
+	UGameplayStatics::SaveGameToSlot(SaveGameObj, SaveSlotName, UserIndex);
+}
+
+bool USaveManagerSubsystem::LoadProgress(FGlobalProgressSnapshot& Out) {
+	if (USaveGame* Loaded = UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex)) {
+		if (auto* SaveObj = Cast<UPlayerSaveGame>(Loaded)) {
+			Out = SaveObj->GlobalProgressSnapshot;
 			return true;
 		}
 	}

@@ -1,0 +1,16 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Systems/UI/Widgets/Parts/ClickerHUDPartWidgetBase.h"
+
+void UClickerHUDPartWidgetBase::InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) {
+	// Implement in Blueprint
+	UIRef = InUI;
+	PCRef = InPC;	
+
+}
+
+void UClickerHUDPartWidgetBase::OnEconomyChangedUI_Implementation(const FClickerEconomySnapshot& Snapshot) {
+	// Implement in Blueprint
+
+}

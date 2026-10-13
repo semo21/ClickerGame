@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Systems/UI/ClickerUISubsystem.h"
 
 #include "Blueprint/UserWidget.h"
@@ -14,38 +13,43 @@
 #include "NiagaraFunctionLibrary.h"
 #include "TimerManager.h"
 
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/ClickerPlayerController.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "Systems/UI/Widgets/ToastWidgetBase.h"
+#include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
+#include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 #include "Systems/UI/Settings/ClickerUISettings.h"
+#include "Systems/UI/Data/ActionButton/ActionButtonRegistry.h"
 
 // public field
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-	Collection.InitializeDependency(UClickerEconomySubsystem::StaticClass());
 
-	EconomySubsystemRef = GetGameInstance()->GetSubsystem<UClickerEconomySubsystem>();
-	checkf(EconomySubsystemRef, TEXT("UClickerUISubsystem::Initialize EconomySubsystemRef is null"));
-
-	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
-	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
-	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
-
+	UE_LOG(LogTemp, Warning, TEXT("UISettingsAsset: &s, ActionButtonRegistryAsset: %s"), *UISettingsAsset.ToString(), *ActionButtonRegistryAsset.ToString());
+	
 	if (!UISettingsAsset.IsNull()) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
 
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
 			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize DA Load"));
 
-			HUDWidgetClass = Settings->HUDWidgetClass;
+			InGameRootWidgetClass = Settings->InGameRootWidgetClass;
 			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
 			RewardToastClass = Settings->IdleRewardTextWidgetClass;
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
 			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
 		}
+	}
+
+	if (!ActionButtonRegistryAsset.IsNull()) {
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found ActionButtonRegistry"));
+
+		ActionButtonRegistry = ActionButtonRegistryAsset.LoadSynchronous();
+
+		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize ActionButtonRegistry Load = %s"), ActionButtonRegistry ? TEXT("Success") : TEXT("Failed"));
+
 	}
 }
 
@@ -59,7 +63,7 @@ void UClickerUISubsystem::Deinitialize() {
 		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
 	}
 
-	HUDWidget = nullptr;
+	InGameRootWidget = nullptr;
 	CurrencyText = ClickValueText = UpgradeCostText = PassiveIncomeText = UpgradeSuccessText = nullptr;
 	UpgradeButton = SaveButton = LoadButton = nullptr;
 	EconomySubsystemRef = nullptr;
@@ -70,56 +74,17 @@ void UClickerUISubsystem::Deinitialize() {
 	Super::Deinitialize();
 }
 
-void UClickerUISubsystem::ShowHUD(UWorld* World) {
-	if (!World || HUDWidget || !HUDWidgetClass) return;
+void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
+	EconomySubsystemRef = Eco;
 
-	if (!PlayerController.IsValid()) {
-		if (auto* PC = World->GetFirstPlayerController()) {
-			PlayerController = Cast<AMyPlayerController>(PC);
-		}
+	if (!EconomySubsystemRef) return;
 
-		if (!PlayerController.IsValid()) return;
-	}
+	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
+	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
+	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
 
-	if (GEngine && GEngine->GameViewport) {
-		GEngine->GameViewport->GetViewportSize(CachedViewportSize);
-	}
-
-
-	if (!ensureMsgf(HUDWidgetClass && HUDWidgetClass->IsChildOf(UUserWidget::StaticClass()), TEXT("HUDWidgetClass invalid: %s"), *GetNameSafe(HUDWidgetClass))) {
-		return;
-	}
-	HUDWidget = CreateWidget<UUserWidget>(World, HUDWidgetClass);
-	if (!HUDWidget) return;
-	HUDWidget->AddToViewport();
-
-	CurrencyText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("CurrencyText")));
-	ClickValueText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("ClickValueText")));
-	UpgradeCostText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("UpgradeCostText")));
-	PassiveIncomeText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("PassiveIncomeText")));
-	UpgradeSuccessText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("UpgradeSuccessText")));
-	UpgradeButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("UpgradeButton")));
-	SaveButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("SaveButton")));
-	LoadButton = Cast<UButton>(HUDWidget->GetWidgetFromName(TEXT("LoadButton")));
-
-	if (UpgradeSuccessText)	UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-
-	if (auto* PC = Cast<AMyPlayerController>(PlayerController.Get())) {
-		if (UpgradeButton)
-			UpgradeButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnUpgradeClicked);
-
-		if (SaveButton)
-			SaveButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnSaveClicked);
-
-		if (LoadButton)
-			LoadButton->OnClicked.AddDynamic(PC, &AMyPlayerController::OnLoadClicked);
-	}
-		
-	if (EconomySubsystemRef) {
-		OnEconomyChanged(EconomySubsystemRef->GetSnapshot());
-	}
-	bHUDReady = true;
-	TryFlushOfflineReward();
+	CachedClickerEconomySnapshot = EconomySubsystemRef->GetSnapshot();
+	OnEconomyChangedUI.Broadcast(CachedClickerEconomySnapshot);
 }
 
 void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
@@ -152,8 +117,17 @@ void UClickerUISubsystem::HideUpgradeSuccessText() {
 	}
 }
 
-void UClickerUISubsystem::OnEconomyChanged(const FEconomySnapshot& Snapshot) {
-	UpdateScore(Snapshot);
+const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(const FGameplayTag& Tag) const {
+	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::FindActionButtonDefinition Tag: %s"), *Tag.ToString());
+	if (!ActionButtonRegistry || !Tag.IsValid()) return nullptr;
+
+	return ActionButtonRegistry->Find(Tag);
+}
+
+void UClickerUISubsystem::OnEconomyChanged(const FClickerEconomySnapshot& Snapshot) {
+	CachedClickerEconomySnapshot = Snapshot;
+	OnEconomyChangedUI.Broadcast(CachedClickerEconomySnapshot);
+	UpdateScore(Snapshot);	// HUDRoot 리팩터 후 이 부분은 HUDRoot에서 처리하도록 변경 예정
 }
 
 void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
@@ -168,7 +142,9 @@ void UClickerUISubsystem::OnOfflineReward(double Amount) {
 }
 
 // private field
-void UClickerUISubsystem::UpdateScore(const FEconomySnapshot& Snapshot) {
+void UClickerUISubsystem::UpdateScore(const FClickerEconomySnapshot& Snapshot) {
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
+
 	if (CurrencyText)
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
 
@@ -205,7 +181,7 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	if (!RewardToastClass)	return;
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
+	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
 	const FVector2D ScreenPos(640.0f, 120.0f);
 
 	if (UToastWidgetBase* Widget = GetWidgetFromPool(RewardPool, RewardToastClass)) {

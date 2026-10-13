@@ -2,15 +2,31 @@
 
 
 #include "Gameplay/GameMode/MyGameModeBase.h"
-#include "Gameplay/Player/MyPlayerController.h"
+#include "Gameplay/Player/MyPlayerControllerBase.h"
+#include "Gameplay/Character/MyCharacter.h"
+#include "Systems/Economy/GlobalEconomySubsystem.h"
+#include "Systems/Progress/GlobalProgressSubsystem.h"
+#include "Systems/UI/GlobalUISUbsystem.h"
+#include "Blueprint/UserWidget.h"
 
 AMyGameModeBase::AMyGameModeBase() {
 	// Set the player controller class to our custom player controller
-	PlayerControllerClass = AMyPlayerController::StaticClass();
+	PlayerControllerClass = AMyPlayerControllerBase::StaticClass();
+	DefaultPawnClass = AMyCharacter::StaticClass();
+}
 
-	// You can also set other properties here, such as the default pawn class, HUD class, etc.
-	// DefaultPawnClass = AMyPawn::StaticClass(); // Example for setting a default pawn class
-	// HUDClass = AMyHUD::StaticClass(); // Example for setting a custom HUD class
-	// Set the default game state class if needed
+void AMyGameModeBase::BeginPlay() {
+	Super::BeginPlay();
 
+	if (UGlobalUISubsystem* GlobalUI = GetGameInstance()->GetSubsystem<UGlobalUISubsystem>()) {
+		GlobalUI->ShowRootUI(RootWidgetClass);
+	}
+
+	if (UGlobalEconomySubsystem* GlobalEco = GetGameInstance()->GetSubsystem<UGlobalEconomySubsystem>()) {
+		GlobalEco->StartGame();
+	}
+
+	if (UGlobalProgressSubsystem* GlobalProgress = GetGameInstance()->GetSubsystem<UGlobalProgressSubsystem>()) {
+		GlobalProgress->StartGame();
+	}
 }
