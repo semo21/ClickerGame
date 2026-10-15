@@ -71,4 +71,5 @@ private:
 
 	void RecalculatePath();
 	void DrawDebugPath() const;
+	TArray<bool> GetReachableTiles(int32 FromIndex, int32 BlockedIndex = INDEX_NONE) const;
 };

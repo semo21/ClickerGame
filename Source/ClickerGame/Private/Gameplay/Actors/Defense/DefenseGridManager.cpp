@@ -163,4 +163,43 @@ void ADefenseGridManager::DrawDebugPath() const {
 	}
 }
 
+TArray<bool> ADefenseGridManager::GetReachableTiles(int32 FromIndex, int32 BlockedIndex) const {
+	TArray<bool> Visited;
+	if (!Tiles.IsValidIndex(FromIndex)) return Visited;
 
+	TQueue<int32> TileQueue;
+	int32 Current = INDEX_NONE;
+
+	Visited.SetNum(Tiles.Num());
+	TileQueue.Enqueue(FromIndex);
+	Visited[FromIndex] = true;
+
+	const int32 Directions[4][2] = {
+		{0, -1},
+		{0, 1},
+		{-1, 0},
+		{1, 0}
+	};
+
+	while (!TileQueue.IsEmpty()) {
+			TileQueue.Dequeue(Current);
+
+			const int32 X = Current % GridWidth;
+			const int32 Y = Current / GridWidth;
+
+			for (int32 i = 0; i < 4; ++i) {
+				const int32 NX = X + Directions[i][0];
+				const int32 NY = Y + Directions[i][1];
+
+				if (!IsValidCoord(NX, NY)) continue;
+
+				const int32 NeighborIndex = NY * GridWidth + NX;
+				if (Visited[NeighborIndex] || Tiles[NeighborIndex].IsOccupied() || NeighborIndex == BlockedIndex) continue;
+
+				Visited[NeighborIndex] = true;
+				TileQueue.Enqueue(NeighborIndex);
+			}
+	}
+
+	return Visited;
+}
