@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "EngineUtils.h"
+
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
 #include "Gameplay/Actors/Defense/DefenseTowerBase.h"
+#include "Gameplay/Actors/Defense/DefenseEnemyBase.h"
 
 #include "Algo/Reverse.h"
 
@@ -61,7 +64,20 @@ bool ADefenseGridManager::CanPlaceTower(int32 TileIndex) const {
 	if (!Tiles.IsValidIndex(TileIndex)) return false;
 	if (Tiles[TileIndex].IsOccupied()) return false;
 	if (TileIndex == SpawnTileIndex || TileIndex == GoalTileIndex) return false;
-	if (FindPath(SpawnTileIndex, GoalTileIndex, TileIndex).Num() == 0) return false;
+
+	const TArray<bool> Reachable = GetReachableTiles(GoalTileIndex, TileIndex);
+	if (!Reachable.IsValidIndex(SpawnTileIndex) || !Reachable[SpawnTileIndex]) return false;
+	
+
+	for (TActorIterator<ADefenseEnemyBase> It(GetWorld()); It; ++It) {
+		const int32 TargetTile = It->GetTargetTileIndex();
+		const int32 StandingTile = WorldToTileIndex(It->GetActorLocation());
+
+		if (TileIndex == TargetTile || TileIndex == StandingTile) return false;
+		if (TargetTile != INDEX_NONE && !Reachable[TargetTile]) return false;
+	}
+
+
 
 	return true;
 }
