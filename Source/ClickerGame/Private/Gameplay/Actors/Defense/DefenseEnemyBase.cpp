@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Gameplay/Actors/Defense/DefenseEnemyBase.h"
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
+
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 ADefenseEnemyBase::ADefenseEnemyBase()
@@ -22,6 +23,7 @@ ADefenseEnemyBase::ADefenseEnemyBase()
 void ADefenseEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHP = MaxHP;
 	
 }
 
@@ -41,6 +43,18 @@ void ADefenseEnemyBase::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 	if (FVector::Dist(NewLocation, Target) < 1.0f) ++PathStep;
 	
+}
+
+float ADefenseEnemyBase::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
+	const float AppliedDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (AppliedDamage <= 0.0f || CurrentHP <= 0.0f) return 0.0f;
+
+	CurrentHP -= AppliedDamage;
+	UE_LOG(LogTemp, Warning, TEXT("ADefenseEnemyBase::TakeDamage: Remaining HP %f"), CurrentHP);
+
+	if (CurrentHP <= 0.0f) Destroy();
+		
+	return AppliedDamage;
 }
 
 void ADefenseEnemyBase::InitPath(ADefenseGridManager* InGrid) {
