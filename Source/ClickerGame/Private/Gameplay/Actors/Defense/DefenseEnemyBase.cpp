@@ -32,6 +32,7 @@ void ADefenseEnemyBase::Tick(float DeltaTime)
 
 	if (!GridManager) return;	
 	if (PathStep >= CurrentPath.Num()) { 
+		OnReachedGoal.Broadcast();
 		Destroy();
 		return;
 	}

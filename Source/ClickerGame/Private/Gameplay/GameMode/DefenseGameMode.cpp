@@ -14,6 +14,7 @@ ADefenseGameMode::ADefenseGameMode() {
 
 void ADefenseGameMode::BeginPlay() {
 	Super::BeginPlay();
+	CurrentLives = StartLives;
 	SpawnEnemy();
 }
 
@@ -30,6 +31,11 @@ void ADefenseGameMode::SpawnEnemy() {
 	
 	if (Enemy) {
 		Enemy->InitPath(GridManager);
-	}
-	
+		Enemy->OnReachedGoal.AddUObject(this, &ADefenseGameMode::HandleEnemyReachedGoal);
+	}	
+}
+
+void ADefenseGameMode::HandleEnemyReachedGoal() {
+	--CurrentLives;
+	UE_LOG(LogTemp, Warning, TEXT("DefenseGameMode::CurrentLives: %d"), CurrentLives);
 }

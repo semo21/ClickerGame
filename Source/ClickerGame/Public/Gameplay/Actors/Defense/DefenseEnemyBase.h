@@ -9,43 +9,40 @@
 class UStaticMeshComponent;
 class ADefenseGridManager;
 
+DECLARE_MULTICAST_DELEGATE(FOnDefenseEnemyReachedGoal);
+
 UCLASS()
 class CLICKERGAME_API ADefenseEnemyBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	ADefenseEnemyBase();
 	void InitPath(ADefenseGridManager* InGrid);
 	int32 GetTargetTileIndex() const { return CurrentPath.IsValidIndex(PathStep) ? CurrentPath[PathStep] : INDEX_NONE; };
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	FOnDefenseEnemyReachedGoal OnReachedGoal;
+
 protected:
-	UPROPERTY(VisibleAnywhere, Category="Enemy")
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	TObjectPtr<USceneComponent> Root;
 
-	UPROPERTY(VisibleAnywhere, Category="Enemy")
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	TObjectPtr<UStaticMeshComponent> Body;
 
-	UPROPERTY(EditAnywhere, Category="Enemy")
+	UPROPERTY(EditAnywhere, Category = "Enemy")
 	float MoveSpeed = 100.0f;
 
-	UPROPERTY(VisibleInstanceOnly, Category="Enemy")
+	UPROPERTY(VisibleInstanceOnly, Category = "Enemy")
 	TArray<int32> CurrentPath;
 
-	UPROPERTY(VisibleInstanceOnly, Category="Enemy")
+	UPROPERTY(VisibleInstanceOnly, Category = "Enemy")
 	TObjectPtr<ADefenseGridManager> GridManager;
 
 	int32 PathStep = 1;
-	
 
 private:
 	void HandlePathChanged();

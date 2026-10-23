@@ -9,7 +9,7 @@
 
 class ADefenseEnemyBase;
 /**
- * 
+ *
  */
 UCLASS()
 class CLICKERGAME_API ADefenseGameMode : public AMyGameModeBase
@@ -20,7 +20,16 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	UPROPERTY(EditDefaultsOnly, Category="Enemy")
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy")
 	TSubclassOf<ADefenseEnemyBase> EnemyClass;
 	void SpawnEnemy();
+
+private:
+	void HandleEnemyReachedGoal();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Rules")
+	int32 StartLives = 10;
+
+	UPROPERTY(VisibleInstanceOnly, Category = "Rules")
+	int32 CurrentLives = 0;
 };
