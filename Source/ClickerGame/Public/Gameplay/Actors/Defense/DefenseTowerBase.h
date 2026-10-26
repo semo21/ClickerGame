@@ -8,20 +8,37 @@
 #include "DefenseTowerBase.generated.h"
 
 class UStaticMeshComponent;
+class ADefenseEnemyBase;
 
 UCLASS()
 class CLICKERGAME_API ADefenseTowerBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ADefenseTowerBase();
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category="Tower")
+	virtual void BeginPlay() override;
+	virtual void Attack();
+	virtual ADefenseEnemyBase* FindTarget() const;
+
+	UPROPERTY(VisibleAnywhere, Category = "Tower")
 	TObjectPtr<USceneComponent> Root;
 
-	UPROPERTY(VisibleAnywhere, Category="Tower")
+	UPROPERTY(VisibleAnywhere, Category = "Tower")
 	TObjectPtr<UStaticMeshComponent> Body;
+
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	float Range = 250.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	float Damage = 25.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "Tower")
+	float AttackInterval = 1.0f;
+
+private:
+	FTimerHandle AttackTimerHandle;
 };
