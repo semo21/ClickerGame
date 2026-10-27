@@ -1,14 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EngineUtils.h"
-
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
 #include "Gameplay/Actors/Defense/DefenseTowerBase.h"
 #include "Gameplay/Actors/Defense/DefenseEnemyBase.h"
 
 #include "Algo/Reverse.h"
-
+#include "EngineUtils.h"
 #include "DrawDebugHelpers.h"
 // Sets default values
 ADefenseGridManager::ADefenseGridManager()
