@@ -57,13 +57,13 @@ void ADefenseGameMode::HandleSpawnTick() {
 }
 
 void ADefenseGameMode::HandleEnemyReachedGoal() {
-	if (MatchState != EDefenseGameState::InProgress)	return;
+	if (MatchState != EDefenseMatchState::InProgress)	return;
 
 	--CurrentLives;
 	UE_LOG(LogTemp, Warning, TEXT("DefenseGameMode::CurrentLives: %d"), CurrentLives);
 
 	if (CurrentLives <= 0) {
-		EndMatch(EDefenseGameState::Defeat);
+		EndMatch(EDefenseMatchState::Defeat);
 	}
 }
 
@@ -79,11 +79,11 @@ void ADefenseGameMode::HandleEnemyDestroyed(AActor* DestroyedActor) {
 }
 
 void ADefenseGameMode::HandleWaveCleared() {
-	if (MatchState != EDefenseGameState::InProgress) return;
+	if (MatchState != EDefenseMatchState::InProgress) return;
 
 	if (CurrentWave >= MaxWaves) {
 		UE_LOG(LogTemp, Warning, TEXT("ADefenseGameMode::HandleWaveCleared / All waves cleared"));
-		EndMatch(EDefenseGameState::Victory);
+		EndMatch(EDefenseMatchState::Victory);
 		return;
 	}
 	StartWave();
@@ -93,8 +93,8 @@ bool ADefenseGameMode::IsWaveCleared() const {
 	return EnemiesLeftToSpawn <= 0 && AliveEnemies.IsEmpty();
 }
 
-void ADefenseGameMode::EndMatch(EDefenseGameState Result) {
-	if (MatchState != EDefenseGameState::InProgress) return;
+void ADefenseGameMode::EndMatch(EDefenseMatchState Result) {
+	if (MatchState != EDefenseMatchState::InProgress) return;
 
 	MatchState = Result;
 	GetWorldTimerManager().ClearTimer(SpawnTimerHandle);

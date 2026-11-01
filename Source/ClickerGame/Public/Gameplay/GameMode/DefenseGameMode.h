@@ -4,19 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Gameplay/GameMode/MyGameModeBase.h"
+#include "Gameplay/Types/DefenseTypes.h"
 
 #include "DefenseGameMode.generated.h"
 
 class ADefenseEnemyBase;
-
-
-UENUM()
-enum class EDefenseGameState : uint8 {
-	InProgress,
-	Victory,
-	Defeat
-};
-
 /**
  *
  */
@@ -41,7 +33,7 @@ private:
 	void HandleWaveCleared();
 	void SpawnEnemy();
 	bool IsWaveCleared() const;	
-	void EndMatch(EDefenseGameState Result);
+	void EndMatch(EDefenseMatchState Result);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy")
 	TSubclassOf<ADefenseEnemyBase> EnemyClass;
@@ -53,7 +45,7 @@ private:
 	int32 CurrentLives = 0;
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Rules")
-	EDefenseGameState MatchState = EDefenseGameState::InProgress;
+	EDefenseMatchState MatchState = EDefenseMatchState::InProgress;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Wave")
 	int32 BaseEnemyCount = 3;
