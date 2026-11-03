@@ -52,6 +52,11 @@ Mode 시스템 뼈대를 세우고, 그 위에 두 번째 장르 룸을 플레�
 - 변경된 Goal: 룸의 결과를 Global 재화로 정산하는 최소 루프를 연결하고, Mode 시스템 뼈대를 세운다
 - 변경된 Deliverable: Lobby <-> Clicker / Defense를 오가며 Global 재화를 벌고 쓰는 플레이 가능한 빌드
 
+### Revision (2026-11-03)
+- 사유: 10월 Defense 결과 화면/Lobby 복귀 미완, Defense 완료 후 Clicker 구조 정리 결정(10-28)
+- 10월에서 이관: "Defense 결과 표시 및 Lobby 복귀"
+- 추가 Task: Clicker 리팩터 (월드 서브시스템 레벨별 생성 필터 적용, ClickerUISubsystem 결함 정리)
+
 ---
 ## December 2026 — 에셋 적용 및 폴리싱
 
