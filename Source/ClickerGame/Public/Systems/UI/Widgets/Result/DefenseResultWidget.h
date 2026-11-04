@@ -14,7 +14,7 @@ class UButton;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class CLICKERGAME_API UDefenseResultWidget : public UUserWidget
 {
 	GENERATED_BODY()
@@ -23,10 +23,19 @@ public:
 	void SetResult(EDefenseMatchState Result);
 
 protected:
+	virtual void NativeOnInitialized() override;
+
+	UPROPERTY(EditDefaultsOnly, Category="Navigation")
+	FName LobbyLevelName;
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> Txt_Result;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Btn_Lobby;
+
+private:
+	UFUNCTION()
+	void HandleLobbyButtonClicked();
 	
 };
