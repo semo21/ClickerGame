@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/Actors/ClickTargetActor.h"
+#include "Gameplay/Actors/Clicker/ClickTargetActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 
