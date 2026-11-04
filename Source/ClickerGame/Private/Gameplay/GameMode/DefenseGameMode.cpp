@@ -99,4 +99,8 @@ void ADefenseGameMode::EndMatch(EDefenseMatchState Result) {
 	MatchState = Result;
 	GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
 	UE_LOG(LogTemp, Warning, TEXT("ADefenseGameMode::EndMatch, MatchState: %s"), *UEnum::GetValueAsString(Result));
+
+	if (ADefensePlayerController* PC = Cast<ADefensePlayerController>(GetWorld()->GetFirstPlayerController())) {
+		PC->HandleMatchEnded(Result);
+	}
 }

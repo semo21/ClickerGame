@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Gameplay/Player/MyPlayerControllerBase.h"
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
+#include "Gameplay/Types/DefenseTypes.h"
 
 #include "DefensePlayerController.generated.h"
 
@@ -19,6 +20,7 @@ class CLICKERGAME_API ADefensePlayerController : public AMyPlayerControllerBase
 	
 public:
 	UFUNCTION() void OnClick();
+	void HandleMatchEnded(EDefenseMatchState Result);
 
 protected:
 	virtual void BeginPlay() override;

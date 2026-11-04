@@ -3,6 +3,8 @@
 
 #include "Gameplay/Player/DefensePlayerController.h"
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
+#include "Systems/UI/DefenseUISubsystem.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void ADefensePlayerController::BeginPlay() {
@@ -29,4 +31,14 @@ void ADefensePlayerController::OnClick() {
 	if (TileIndex == INDEX_NONE) return;
 
 	GridRef->PlaceTower(TileIndex, TowerClass);
+}
+
+void ADefensePlayerController::HandleMatchEnded(EDefenseMatchState Result) {
+	if (UDefenseUISubsystem* UI = GetWorld()->GetSubsystem<UDefenseUISubsystem>()) {
+		UI->ShowResult(this, Result);
+
+		SetPause(true);
+		bShowMouseCursor = true;
+		SetInputMode(FInputModeUIOnly());
+	}
 }
