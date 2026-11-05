@@ -8,11 +8,13 @@
 #include "TimerManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Gameplay/GameMode/ClickerGameMode.h"
 #include "Systems/Save/SaveManagerSubsystem.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
 
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
+	UE_LOG(LogTemp, Warning, TEXT("UClickerEconomySubsystem::Initilalize"));
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
@@ -83,6 +85,10 @@ void UClickerEconomySubsystem::RequestLoad() {
 			Broadcast();
 		}
 	}
+}
+
+TSubclassOf<AGameModeBase> UClickerEconomySubsystem::GetRequiredGameModeClass() const {
+	return AClickerGameMode::StaticClass();
 }
 
 double UClickerEconomySubsystem::GetUpgradeCost() const {

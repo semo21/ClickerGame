@@ -3,15 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Systems/MyWorldSubsystemBase.h"
 #include "LobbyUISubsystem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CLICKERGAME_API ULobbyUISubsystem : public UWorldSubsystem
+class CLICKERGAME_API ULobbyUISubsystem : public UMyWorldSubsystemBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+protected:
+	virtual TSubclassOf<AGameModeBase> GetRequiredGameModeClass() const override;	
 };

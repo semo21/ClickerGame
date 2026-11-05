@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Systems/MyWorldSubsystemBase.h"
 #include "GameplayTagContainer.h"
 #include "Systems/Economy/Data/ClickerEconomySnapshot.h"
 
@@ -24,7 +24,7 @@ struct FClickerEconomySnapshot;		struct FActionButtonDefinition;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FClickerEconomySnapshot&, Snapshot);
 
 UCLASS(Config=Game, DefaultConfig)
-class CLICKERGAME_API UClickerUISubsystem : public UWorldSubsystem
+class CLICKERGAME_API UClickerUISubsystem : public UMyWorldSubsystemBase
 {
 	GENERATED_BODY()
 
@@ -67,6 +67,7 @@ public:
 	
 
 protected:
+	virtual TSubclassOf<AGameModeBase> GetRequiredGameModeClass() const override;
 	UToastWidgetBase* GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass);
 
 	UPROPERTY() 

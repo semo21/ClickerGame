@@ -14,6 +14,7 @@
 #include "TimerManager.h"
 
 #include "Gameplay/Player/ClickerPlayerController.h"
+#include "Gameplay/GameMode/ClickerGameMode.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
@@ -51,6 +52,8 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize ActionButtonRegistry Load = %s"), ActionButtonRegistry ? TEXT("Success") : TEXT("Failed"));
 
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("UClickerUISubsystem::Initialize"));
 }
 
 void UClickerUISubsystem::Deinitialize() {
@@ -192,6 +195,10 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 		Widget->SetupToast(FText::FromString(Text), ScreenPos);
 		Widget->PlayToast();
 	}
+}
+
+TSubclassOf<AGameModeBase> UClickerUISubsystem::GetRequiredGameModeClass() const {
+	return AClickerGameMode::StaticClass();
 }
 
 UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass) {

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "Subsystems/WorldSubsystem.h"
+#include "Systems/MyWorldSubsystemBase.h"
 #include "Systems/Economy/Data/ClickerEconomySnapshot.h"
 
 #include "ClickerEconomySubsystem.generated.h"
@@ -19,7 +19,7 @@ class USaveManagerSubsystem;
  * 
  */
 UCLASS(BlueprintType)
-class CLICKERGAME_API UClickerEconomySubsystem : public UWorldSubsystem
+class CLICKERGAME_API UClickerEconomySubsystem : public UMyWorldSubsystemBase
 {
 	GENERATED_BODY()
 
@@ -40,6 +40,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnOfflineReward OnOfflineReward;
 	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnPassiveIncome OnPassiveIncome;
 
+protected:
+	virtual TSubclassOf<AGameModeBase> GetRequiredGameModeClass() const override;
+
 private:
 	void Broadcast();
 	void StartAutoSaveTimer();
@@ -54,7 +57,6 @@ private:
 	void ApplyOfflineReward(double Amount);
 	void UpdateLastOfflineReward(FClickerEconomySnapshot& In);
 	
-private:
 	UPROPERTY()
 	TObjectPtr<USaveManagerSubsystem> SaveManagerSubsystemRef;
 	FClickerEconomySnapshot ClickerEconomySnapshot;
