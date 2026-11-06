@@ -16,6 +16,7 @@
 #include "Gameplay/Player/ClickerPlayerController.h"
 #include "Gameplay/GameMode/ClickerGameMode.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
+#include "Systems/UI/GlobalUISubsystem.h"
 #include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
@@ -75,6 +76,20 @@ void UClickerUISubsystem::Deinitialize() {
 	PlayerController.Reset();
 
 	Super::Deinitialize();
+}
+
+void UClickerUISubsystem::InitializeHUDRoot(AClickerPlayerController* PC) {
+	if (!ensure(PC)) return;
+	PlayerController = PC;
+
+	auto* GlobalUI = GetWorld()->GetGameInstance()->GetSubsystem<UGlobalUISubsystem>();
+	if (!ensure(GlobalUI)) return;
+	auto* RootWidget = Cast<UClickerHUDRootWidgetBase>(GlobalUI->GetCurrentRootWidget());
+	if (!ensure(RootWidget)) return;
+
+	RootWidget->InitializeHUDRoot(this, PC);
+	bHUDReady = true;
+	TryFlushOfflineReward();
 }
 
 void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {

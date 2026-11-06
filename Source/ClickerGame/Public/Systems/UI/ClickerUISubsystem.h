@@ -31,6 +31,7 @@ class CLICKERGAME_API UClickerUISubsystem : public UMyWorldSubsystemBase
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	void InitializeHUDRoot(AClickerPlayerController* PC);
 	void BindEconomySubsystem(UClickerEconomySubsystem* Eco);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
