@@ -13,7 +13,6 @@ void UActionButtonWidgetBase::InitializeButton(AMyPlayerControllerBase* InPC, UC
 	CachedPC = InPC;
 	CachedUI = InUI;
 	ActionTag = InTag;
-	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::InitializeButton - Initialized with tag: %s"), *ActionTag.ToString());
 	SynchronizeProperties();
 }
 
@@ -21,21 +20,10 @@ const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
 	if (!ActionTag.IsValid())	return nullptr;
 
 	if (CachedUI.IsValid()) {
-		UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::GetDefinition - CachedUI is valid, trying to find definition for tag: %s"), *ActionTag.ToString());
 		return CachedUI->FindActionButtonDefinition(ActionTag);
 	}
 
 	return nullptr;
-
-	//const UWorld* World = GetWorld();
-	//if (!World) return nullptr;
-
-	//const UGameInstance* GI = World->GetGameInstance();
-	//if (!GI) return nullptr;
-
-	//const UClickerUISubsystem* UISubsystem = GI->GetSubsystem<UClickerUISubsystem>();
-	//return UISubsystem ? UISubsystem->FindActionButtonDefinition(ActionTag) : nullptr;
-	
 }
 
 void UActionButtonWidgetBase::NativeOnInitialized() {
@@ -47,16 +35,6 @@ void UActionButtonWidgetBase::NativeOnInitialized() {
 
 void UActionButtonWidgetBase::NativePreConstruct() {
 	Super::NativePreConstruct();
-	//if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
-	//	OverrideLabelText = PreviewLabelText;
-	//	bOverrideLabel = true;
-
-	//	OverrideIconTexture = nullptr;
-	//	bOverrideIcon = bPreviewIcon;
-
-	//	Mode = EActionButtonMode::Auto;
-	//	bEnabled = true;
-	//}
 
 	ApplyResolvedDataToWidgets();
 }
@@ -92,8 +70,6 @@ void UActionButtonWidgetBase::SetMode(EActionButtonMode InMode) {
 }
 
 void UActionButtonWidgetBase::HandleClicked() {
-	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::HandleClicked - Button with tag %s clicked"), *ActionTag.ToString());
-
 	if (!CachedPC.IsValid() || !CachedUI.IsValid() || !ActionTag.IsValid()) {
 		return;
 	}

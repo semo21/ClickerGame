@@ -21,7 +21,6 @@ class CLICKERGAME_API UClickerHUDDevButtonsWidget : public UClickerHUDPartWidget
 	
 public:
 	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) override;
-
 protected:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
 	TObjectPtr<UActionButtonWidgetBase> Btn_Save;
