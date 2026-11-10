@@ -77,7 +77,6 @@ void UClickerEconomySubsystem::RequestLoad() {
 		FClickerEconomySnapshot In;
 		if (SaveManagerSubsystemRef->LoadProgress(In)) {
 			UpdateLastOfflineReward(In);
-			TriggerOfflineReward();
 			ApplySnapshot(In);
 			RequestSave();
 		}
@@ -93,12 +92,6 @@ TSubclassOf<AGameModeBase> UClickerEconomySubsystem::GetRequiredGameModeClass() 
 
 double UClickerEconomySubsystem::GetUpgradeCost() const {
 	return FMath::Pow(ClickerEconomySnapshot.UpgradeGrowth, ClickerEconomySnapshot.UpgradeLevel + 1) * ClickerEconomySnapshot.UpgradeCostBase;
-}
-
-void UClickerEconomySubsystem::TriggerOfflineReward() {
-	if (LastOfflineReward > 0.0) {
-		OnOfflineReward.Broadcast(LastOfflineReward);
-	}
 }
 
 void UClickerEconomySubsystem::Broadcast() {
@@ -146,12 +139,6 @@ FClickerEconomySnapshot UClickerEconomySubsystem::MakeSnapshot() const {
 void UClickerEconomySubsystem::ApplySnapshot(const FClickerEconomySnapshot& In) {
 
 	ClickerEconomySnapshot = In;
-	Broadcast();
-}
-
-void UClickerEconomySubsystem::ApplyOfflineReward(double Amount) {
-	if (Amount <= 0.0) return;	
-	OnOfflineReward.Broadcast(Amount);
 	Broadcast();
 }
 

@@ -36,7 +36,6 @@ public:
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
 	void ShowClickEffect(const FVector& WorldLocation);
-	void ShowOfflineReward(float OfflineReward);
 	void ShowUpgradeSuccessText();
 	void HideUpgradeSuccessText();
 	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
@@ -44,8 +43,6 @@ public:
 	void OnEconomyChanged(const FClickerEconomySnapshot& Snapshot);
 	UFUNCTION() 
 	void OnPassiveIncome(double AmountPerSec);
-	UFUNCTION() 
-	void OnOfflineReward(double Amount);
 	UFUNCTION(BlueprintCallable, Category="UI|Economy")
 	const FClickerEconomySnapshot& GetCachedClickerEconomySnapshot() const { return CachedClickerEconomySnapshot; }
 
@@ -86,8 +83,6 @@ protected:
 private:
 	void UpdateScore(const FClickerEconomySnapshot& S);
 	void HandlePassiveIncome(double Amount);
-	void HandleOfflineReward(double Amount);
-	void TryFlushOfflineReward();
 
 	UPROPERTY()	
 	UUserWidget* InGameRootWidget;
@@ -112,8 +107,6 @@ private:
 	UPROPERTY(Transient) 
 	FClickerEconomySnapshot CachedClickerEconomySnapshot;
 	
-	double PendingOfflineReward = 0.0;
-	bool bHUDReady = false;
 	FTimerHandle UpgradeSuccessTimerHandle;
 
 	UPROPERTY()

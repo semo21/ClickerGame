@@ -10,7 +10,6 @@
 #include "ClickerEconomySubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FClickerEconomySnapshot&, Snapshot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfflineReward, double, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
 
 class UClickerUISubsystem;
@@ -37,7 +36,6 @@ public:
 
 	// Delegate
 	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnEconomyChanged OnEconomyChanged;
-	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnOfflineReward OnOfflineReward;
 	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnPassiveIncome OnPassiveIncome;
 
 protected:
@@ -52,9 +50,7 @@ private:
 	void StopTickTimer();
 	double GetUpgradeCost() const;
 	FClickerEconomySnapshot MakeSnapshot() const;
-	void TriggerOfflineReward();
 	void ApplySnapshot(const FClickerEconomySnapshot& In);
-	void ApplyOfflineReward(double Amount);
 	void UpdateLastOfflineReward(FClickerEconomySnapshot& In);
 	
 	UPROPERTY()

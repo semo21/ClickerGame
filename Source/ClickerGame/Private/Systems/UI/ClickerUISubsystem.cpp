@@ -61,7 +61,6 @@ void UClickerUISubsystem::Deinitialize() {
 	if (EconomySubsystemRef) {
 		EconomySubsystemRef->OnEconomyChanged.RemoveDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 		EconomySubsystemRef->OnPassiveIncome.RemoveDynamic(this, &UClickerUISubsystem::OnPassiveIncome);
-		EconomySubsystemRef->OnOfflineReward.RemoveDynamic(this, &UClickerUISubsystem::OnOfflineReward);
 	}
 	if (auto* PC = PlayerController.Get()) {
 		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
@@ -88,8 +87,9 @@ void UClickerUISubsystem::InitializeHUDRoot(AClickerPlayerController* PC) {
 	if (!ensure(RootWidget)) return;
 
 	RootWidget->InitializeHUDRoot(this, PC);
-	bHUDReady = true;
-	TryFlushOfflineReward();
+	if (const double Reward = EconomySubsystemRef->GetLastOfflineReward(); Reward > 0.0) {
+		ShowReward(Reward, true);
+	}	
 }
 
 void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
@@ -99,7 +99,6 @@ void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
 	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
-	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
 
 	CachedClickerEconomySnapshot = EconomySubsystemRef->GetSnapshot();
 	OnEconomyChangedUI.Broadcast(CachedClickerEconomySnapshot);
@@ -109,10 +108,6 @@ void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
 	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, WorldLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
-}
-
-void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	ShowReward(OfflineReward, true);
 }
 
 void UClickerUISubsystem::ShowUpgradeSuccessText() {
@@ -152,16 +147,8 @@ void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
 	HandlePassiveIncome(AmountPerSec);
 }
 
-void UClickerUISubsystem::OnOfflineReward(double Amount) {
-	if (Amount <= 0.0) return;
-
-	PendingOfflineReward += Amount;
-	TryFlushOfflineReward();
-}
-
 // private field
 void UClickerUISubsystem::UpdateScore(const FClickerEconomySnapshot& Snapshot) {
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
 
 	if (CurrencyText)
 		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
@@ -181,10 +168,6 @@ void UClickerUISubsystem::HandlePassiveIncome(double Amount) {
 	ShowReward(Amount, false);
 }
 
-void UClickerUISubsystem::HandleOfflineReward(double Amount) {
-	ShowReward(Amount, true);
-}
-
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
 	if (!FloatingTextWidgetClass || !PlayerController.IsValid())	return;
 
@@ -199,7 +182,6 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	if (!RewardToastClass)	return;
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
 	const FVector2D ScreenPos(640.0f, 120.0f);
 
 	if (UToastWidgetBase* Widget = GetWidgetFromPool(RewardPool, RewardToastClass)) {
@@ -234,13 +216,4 @@ UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase
 	}
 
 	return nullptr;
-}
-
-void UClickerUISubsystem::TryFlushOfflineReward() {
-	if (!bHUDReady || PendingOfflineReward <= 0.0)	return;
-
-	const double amount = PendingOfflineReward;
-	PendingOfflineReward = 0.0;
-
-	ShowReward(amount, true);
 }
