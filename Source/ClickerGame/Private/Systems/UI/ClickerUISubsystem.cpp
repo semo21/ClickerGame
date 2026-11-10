@@ -28,7 +28,6 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	if (!UISettingsAsset.IsNull()) {
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
-			InGameRootWidgetClass = Settings->InGameRootWidgetClass;
 			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
 			RewardToastClass = Settings->IdleRewardTextWidgetClass;
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;

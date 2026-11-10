@@ -53,8 +53,6 @@ public:
 	UPROPERTY(Transient)
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
 	UPROPERTY() 
-	TSubclassOf<UUserWidget> InGameRootWidgetClass;
-	UPROPERTY() 
 	UNiagaraSystem* ClickEffectAsset = nullptr;
 	UPROPERTY()	
 	USoundBase* ClickRewardSound = nullptr;
