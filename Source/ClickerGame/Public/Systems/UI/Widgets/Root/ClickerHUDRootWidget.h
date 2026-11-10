@@ -5,14 +5,15 @@
 #include "CoreMinimal.h"
 #include "Systems/UI/Widgets/Root/GlobalHUDRootWidgetBase.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "ClickerHUDRootWidgetBase.generated.h"
+
+#include "ClickerHUDRootWidget.generated.h"
 
 class UClickerUISubsystem;
 class AClickerPlayerController;
 class UClickerHUDPartWidgetBase;
 
 UCLASS(Abstract, Blueprintable)
-class CLICKERGAME_API UClickerHUDRootWidgetBase : public UGlobalHUDRootWidgetBase
+class CLICKERGAME_API UClickerHUDRootWidget : public UGlobalHUDRootWidgetBase
 {
 	GENERATED_BODY()
 

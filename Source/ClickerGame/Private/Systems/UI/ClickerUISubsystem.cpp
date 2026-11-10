@@ -15,7 +15,7 @@
 #include "Gameplay/GameMode/ClickerGameMode.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "Systems/UI/GlobalUISubsystem.h"
-#include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
+#include "Systems/UI/Widgets/Root/ClickerHUDRootWidget.h"
 #include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
@@ -60,7 +60,7 @@ void UClickerUISubsystem::InitializeHUDRoot(AClickerPlayerController* PC) {
 
 	auto* GlobalUI = GetWorld()->GetGameInstance()->GetSubsystem<UGlobalUISubsystem>();
 	if (!ensure(GlobalUI)) return;
-	auto* RootWidget = Cast<UClickerHUDRootWidgetBase>(GlobalUI->GetCurrentRootWidget());
+	auto* RootWidget = Cast<UClickerHUDRootWidget>(GlobalUI->GetCurrentRootWidget());
 	if (!ensure(RootWidget)) return;
 
 	RootWidget->InitializeHUDRoot(this, PC);

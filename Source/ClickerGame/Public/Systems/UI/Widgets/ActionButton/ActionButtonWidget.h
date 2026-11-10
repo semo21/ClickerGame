@@ -9,7 +9,7 @@
 #include "Systems/UI/Types/ActionButtonTypes.h"
 #include "Systems/UI/Data/ActionButton/ActionButtonDefinition.h"
 
-#include "ActionButtonWidgetBase.generated.h"
+#include "ActionButtonWidget.generated.h"
 
 class UButton;
 class UTextBlock;
@@ -21,8 +21,8 @@ class AMyPlayerControllerBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionButtonClicked);
 
-UCLASS()
-class CLICKERGAME_API UActionButtonWidgetBase : public UUserWidget
+UCLASS(Abstract)
+class CLICKERGAME_API UActionButtonWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

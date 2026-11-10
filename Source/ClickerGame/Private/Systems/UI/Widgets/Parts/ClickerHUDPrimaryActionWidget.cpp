@@ -6,7 +6,7 @@
 #include "Components/Button.h"
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Gameplay/Player/ClickerPlayerController.h"
-#include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
+#include "Systems/UI/Widgets/ActionButton/ActionButtonWidget.h"
 
 void UClickerHUDPrimaryActionWidget::InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC){
 	Super::InitializePart_Implementation(InUI, InPC);

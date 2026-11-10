@@ -6,7 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "ClickerUISettings.generated.h"
 
-class UClickerHUDRootWidgetBase;
+class UClickerHUDRootWidget;
 class UUserWidget;
 class UIdleRewardTextWidget;
 class UClickFloatingTextWidget;
