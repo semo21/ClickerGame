@@ -36,8 +36,6 @@ public:
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
 	void ShowClickEffect(const FVector& WorldLocation);
-	void ShowUpgradeSuccessText();
-	void HideUpgradeSuccessText();
 	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
 	UFUNCTION()	
 	void OnEconomyChanged(const FClickerEconomySnapshot& Snapshot);
@@ -77,39 +75,14 @@ protected:
 	UPROPERTY() 
 	TSubclassOf<UToastWidgetBase> RewardToastClass;
 	UPROPERTY() 
-	TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
 	TWeakObjectPtr<AClickerPlayerController> PlayerController;
 
 private:
-	void UpdateScore(const FClickerEconomySnapshot& S);
 	void HandlePassiveIncome(double Amount);
 
-	UPROPERTY()	
-	UUserWidget* InGameRootWidget;
-	UPROPERTY()	
-	UTextBlock* CurrencyText;
-	UPROPERTY()	
-	UTextBlock* ClickValueText;
-	UPROPERTY()	
-	UTextBlock* UpgradeCostText;
-	UPROPERTY()	
-	UTextBlock* PassiveIncomeText;
-	UPROPERTY()	
-	UTextBlock* UpgradeSuccessText;
-	UPROPERTY()	
-	UButton* UpgradeButton;
-	UPROPERTY()	
-	UButton* SaveButton;
-	UPROPERTY()	
-	UButton* LoadButton;
-	UPROPERTY()	
-	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	UPROPERTY(Transient) 
 	FClickerEconomySnapshot CachedClickerEconomySnapshot;
 	
-	FTimerHandle UpgradeSuccessTimerHandle;
-
 	UPROPERTY()
 	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;
-	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 };

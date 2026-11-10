@@ -25,12 +25,7 @@ void AClickerPlayerController::OnClick() {
 
 void AClickerPlayerController::OnUpgradeClicked() {
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
-		const bool bSuccess = Eco->TryUpgrade();
-		if (bSuccess) {
-			if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
-				UI->ShowUpgradeSuccessText();
-			}
-		}
+		Eco->TryUpgrade();		
 	}
 }
 
