@@ -7,7 +7,10 @@
 
 #include "ClickTargetActor.generated.h"
 
-UCLASS()
+class UNiagaraSystem;
+class USoundBase;
+
+UCLASS(Abstract)
 class CLICKERGAME_API AClickTargetActor : public AActor
 {
 	GENERATED_BODY()
@@ -15,14 +18,19 @@ class CLICKERGAME_API AClickTargetActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AClickTargetActor();
+	virtual void Tick(float DeltaTime) override;
+	void HandleClicked(const FVector& HitLocation);
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* Mesh;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditDefaultsOnly, Category = "Feedback")
+	TObjectPtr<UNiagaraSystem> ClickEffect;
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* Mesh;
+	UPROPERTY(EditDefaultsOnly, Category = "Feedback")
+	TObjectPtr<USoundBase> ClickSound;
 };

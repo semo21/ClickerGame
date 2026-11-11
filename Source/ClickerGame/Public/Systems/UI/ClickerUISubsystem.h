@@ -11,7 +11,6 @@
 
 class USoundBase;				class UUserWidget; 
 class UButton;					class UTextBlock; 
-class UNiagaraSystem;
 
 class UClickerEconomySubsystem; class AClickerPlayerController;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
@@ -35,7 +34,6 @@ public:
 	void BindEconomySubsystem(UClickerEconomySubsystem* Eco);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
-	void ShowClickEffect(const FVector& WorldLocation);
 	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
 	UFUNCTION()	
 	void OnEconomyChanged(const FClickerEconomySnapshot& Snapshot);
@@ -52,10 +50,6 @@ public:
 	TSoftObjectPtr<UActionButtonRegistry> ActionButtonRegistryAsset = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
-	UPROPERTY() 
-	UNiagaraSystem* ClickEffectAsset = nullptr;
-	UPROPERTY()	
-	USoundBase* ClickRewardSound = nullptr;
 	UPROPERTY()	
 	USoundBase* OfflineRewardSound = nullptr;
 	

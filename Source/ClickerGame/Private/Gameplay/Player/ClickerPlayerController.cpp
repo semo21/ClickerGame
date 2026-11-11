@@ -12,12 +12,13 @@ void AClickerPlayerController::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 
-	if (!HitResult.bBlockingHit || !HitResult.GetActor() || !HitResult.GetActor()->IsA(AClickTargetActor::StaticClass())) return;
+	auto* Target = Cast<AClickTargetActor>(HitResult.GetActor());
+	if (!HitResult.bBlockingHit || !Target) return;
 
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {
 		Eco->OnClicked();
+		Target->HandleClicked(HitResult.Location);
 		if (auto* UI = GetWorld()->GetSubsystem<UClickerUISubsystem>()) {
-			UI->ShowClickEffect(HitResult.Location);
 			UI->ShowFloatingText(FString::Printf(TEXT("%f"), Eco->GetSnapshot().CurrencyPerClick), HitResult.Location);
 		}
 	}

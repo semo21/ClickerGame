@@ -4,6 +4,8 @@
 #include "Gameplay/Actors/Clicker/ClickTargetActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AClickTargetActor::AClickTargetActor()
@@ -22,6 +24,15 @@ AClickTargetActor::AClickTargetActor()
 		Mesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	}
 
+}
+
+void AClickTargetActor::HandleClicked(const FVector& HitLocation) {
+	if (ClickEffect) {
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickEffect, HitLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
+	}
+	if (ClickSound) {
+		UGameplayStatics::PlaySoundAtLocation(this, ClickSound, HitLocation);
+	}
 }
 
 // Called when the game starts or when spawned

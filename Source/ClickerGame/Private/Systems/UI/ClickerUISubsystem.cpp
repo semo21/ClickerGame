@@ -7,8 +7,6 @@
 #include "Engine/GameViewportClient.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
 #include "TimerManager.h"
 
 #include "Gameplay/Player/ClickerPlayerController.h"
@@ -28,10 +26,8 @@ void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 
 	if (!UISettingsAsset.IsNull()) {
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
-			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
 			RewardToastClass = Settings->IdleRewardTextWidgetClass;
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
-			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
 		}
 	}
@@ -81,12 +77,6 @@ void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
 	OnEconomyChangedUI.Broadcast(CachedClickerEconomySnapshot);
 }
 
-void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
-	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
-
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, WorldLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
-}
-
 const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(const FGameplayTag& Tag) const {
 	if (!ActionButtonRegistry || !Tag.IsValid()) return nullptr;
 
@@ -130,6 +120,10 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 
 		Widget->SetupToast(FText::FromString(Text), ScreenPos);
 		Widget->PlayToast();
+	}
+
+	if (bIsOffline && OfflineRewardSound) {
+		UGameplayStatics::PlaySound2D(this, OfflineRewardSound);
 	}
 }
 
