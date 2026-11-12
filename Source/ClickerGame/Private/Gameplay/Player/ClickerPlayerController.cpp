@@ -5,14 +5,14 @@
 
 #include "Systems/Economy/ClickerEconomySubsystem.h"
 #include "Systems/UI/ClickerUISubsystem.h"
-#include "Gameplay/Actors/Clicker/ClickTargetActor.h"
+#include "Gameplay/Actors/Clicker/ClickerTarget.h"
 
 // private field
 void AClickerPlayerController::OnClick() {
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 
-	auto* Target = Cast<AClickTargetActor>(HitResult.GetActor());
+	auto* Target = Cast<AClickerTarget>(HitResult.GetActor());
 	if (!HitResult.bBlockingHit || !Target) return;
 
 	if (auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>()) {

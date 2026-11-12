@@ -5,19 +5,19 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "ClickTargetActor.generated.h"
+#include "ClickerTarget.generated.h"
 
 class UNiagaraSystem;
 class USoundBase;
 
 UCLASS(Abstract)
-class CLICKERGAME_API AClickTargetActor : public AActor
+class CLICKERGAME_API AClickerTarget : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AClickTargetActor();
+	AClickerTarget();
 	virtual void Tick(float DeltaTime) override;
 	void HandleClicked(const FVector& HitLocation);
 
