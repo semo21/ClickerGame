@@ -4,8 +4,7 @@
 #include "Gameplay/GameMode/ClickerGameMode.h"
 #include "Gameplay/Player/ClickerPlayerController.h"
 #include "Systems/UI/ClickerUISubsystem.h"
-#include "Systems/UI/GlobalUISubsystem.h"
-#include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
+#include "Systems/Economy/ClickerEconomySubsystem.h"
 
 AClickerGameMode::AClickerGameMode() {
 	PlayerControllerClass = AClickerPlayerController::StaticClass();
@@ -14,15 +13,16 @@ AClickerGameMode::AClickerGameMode() {
 void AClickerGameMode::BeginPlay() {
 	Super::BeginPlay();
 
-	auto* GlobalUI = GetGameInstance()->GetSubsystem<UGlobalUISubsystem>();
-	auto* Root = Cast<UClickerHUDRootWidgetBase>(GlobalUI->GetCurrentRootWidget());
 	auto* ClickerUI = GetWorld()->GetSubsystem<UClickerUISubsystem>();
-	auto* PC = Cast<AClickerPlayerController>(GetWorld()->GetFirstPlayerController());
-	auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
+	if (!ensure(ClickerUI)) return;
 
-	if (GlobalUI && Root && ClickerUI && PC && Eco) {
-		Eco->StartWorld(GetWorld());
-		ClickerUI->BindEconomySubsystem(Eco);
-		Root->InitializeHUDRoot(ClickerUI, PC);
-	}
+	auto* PC = Cast<AClickerPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!ensure(PC)) return;
+
+	auto* Eco = GetWorld()->GetSubsystem<UClickerEconomySubsystem>();
+	if (!ensure(Eco)) return;
+
+	ClickerUI->BindEconomySubsystem(Eco);
+	Eco->StartWorld(GetWorld());
+	ClickerUI->InitializeHUDRoot(PC);
 }

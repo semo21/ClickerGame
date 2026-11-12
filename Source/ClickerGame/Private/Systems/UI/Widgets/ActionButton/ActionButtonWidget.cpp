@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include "Systems/UI/Widgets/ActionButton/ActionButtonWidgetBase.h"
+#include "Systems/UI/Widgets/ActionButton/ActionButtonWidget.h"
 
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
@@ -9,91 +9,67 @@
 #include "Systems/UI/ClickerUISubsystem.h"
 #include "Gameplay/Player/MyPlayerControllerBase.h"
 
-void UActionButtonWidgetBase::InitializeButton(AMyPlayerControllerBase* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag) {
+void UActionButtonWidget::InitializeButton(AMyPlayerControllerBase* InPC, UClickerUISubsystem* InUI, FGameplayTag InTag) {
 	CachedPC = InPC;
 	CachedUI = InUI;
 	ActionTag = InTag;
-	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::InitializeButton - Initialized with tag: %s"), *ActionTag.ToString());
 	SynchronizeProperties();
 }
 
-const FActionButtonDefinition* UActionButtonWidgetBase::GetDefinition() const {
+const FActionButtonDefinition* UActionButtonWidget::GetDefinition() const {
 	if (!ActionTag.IsValid())	return nullptr;
 
 	if (CachedUI.IsValid()) {
-		UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::GetDefinition - CachedUI is valid, trying to find definition for tag: %s"), *ActionTag.ToString());
 		return CachedUI->FindActionButtonDefinition(ActionTag);
 	}
 
 	return nullptr;
-
-	//const UWorld* World = GetWorld();
-	//if (!World) return nullptr;
-
-	//const UGameInstance* GI = World->GetGameInstance();
-	//if (!GI) return nullptr;
-
-	//const UClickerUISubsystem* UISubsystem = GI->GetSubsystem<UClickerUISubsystem>();
-	//return UISubsystem ? UISubsystem->FindActionButtonDefinition(ActionTag) : nullptr;
-	
 }
 
-void UActionButtonWidgetBase::NativeOnInitialized() {
+void UActionButtonWidget::NativeOnInitialized() {
 	Super::NativeOnInitialized();
 	if (Btn_Root) {
-		Btn_Root->OnClicked.AddDynamic(this, &UActionButtonWidgetBase::HandleClicked);
+		Btn_Root->OnClicked.AddDynamic(this, &UActionButtonWidget::HandleClicked);
 	}
 }
 
-void UActionButtonWidgetBase::NativePreConstruct() {
+void UActionButtonWidget::NativePreConstruct() {
 	Super::NativePreConstruct();
-	//if (IsDesignTime() && !DefaultStyle && !bOverrideLabel && !bOverrideIcon) {
-	//	OverrideLabelText = PreviewLabelText;
-	//	bOverrideLabel = true;
-
-	//	OverrideIconTexture = nullptr;
-	//	bOverrideIcon = bPreviewIcon;
-
-	//	Mode = EActionButtonMode::Auto;
-	//	bEnabled = true;
-	//}
 
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::SynchronizeProperties() {
+void UActionButtonWidget::SynchronizeProperties() {
 	Super::SynchronizeProperties();
 
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::SetLabelText(const FText& InText) {
+void UActionButtonWidget::SetLabelText(const FText& InText) {
 	bOverrideLabel = true;
 	OverrideLabelText = InText;
 
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::SetIcon(UTexture2D* InTexture) {
+void UActionButtonWidget::SetIcon(UTexture2D* InTexture) {
 	bOverrideIcon = true;
 	OverrideIconTexture = InTexture;
 
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::SetEnabledState(bool bInEnabled) {
+void UActionButtonWidget::SetEnabledState(bool bInEnabled) {
 	bOverrideEnabledValue = bInEnabled;
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::SetMode(EActionButtonMode InMode) {
+void UActionButtonWidget::SetMode(EActionButtonMode InMode) {
 	Mode = InMode;
 	ApplyResolvedDataToWidgets();
 }
 
-void UActionButtonWidgetBase::HandleClicked() {
-	UE_LOG(LogTemp, Warning, TEXT("UActionButtonWidgetBase::HandleClicked - Button with tag %s clicked"), *ActionTag.ToString());
-
+void UActionButtonWidget::HandleClicked() {
 	if (!CachedPC.IsValid() || !CachedUI.IsValid() || !ActionTag.IsValid()) {
 		return;
 	}
@@ -102,7 +78,7 @@ void UActionButtonWidgetBase::HandleClicked() {
 	OnClicked.Broadcast();
 }
 
-FText UActionButtonWidgetBase::ResolveLabel() const {
+FText UActionButtonWidget::ResolveLabel() const {
 	if (bOverrideLabel && !OverrideLabelText.IsEmpty()) {
 		return OverrideLabelText;
 	}
@@ -116,7 +92,7 @@ FText UActionButtonWidgetBase::ResolveLabel() const {
 	return FText::GetEmpty();
 }
 
-UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
+UTexture2D* UActionButtonWidget::ResolveIcon() const {
 	if (bOverrideIcon && !OverrideIconTexture.IsNull()) {
 		return OverrideIconTexture.LoadSynchronous();
 	}
@@ -129,7 +105,7 @@ UTexture2D* UActionButtonWidgetBase::ResolveIcon() const {
 	return nullptr;
 }
 
-bool UActionButtonWidgetBase::ResolveEnabled() const {
+bool UActionButtonWidget::ResolveEnabled() const {
 	if (bOverrideEnabled) {
 		return bOverrideEnabledValue;
 	}
@@ -140,7 +116,7 @@ bool UActionButtonWidgetBase::ResolveEnabled() const {
 	return true;
 }
 
-EActionButtonMode UActionButtonWidgetBase::ResolveMode() const {
+EActionButtonMode UActionButtonWidget::ResolveMode() const {
 	if (Mode != EActionButtonMode::Auto)	return Mode;
 
 	if (const FActionButtonDefinition* Def = GetDefinition()) 
@@ -150,7 +126,7 @@ EActionButtonMode UActionButtonWidgetBase::ResolveMode() const {
 	return EActionButtonMode::Auto;
 }
 
-void UActionButtonWidgetBase::ApplyResolvedDataToWidgets() {
+void UActionButtonWidget::ApplyResolvedDataToWidgets() {
 	// 1) Enabled / Disabled overlay
 	const bool bFinalEnabled = ResolveEnabled();
 
@@ -186,7 +162,7 @@ void UActionButtonWidgetBase::ApplyResolvedDataToWidgets() {
 	ApplyMode(ResolveMode());
 }
 
-void UActionButtonWidgetBase::ApplyMode(EActionButtonMode FinalMode) {
+void UActionButtonWidget::ApplyMode(EActionButtonMode FinalMode) {
 	if (!Switcher_Mode) return;
 
 	int32 index = 0;

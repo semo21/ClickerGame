@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 
-#include "Subsystems/WorldSubsystem.h"
+#include "Systems/MyWorldSubsystemBase.h"
 #include "Systems/Economy/Data/ClickerEconomySnapshot.h"
 
 #include "ClickerEconomySubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChanged, const FClickerEconomySnapshot&, Snapshot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOfflineReward, double, Amount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPassiveIncome, double, AmountPerSec);
 
 class UClickerUISubsystem;
@@ -19,7 +18,7 @@ class USaveManagerSubsystem;
  * 
  */
 UCLASS(BlueprintType)
-class CLICKERGAME_API UClickerEconomySubsystem : public UWorldSubsystem
+class CLICKERGAME_API UClickerEconomySubsystem : public UMyWorldSubsystemBase
 {
 	GENERATED_BODY()
 
@@ -37,8 +36,10 @@ public:
 
 	// Delegate
 	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnEconomyChanged OnEconomyChanged;
-	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnOfflineReward OnOfflineReward;
 	UPROPERTY(BlueprintAssignable, Category = "Economy|Events") FOnPassiveIncome OnPassiveIncome;
+
+protected:
+	virtual TSubclassOf<AGameModeBase> GetRequiredGameModeClass() const override;
 
 private:
 	void Broadcast();
@@ -49,12 +50,9 @@ private:
 	void StopTickTimer();
 	double GetUpgradeCost() const;
 	FClickerEconomySnapshot MakeSnapshot() const;
-	void TriggerOfflineReward();
 	void ApplySnapshot(const FClickerEconomySnapshot& In);
-	void ApplyOfflineReward(double Amount);
 	void UpdateLastOfflineReward(FClickerEconomySnapshot& In);
 	
-private:
 	UPROPERTY()
 	TObjectPtr<USaveManagerSubsystem> SaveManagerSubsystemRef;
 	FClickerEconomySnapshot ClickerEconomySnapshot;

@@ -10,7 +10,7 @@ class UTextBlock;
 /**
  *
  */
-UCLASS()
+UCLASS(Abstract)
 class CLICKERGAME_API UClickFloatingTextWidget : public UToastWidgetBase
 {
 	GENERATED_BODY()

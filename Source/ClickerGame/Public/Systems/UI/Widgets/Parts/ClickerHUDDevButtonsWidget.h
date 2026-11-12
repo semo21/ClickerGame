@@ -8,26 +8,25 @@
 
 #include "ClickerHUDDevButtonsWidget.generated.h"
 
-class UActionButtonWidgetBase;
+class UActionButtonWidget;
 class UClickerUISubsystem;
 class AClickerPlayerController;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class CLICKERGAME_API UClickerHUDDevButtonsWidget : public UClickerHUDPartWidgetBase
 {
 	GENERATED_BODY()
 	
 public:
 	virtual void InitializePart_Implementation(UClickerUISubsystem* InUI, AClickerPlayerController* InPC) override;
-
 protected:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
-	TObjectPtr<UActionButtonWidgetBase> Btn_Save;
+	TObjectPtr<UActionButtonWidget> Btn_Save;
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadOnly)
-	TObjectPtr<UActionButtonWidgetBase> Btn_Load;
+	TObjectPtr<UActionButtonWidget> Btn_Load;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Actions")
 	FGameplayTag SaveActionTag;

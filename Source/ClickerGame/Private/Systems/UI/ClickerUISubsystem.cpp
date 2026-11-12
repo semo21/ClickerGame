@@ -3,19 +3,17 @@
 #include "Systems/UI/ClickerUISubsystem.h"
 
 #include "Blueprint/UserWidget.h"
-#include "Components/TextBlock.h"
-#include "Components/Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Engine/GameViewportClient.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
 #include "TimerManager.h"
 
 #include "Gameplay/Player/ClickerPlayerController.h"
+#include "Gameplay/GameMode/ClickerGameMode.h"
 #include "Systems/Economy/ClickerEconomySubsystem.h"
-#include "Systems/UI/Widgets/Root/ClickerHUDRootWidgetBase.h"
+#include "Systems/UI/GlobalUISubsystem.h"
+#include "Systems/UI/Widgets/Root/ClickerHUDRootWidget.h"
 #include "Systems/UI/Widgets/Toast/ToastWidgetBase.h"
 #include "Systems/UI/Widgets/Toast/ClickFloatingTextWidget.h"
 #include "Systems/UI/Widgets/Toast/IdleRewardTextWidget.h"
@@ -26,52 +24,45 @@
 void UClickerUISubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
 
-	UE_LOG(LogTemp, Warning, TEXT("UISettingsAsset: &s, ActionButtonRegistryAsset: %s"), *UISettingsAsset.ToString(), *ActionButtonRegistryAsset.ToString());
-	
 	if (!UISettingsAsset.IsNull()) {
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found DA"));
-
 		if (UClickerUISettings* Settings = UISettingsAsset.LoadSynchronous()) {
-			UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize DA Load"));
-
-			InGameRootWidgetClass = Settings->InGameRootWidgetClass;
-			ClickEffectAsset = Settings->ClickEffectAsset.LoadSynchronous();
 			RewardToastClass = Settings->IdleRewardTextWidgetClass;
 			FloatingTextWidgetClass = Settings->FloatingTextWidgetClass;
-			ClickRewardSound = Settings->ClickRewardSound.LoadSynchronous();
 			OfflineRewardSound = Settings->OfflineRewardSound.LoadSynchronous();
 		}
 	}
 
 	if (!ActionButtonRegistryAsset.IsNull()) {
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize Found ActionButtonRegistry"));
-
 		ActionButtonRegistry = ActionButtonRegistryAsset.LoadSynchronous();
-
-		UE_LOG(LogTemp, Warning, TEXT("UISubsystem::Initialize ActionButtonRegistry Load = %s"), ActionButtonRegistry ? TEXT("Success") : TEXT("Failed"));
-
-	}
-}
+	}}
 
 void UClickerUISubsystem::Deinitialize() {
 	if (EconomySubsystemRef) {
 		EconomySubsystemRef->OnEconomyChanged.RemoveDynamic(this, &UClickerUISubsystem::OnEconomyChanged);
 		EconomySubsystemRef->OnPassiveIncome.RemoveDynamic(this, &UClickerUISubsystem::OnPassiveIncome);
-		EconomySubsystemRef->OnOfflineReward.RemoveDynamic(this, &UClickerUISubsystem::OnOfflineReward);
-	}
-	if (auto* PC = PlayerController.Get()) {
-		PC->GetWorldTimerManager().ClearTimer(UpgradeSuccessTimerHandle);
 	}
 
-	InGameRootWidget = nullptr;
-	CurrencyText = ClickValueText = UpgradeCostText = PassiveIncomeText = UpgradeSuccessText = nullptr;
-	UpgradeButton = SaveButton = LoadButton = nullptr;
 	EconomySubsystemRef = nullptr;
 	FloatingTextPool.Empty();
-	RewardTextPool.Empty();
+	RewardPool.Empty();
 	PlayerController.Reset();
 
 	Super::Deinitialize();
+}
+
+void UClickerUISubsystem::InitializeHUDRoot(AClickerPlayerController* PC) {
+	if (!ensure(PC)) return;
+	PlayerController = PC;
+
+	auto* GlobalUI = GetWorld()->GetGameInstance()->GetSubsystem<UGlobalUISubsystem>();
+	if (!ensure(GlobalUI)) return;
+	auto* RootWidget = Cast<UClickerHUDRootWidget>(GlobalUI->GetCurrentRootWidget());
+	if (!ensure(RootWidget)) return;
+
+	RootWidget->InitializeHUDRoot(this, PC);
+	if (const double Reward = EconomySubsystemRef->GetLastOfflineReward(); Reward > 0.0) {
+		ShowReward(Reward, true);
+	}
 }
 
 void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
@@ -81,44 +72,12 @@ void UClickerUISubsystem::BindEconomySubsystem(UClickerEconomySubsystem* Eco) {
 
 	EconomySubsystemRef->OnEconomyChanged.AddUniqueDynamic(this, &ThisClass::OnEconomyChanged);
 	EconomySubsystemRef->OnPassiveIncome.AddUniqueDynamic(this, &ThisClass::OnPassiveIncome);
-	EconomySubsystemRef->OnOfflineReward.AddUniqueDynamic(this, &ThisClass::OnOfflineReward);
 
 	CachedClickerEconomySnapshot = EconomySubsystemRef->GetSnapshot();
 	OnEconomyChangedUI.Broadcast(CachedClickerEconomySnapshot);
 }
 
-void UClickerUISubsystem::ShowClickEffect(const FVector& WorldLocation) {
-	if (!PlayerController.IsValid() || !ClickEffectAsset) return;
-
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(PlayerController->GetWorld(), ClickEffectAsset, WorldLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
-}
-
-void UClickerUISubsystem::ShowOfflineReward(float OfflineReward) {
-	ShowReward(OfflineReward, true);
-}
-
-void UClickerUISubsystem::ShowUpgradeSuccessText() {
-	if (UpgradeSuccessText && PlayerController.IsValid()) {
-		UpgradeSuccessText->SetVisibility(ESlateVisibility::Visible);
-
-		PlayerController->GetWorldTimerManager().SetTimer(
-			UpgradeSuccessTimerHandle,
-			this,
-			&UClickerUISubsystem::HideUpgradeSuccessText,
-			2.0f,
-			false
-		);
-	}
-}
-
-void UClickerUISubsystem::HideUpgradeSuccessText() {
-	if (UpgradeSuccessText) {
-		UpgradeSuccessText->SetVisibility(ESlateVisibility::Collapsed);
-	}
-}
-
 const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(const FGameplayTag& Tag) const {
-	UE_LOG(LogTemp, Warning, TEXT("UISubsystem::FindActionButtonDefinition Tag: %s"), *Tag.ToString());
 	if (!ActionButtonRegistry || !Tag.IsValid()) return nullptr;
 
 	return ActionButtonRegistry->Find(Tag);
@@ -127,44 +86,15 @@ const FActionButtonDefinition* UClickerUISubsystem::FindActionButtonDefinition(c
 void UClickerUISubsystem::OnEconomyChanged(const FClickerEconomySnapshot& Snapshot) {
 	CachedClickerEconomySnapshot = Snapshot;
 	OnEconomyChangedUI.Broadcast(CachedClickerEconomySnapshot);
-	UpdateScore(Snapshot);	// HUDRoot 리팩터 후 이 부분은 HUDRoot에서 처리하도록 변경 예정
 }
 
 void UClickerUISubsystem::OnPassiveIncome(double AmountPerSec) {
 	HandlePassiveIncome(AmountPerSec);
 }
 
-void UClickerUISubsystem::OnOfflineReward(double Amount) {
-	if (Amount <= 0.0) return;
-
-	PendingOfflineReward += Amount;
-	TryFlushOfflineReward();
-}
-
 // private field
-void UClickerUISubsystem::UpdateScore(const FClickerEconomySnapshot& Snapshot) {
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::UpdateScore Currency: %.2f, ClickValue: %.2f, UpgradeCost: %.2f, PassiveIncome: %.2f"), Snapshot.Currency, Snapshot.CurrencyPerClick, FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase, Snapshot.CurrencyPerSecond);
-
-	if (CurrencyText)
-		CurrencyText->SetText(FText::FromString(FString::Printf(TEXT("Currency: %.2f"), Snapshot.Currency)));
-
-	if (ClickValueText)
-		ClickValueText->SetText(FText::FromString(FString::Printf(TEXT("Click Value: %.2f"), Snapshot.CurrencyPerClick)));
-
-	if (UpgradeCostText)
-		UpgradeCostText->SetText(FText::FromString(FString::Printf(TEXT("Upgrade Cost: %.2f"), FMath::Pow(Snapshot.UpgradeGrowth, Snapshot.UpgradeLevel + 1) * Snapshot.UpgradeCostBase)));
-
-	if (PassiveIncomeText)
-		PassiveIncomeText->SetText(FText::FromString(FString::Printf(TEXT("Passive Income: %.2f / sec"), Snapshot.CurrencyPerSecond)));
-
-}
-
 void UClickerUISubsystem::HandlePassiveIncome(double Amount) {
 	ShowReward(Amount, false);
-}
-
-void UClickerUISubsystem::HandleOfflineReward(double Amount) {
-	ShowReward(Amount, true);
 }
 
 void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector& WorldLocation) {
@@ -181,7 +111,6 @@ void UClickerUISubsystem::ShowFloatingText(const FString& Message, const FVector
 
 void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 	if (!RewardToastClass)	return;
-	//UE_LOG(LogTemp, Warning, TEXT("UISubsystem::ShowReward Amount: %.2f, bIsOffline: %d"), Amount, bIsOffline);
 	const FVector2D ScreenPos(640.0f, 120.0f);
 
 	if (UToastWidgetBase* Widget = GetWidgetFromPool(RewardPool, RewardToastClass)) {
@@ -192,6 +121,14 @@ void UClickerUISubsystem::ShowReward(double Amount, bool bIsOffline) {
 		Widget->SetupToast(FText::FromString(Text), ScreenPos);
 		Widget->PlayToast();
 	}
+
+	if (bIsOffline && OfflineRewardSound) {
+		UGameplayStatics::PlaySound2D(this, OfflineRewardSound);
+	}
+}
+
+TSubclassOf<AGameModeBase> UClickerUISubsystem::GetRequiredGameModeClass() const {
+	return AClickerGameMode::StaticClass();
 }
 
 UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass) {
@@ -212,13 +149,4 @@ UToastWidgetBase* UClickerUISubsystem::GetWidgetFromPool(TArray<UToastWidgetBase
 	}
 
 	return nullptr;
-}
-
-void UClickerUISubsystem::TryFlushOfflineReward() {
-	if (!bHUDReady || PendingOfflineReward <= 0.0)	return;
-
-	const double amount = PendingOfflineReward;
-	PendingOfflineReward = 0.0;
-
-	ShowReward(amount, true);
 }

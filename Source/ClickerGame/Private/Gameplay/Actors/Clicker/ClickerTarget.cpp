@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/Actors/Clicker/ClickTargetActor.h"
+#include "Gameplay/Actors/Clicker/ClickerTarget.h"
 #include "Components/StaticMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AClickTargetActor::AClickTargetActor()
+AClickerTarget::AClickerTarget()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,12 +26,21 @@ AClickTargetActor::AClickTargetActor()
 
 }
 
+void AClickerTarget::HandleClicked(const FVector& HitLocation) {
+	if (ClickEffect) {
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickEffect, HitLocation, FRotator::ZeroRotator, FVector(1.0f), true, true, ENCPoolMethod::AutoRelease);
+	}
+	if (ClickSound) {
+		UGameplayStatics::PlaySoundAtLocation(this, ClickSound, HitLocation);
+	}
+}
+
 // Called when the game starts or when spawned
-void AClickTargetActor::BeginPlay()
+void AClickerTarget::BeginPlay()
 {
 	Super::BeginPlay();	
 }
 
-void AClickTargetActor::Tick(float DeltaTime) {
+void AClickerTarget::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }

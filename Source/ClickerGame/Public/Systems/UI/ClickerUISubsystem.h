@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Systems/MyWorldSubsystemBase.h"
 #include "GameplayTagContainer.h"
 #include "Systems/Economy/Data/ClickerEconomySnapshot.h"
 
@@ -11,7 +11,6 @@
 
 class USoundBase;				class UUserWidget; 
 class UButton;					class UTextBlock; 
-class UNiagaraSystem;
 
 class UClickerEconomySubsystem; class AClickerPlayerController;
 class UClickFloatingTextWidget; class UIdleRewardTextWidget;
@@ -24,27 +23,22 @@ struct FClickerEconomySnapshot;		struct FActionButtonDefinition;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEconomyChangedUI, const FClickerEconomySnapshot&, Snapshot);
 
 UCLASS(Config=Game, DefaultConfig)
-class CLICKERGAME_API UClickerUISubsystem : public UWorldSubsystem
+class CLICKERGAME_API UClickerUISubsystem : public UMyWorldSubsystemBase
 {
 	GENERATED_BODY()
 
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	void InitializeHUDRoot(AClickerPlayerController* PC);
 	void BindEconomySubsystem(UClickerEconomySubsystem* Eco);
 	void ShowFloatingText(const FString& Message, const FVector& WorldLocation);
 	void ShowReward(double Amount, bool bIsOffline);
-	void ShowClickEffect(const FVector& WorldLocation);
-	void ShowOfflineReward(float OfflineReward);
-	void ShowUpgradeSuccessText();
-	void HideUpgradeSuccessText();
 	const FActionButtonDefinition* FindActionButtonDefinition(const FGameplayTag& Tag) const;
 	UFUNCTION()	
 	void OnEconomyChanged(const FClickerEconomySnapshot& Snapshot);
 	UFUNCTION() 
 	void OnPassiveIncome(double AmountPerSec);
-	UFUNCTION() 
-	void OnOfflineReward(double Amount);
 	UFUNCTION(BlueprintCallable, Category="UI|Economy")
 	const FClickerEconomySnapshot& GetCachedClickerEconomySnapshot() const { return CachedClickerEconomySnapshot; }
 
@@ -56,17 +50,12 @@ public:
 	TSoftObjectPtr<UActionButtonRegistry> ActionButtonRegistryAsset = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<UActionButtonRegistry> ActionButtonRegistry = nullptr;
-	UPROPERTY() 
-	TSubclassOf<UUserWidget> InGameRootWidgetClass;
-	UPROPERTY() 
-	UNiagaraSystem* ClickEffectAsset = nullptr;
-	UPROPERTY()	
-	USoundBase* ClickRewardSound = nullptr;
 	UPROPERTY()	
 	USoundBase* OfflineRewardSound = nullptr;
 	
 
 protected:
+	virtual TSubclassOf<AGameModeBase> GetRequiredGameModeClass() const override;
 	UToastWidgetBase* GetWidgetFromPool(TArray<UToastWidgetBase*>& Pool, TSubclassOf<UToastWidgetBase> ToastWidgetClass);
 
 	UPROPERTY() 
@@ -78,43 +67,14 @@ protected:
 	UPROPERTY() 
 	TSubclassOf<UToastWidgetBase> RewardToastClass;
 	UPROPERTY() 
-	TSubclassOf<UToastWidgetBase> ToastWidgetBaseClass;
 	TWeakObjectPtr<AClickerPlayerController> PlayerController;
 
 private:
-	void UpdateScore(const FClickerEconomySnapshot& S);
 	void HandlePassiveIncome(double Amount);
-	void HandleOfflineReward(double Amount);
-	void TryFlushOfflineReward();
 
-	UPROPERTY()	
-	UUserWidget* InGameRootWidget;
-	UPROPERTY()	
-	UTextBlock* CurrencyText;
-	UPROPERTY()	
-	UTextBlock* ClickValueText;
-	UPROPERTY()	
-	UTextBlock* UpgradeCostText;
-	UPROPERTY()	
-	UTextBlock* PassiveIncomeText;
-	UPROPERTY()	
-	UTextBlock* UpgradeSuccessText;
-	UPROPERTY()	
-	UButton* UpgradeButton;
-	UPROPERTY()	
-	UButton* SaveButton;
-	UPROPERTY()	
-	UButton* LoadButton;
-	UPROPERTY()	
-	TArray<UIdleRewardTextWidget*> RewardTextPool;	
 	UPROPERTY(Transient) 
 	FClickerEconomySnapshot CachedClickerEconomySnapshot;
 	
-	double PendingOfflineReward = 0.0;
-	bool bHUDReady = false;
-	FTimerHandle UpgradeSuccessTimerHandle;
-
 	UPROPERTY()
 	TObjectPtr<UClickerEconomySubsystem> EconomySubsystemRef = nullptr;
-	FVector2D CachedViewportSize = FVector2D::ZeroVector;
 };
