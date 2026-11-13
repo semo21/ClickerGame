@@ -2,6 +2,8 @@
 
 
 #include "Gameplay/GameMode/DefenseGameMode.h"
+#include "Systems/Economy/GlobalEconomySubsystem.h"
+#include "Systems/Economy/DefenseEconomySubsystem.h"
 #include "Gameplay/Player/DefensePlayerController.h"
 #include "Gameplay/Actors/Defense/DefenseGridManager.h"
 #include "Gameplay/Actors/Defense/DefenseEnemyBase.h"
@@ -28,14 +30,14 @@ void ADefenseGameMode::SpawnEnemy() {
 	const FVector SpawnLocation = GridManager->GetSpawnLocation();
 
 	ADefenseEnemyBase* Enemy = GetWorld()->SpawnActor<ADefenseEnemyBase>(EnemyClass, SpawnLocation, FRotator::ZeroRotator);
-	
+
 	if (Enemy) {
 		Enemy->InitPath(GridManager);
 		AliveEnemies.Add(Enemy);
 
 		Enemy->OnReachedGoal.AddUObject(this, &ADefenseGameMode::HandleEnemyReachedGoal);
 		Enemy->OnDestroyed.AddDynamic(this, &ADefenseGameMode::HandleEnemyDestroyed);
-	}	
+	}
 }
 
 void ADefenseGameMode::StartWave() {
@@ -99,6 +101,14 @@ void ADefenseGameMode::EndMatch(EDefenseMatchState Result) {
 	MatchState = Result;
 	GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
 	UE_LOG(LogTemp, Warning, TEXT("ADefenseGameMode::EndMatch, MatchState: %s"), *UEnum::GetValueAsString(Result));
+
+	UDefenseEconomySubsystem* DefenseEco = GetWorld()->GetSubsystem<UDefenseEconomySubsystem>();
+	UGlobalEconomySubsystem* GlobalEco = GetGameInstance()->GetSubsystem<UGlobalEconomySubsystem>();
+	if (DefenseEco && GlobalEco) {
+		const double GlobalReward = DefenseEco->CalculateSettlementReward(Result);
+		GlobalEco->AddGlobalCurrency(GlobalReward);
+		UE_LOG(LogTemp, Warning, TEXT("ADefenseGameMode::EndMatch / GlobalReward: %f"), GlobalReward);
+	}
 
 	if (ADefensePlayerController* PC = Cast<ADefensePlayerController>(GetWorld()->GetFirstPlayerController())) {
 		PC->HandleMatchEnded(Result);

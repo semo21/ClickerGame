@@ -28,5 +28,11 @@ void UGlobalEconomySubsystem::StartGame() {
 }
 
 void UGlobalEconomySubsystem::AddGlobalCurrency(double Amount) {
-	GlobalEconomySnapshot.GlobalCurrency += Amount;
+	if (SaveManagerRef) {
+		GlobalEconomySnapshot.GlobalCurrency += Amount;
+		SaveManagerRef->SaveProgress(GlobalEconomySnapshot);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("UGlobalEconomySubsystem::AddGlobalCurrency / SaveManagerRef is null"));
+	}
 }
