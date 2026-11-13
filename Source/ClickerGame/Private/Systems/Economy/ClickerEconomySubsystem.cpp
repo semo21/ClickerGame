@@ -14,7 +14,6 @@
 
 void UClickerEconomySubsystem::Initialize(FSubsystemCollectionBase& Collection) {
 	Super::Initialize(Collection);
-	UE_LOG(LogTemp, Warning, TEXT("UClickerEconomySubsystem::Initilalize"));
 }
 
 void UClickerEconomySubsystem::Deinitialize() {
