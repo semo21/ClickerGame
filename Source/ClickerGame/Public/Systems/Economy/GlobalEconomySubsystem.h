@@ -22,7 +22,6 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	void StartGame();
 	UFUNCTION(BlueprintCallable, Category = "Economy|Meta")
 	void AddGlobalCurrency(double Amount);
 
@@ -33,5 +32,4 @@ private:
 	FGlobalEconomySnapshot GlobalEconomySnapshot;
 	UPROPERTY()	
 	TObjectPtr<USaveManagerSubsystem> SaveManagerRef;
-	bool bStarted = false;
 };

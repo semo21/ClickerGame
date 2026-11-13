@@ -23,11 +23,8 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	void StartGame();
-
 	UFUNCTION(BlueprintCallable, Category="Progress")
 	bool IsLevelUnlocked(const FGameplayTag& LevelTag) const;
-
 	UFUNCTION(BlueprintCallable, Category="Progress")
 	void UnlockLevel(const FGameplayTag& LevelTag);
 
@@ -38,5 +35,4 @@ private:
 	FGlobalProgressSnapshot GlobalProgressSnapshot;
 	UPROPERTY()
 	TObjectPtr<USaveManagerSubsystem> SaveManagerRef;
-	bool bStarted = false;
 };

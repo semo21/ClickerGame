@@ -4,8 +4,6 @@
 #include "Gameplay/GameMode/MyGameModeBase.h"
 #include "Gameplay/Player/MyPlayerControllerBase.h"
 #include "Gameplay/Character/MyCharacter.h"
-#include "Systems/Economy/GlobalEconomySubsystem.h"
-#include "Systems/Progress/GlobalProgressSubsystem.h"
 #include "Systems/UI/GlobalUISUbsystem.h"
 #include "Blueprint/UserWidget.h"
 
@@ -20,13 +18,5 @@ void AMyGameModeBase::BeginPlay() {
 
 	if (UGlobalUISubsystem* GlobalUI = GetGameInstance()->GetSubsystem<UGlobalUISubsystem>()) {
 		GlobalUI->ShowRootUI(RootWidgetClass);
-	}
-
-	if (UGlobalEconomySubsystem* GlobalEco = GetGameInstance()->GetSubsystem<UGlobalEconomySubsystem>()) {
-		GlobalEco->StartGame();
-	}
-
-	if (UGlobalProgressSubsystem* GlobalProgress = GetGameInstance()->GetSubsystem<UGlobalProgressSubsystem>()) {
-		GlobalProgress->StartGame();
 	}
 }
